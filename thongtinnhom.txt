@@ -1,0 +1,41 @@
+nhóm 9 : hệ thống quản lý học sinh
+
+3122410010: Nguyễn Thị Phương Anh
+3122410136: Nguyễn Đình Hùng
+3122410466: Huỳnh Gia Vĩ
+3122410452: Võ Anh Tuấn
+
+
+- danh sách tài khoản, password:
+admin, admin
+GV1, GV1@
+GV2, GV2@
+GV3, GV3@
+GV4, GV4@
+GV5, GV5@
+GV6, GV6@
+HS1, HS1@
+HS2, HS2@
+HS3, HS3@
+HS4, HS4@
+HS5, HS5@
+HS6, HS6@
+HS7, HS7@
+HS8, HS8@
+HS9, HS9@
+HS10, HS10@
+HS11, HS11@
+HS12, HS12@
+HS13, HS13@
+HS14, HS14@
+HS15, HS15@
+HS16, HS16@
+HS17, HS17@
+HS18, HS18@
+HS19, HS19@
+HS20, HS20@
+HS21, HS21@
+HS22, HS22@
+HS23, HS23@
+HS24, HS24@
+HS25, HS25@

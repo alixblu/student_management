@@ -1,0 +1,56 @@
+{
+  "java.project.sourcePaths": ["src"],
+  "java.project.outputPath": "bin",
+  "java.project.referencedLibraries": {
+    "include": [
+      "lib/**/*.jar",
+      "c:\\Users\\HP\\Downloads\\mysql-connector-j-8.3.0\\mysql-connector-j-8.3.0\\mysql-connector-j-8.3.0.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-5.2.3.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-excelant-5.2.3.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-javadoc-5.2.3.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-ooxml-5.2.3.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-ooxml-lite-5.2.3.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-scratchpad-5.2.3.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-examples-5.2.3.jar",
+      "c:\\Users\\HP\\Downloads\\poi-bin-5.2.3-20220909\\poi-bin-5.2.3\\poi-ooxml-full-5.2.3.jar",
+      "d:\\software_download\\mysql-connector-j-8.3.0\\mysql-connector-j-8.3.0\\mysql-connector-j-8.3.0.jar",
+      "Lib/mysql-connector-j-8.3.0.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\poi-bin-3.8-20120326\\poi-3.8\\poi-3.8-20120326.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\poi-bin-3.8-20120326\\poi-3.8\\poi-examples-3.8-20120326.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\poi-bin-3.8-20120326\\poi-3.8\\poi-excelant-3.8-20120326.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\poi-bin-3.8-20120326\\poi-3.8\\poi-ooxml-3.8-20120326.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\poi-bin-3.8-20120326\\poi-3.8\\poi-ooxml-schemas-3.8-20120326.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\poi-bin-3.8-20120326\\poi-3.8\\poi-scratchpad-3.8-20120326.jar",
+      "Lib/poi-5.2.3.jar",
+      "Lib/poi-examples-5.2.3.jar",
+      "Lib/poi-excelant-5.2.3.jar",
+      "Lib/poi-javadoc-5.2.3.jar",
+      "Lib/poi-ooxml-5.2.3.jar",
+      "Lib/poi-ooxml-full-5.2.3.jar",
+      "Lib/poi-ooxml-lite-5.2.3.jar",
+      "Lib/poi-scratchpad-5.2.3.jar",
+      "Lib/org.apache.commons.io.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\JTable_A_Excel\\JTable_A_Excel\\src\\Librerias\\poi-3.7-20101029.jar",
+      "c:\\Users\\HP\\Downloads\\sqljdbc42.jar",
+      "Lib/mysql-connector-java-5.1.23-bin.jar",
+      "Lib/Librerias/poi-3.7-20101029.jar",
+      "d:\\Coding\\N2_HK2\\DAJAVA\\swingx-all-1.6.4.jar\\swingx-all-1.6.4.jar"
+    ],
+    "exclude": [
+      "lib/mysql-connector-j-8.3.0.jar",
+      "lib/poi-scratchpad-5.2.3.jar",
+      "lib/org.apache.commons.io.jar",
+      "lib/poi-5.2.3.jar",
+      "lib/poi-examples-5.2.3.jar",
+      "lib/poi-excelant-5.2.3.jar",
+      "lib/poi-javadoc-5.2.3.jar",
+      "lib/poi-ooxml-5.2.3.jar",
+      "lib/poi-ooxml-full-5.2.3.jar",
+      "lib/poi-ooxml-lite-5.2.3.jar"
+    ]
+  },
+  "java.debug.settings.onBuildFailureProceed": true,
+  "cSpell.words": [
+    "Taikhoan"
+  ]
+}
