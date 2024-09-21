@@ -26,7 +26,8 @@ public class gv_guiTB extends JPanel{
     // JFrame f;
     JPanel mainPanel, background;
     JLabel[] label;
-    JRadioButton radioButtonHS, radioButtonLop;
+    // JRadioButton radioButtonHS, radioButtonLop;
+    JCheckBox checkBoxLop, checkBoxHS;
     JTextField txtHeader, txtLop, txtHS;
     JTextArea txtContent;
     JButton btnGui;
@@ -72,21 +73,35 @@ public class gv_guiTB extends JPanel{
         label[1].setBounds(100, 100, 100, 30); // Adjusted x coordinate
         label[2].setText("Nhập nội dung thông báo:");
         label[2].setBounds(100, 150, 250, 30); // Adjusted x coordinate
+
+        checkBoxLop = new JCheckBox("Lớp:");
+        checkBoxLop.setOpaque(false);
+        checkBoxLop.setBounds(270, 50, 150, 30); // Adjusted x coordinate
+        checkBoxLop.setFont(new Font("Arial", Font.BOLD, 14));
+
+        checkBoxHS = new JCheckBox("Học Sinh:");
+        checkBoxHS.setOpaque(false);
+        checkBoxHS.setBounds(520, 50, 150, 30); // Adjusted x coordinate
+        checkBoxHS.setFont(new Font("Arial", Font.BOLD, 14));
+        checkBoxHS.setEnabled(false);  // Initially disabled
     
-        radioButtonLop = new JRadioButton("Lớp:");
-        radioButtonLop.setOpaque(false);
-        radioButtonLop.setBounds(270, 50, 150, 30); // Adjusted x coordinate
-        radioButtonLop.setFont(new Font("Arial", Font.BOLD, 14));
+        // radioButtonLop = new JRadioButton("Lớp:");
+        // radioButtonLop.setOpaque(false);
+        // radioButtonLop.setBounds(270, 50, 150, 30); // Adjusted x coordinate
+        // radioButtonLop.setFont(new Font("Arial", Font.BOLD, 14));
     
-        radioButtonHS = new JRadioButton("Học Sinh:");
-        radioButtonHS.setOpaque(false);
-        radioButtonHS.setBounds(520, 50, 150, 30); // Adjusted x coordinate
-        radioButtonHS.setFont(new Font("Arial", Font.BOLD, 14));
+        // radioButtonHS = new JRadioButton("Học Sinh:");
+        // radioButtonHS.setOpaque(false);
+        // radioButtonHS.setBounds(520, 50, 150, 30); // Adjusted x coordinate
+        // radioButtonHS.setFont(new Font("Arial", Font.BOLD, 14));
+        // radioButtonHS.setEnabled(false);
     
         // Group the radio buttons
         ButtonGroup buttonGroup = new ButtonGroup();
-        buttonGroup.add(radioButtonHS);
-        buttonGroup.add(radioButtonLop);
+        // buttonGroup.add(radioButtonHS);
+        // buttonGroup.add(radioButtonLop);
+        // buttonGroup.add(checkBoxHS);
+        // buttonGroup.add(checkBoxLop);
     
         txtHeader = new JTextField();
         txtHeader.setBounds(250, 100, 300, 30); // Adjusted x coordinate
@@ -110,9 +125,9 @@ public class gv_guiTB extends JPanel{
         txtHS.setHorizontalAlignment(JTextField.CENTER);
         txtHS.setBounds(635, 50, 150, 30); // Adjusted x coordinate
     
-        radioButtonHS.addActionListener(new RadioBtnHSListener());
+        checkBoxHS.addActionListener(new CheckBoxHSListener());
     
-        radioButtonLop.addActionListener(new RadioBtnLopListener());
+        checkBoxLop.addActionListener(new CheckBoxLopListener());
     
         btnGui = new JButton("Gửi"); // Create button
         btnGui.setBounds(600, 550, 100, 30); // Adjusted x coordinate
@@ -120,8 +135,8 @@ public class gv_guiTB extends JPanel{
             mainPanel.add(jLabel);
         }
         btnGui.addActionListener(new SendNotiBtnListener());
-        mainPanel.add(radioButtonHS);
-        mainPanel.add(radioButtonLop);
+        mainPanel.add(checkBoxHS);
+        mainPanel.add(checkBoxLop);
         mainPanel.add(txtHeader);
         mainPanel.add(txtContent);
         mainPanel.add(txtLop);
@@ -163,7 +178,7 @@ public class gv_guiTB extends JPanel{
         return panel;
         }
 
-    private JPanel createHSTablePanel() {
+    private JPanel createHSTablePanel(String lopid) {
         JPanel panel = new JPanel(new BorderLayout());
 
         dspc = pcbus.search(magiaovien, null, null);
@@ -174,9 +189,9 @@ public class gv_guiTB extends JPanel{
         table.setModel(tblModel);
         JScrollPane scrollPane = new JScrollPane(table);
         
-        for (PhanCongDTO pc : dspc){
-            String idlop = pc.getLopID();
-            dspl = plbus.search(null,idlop,idnam );
+        // for (PhanCongDTO pc : dspc){
+        //     String idlop = pc.getLopID();
+            dspl = plbus.search(null,lopid,idnam );
             for (PhanLopDTO pl : dspl){
                 String idhs = pl.getHocSinhID();
                 String tenhs = hsbus.get(idhs).getTenHocSinh();
@@ -188,75 +203,73 @@ public class gv_guiTB extends JPanel{
                 tblModel.setColumnIdentifiers(columnNames);
                 tblModel.addRow(rowData);
             }
-        }
+        // }
 
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
         }
 
-        private class RadioBtnLopListener implements ActionListener{
+        private class CheckBoxLopListener implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Create a custom panel with a table
-                JPanel panel = createLopTablePanel();
-                // Show the panel in JOptionPane
-                int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Lớp", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (result == JOptionPane.OK_OPTION) {
-                    // OK button clicked, retrieve data from the table
-                    JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
-                    int selectedRow = table.getSelectedRow();
-                    if (selectedRow != -1) { // Ensure a row is selected
-                        Object selectedID = table.getValueAt(selectedRow, 0);
-                        Object selectedName = table.getValueAt(selectedRow, 1);
-                        // Do something with the selected data
-                        System.out.println("Selected ID: " + selectedID);
-                        System.out.println("Selected Name: " + selectedName);
-    
-                        idlop = String.valueOf(selectedID);
-                        txtLop.setText(String.valueOf(selectedName));
-                        txtHS.setText("");
-                    } else {
-                        // No row selected, handle this case if needed
+                if (checkBoxLop.isSelected()) {
+                    // Create a custom panel with a table
+                    JPanel panel = createLopTablePanel();
+                    // Show the panel in JOptionPane
+                    int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Lớp", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (result == JOptionPane.OK_OPTION) {
+                        JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
+                        int selectedRow = table.getSelectedRow();
+                        if (selectedRow != -1) { 
+                            Object selectedID = table.getValueAt(selectedRow, 0);
+                            Object selectedName = table.getValueAt(selectedRow, 1);
+        
+                            idlop = String.valueOf(selectedID);
+                            txtLop.setText(String.valueOf(selectedName));
+                            checkBoxHS.setEnabled(true);  // Enable checkBoxHS after selecting the class
+                        }
                     }
+                } else {
+                    checkBoxHS.setEnabled(false);  // Disable checkBoxHS if no class selected
+                    txtLop.setText("");
+                    txtHS.setText("");
+                    checkBoxHS.setSelected(false);;
                 }
             }
         }
         
-        private class RadioBtnHSListener implements ActionListener{
+        private class CheckBoxHSListener implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Create a custom panel with a table
-                JPanel panel = createHSTablePanel();
-                // Show the panel in JOptionPane
-                int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Học sinh", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (result == JOptionPane.OK_OPTION) {
-                    // OK button clicked, retrieve data from the table
-                    JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
-                    int selectedRow = table.getSelectedRow();
-                    if (selectedRow != -1) { // Ensure a row is selected
-                        Object selectedID = table.getValueAt(selectedRow, 0);
-                        Object selectedName = table.getValueAt(selectedRow, 1);
-                        // Do something with the selected data
-                        System.out.println("Selected ID: " + selectedID);
-                        System.out.println("Selected Name: " + selectedName);
-    
-                        idhs = String.valueOf(selectedID);
-                        txtHS.setText(String.valueOf(selectedName));
-                        txtLop.setText("");
-                    } else {
-                        // No row selected, handle this case if needed
+                if (checkBoxHS.isSelected()) {
+                    JPanel panel = createHSTablePanel(idlop);
+                    int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Học sinh", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (result == JOptionPane.OK_OPTION) {
+                        JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
+                        int selectedRow = table.getSelectedRow();
+                        if (selectedRow != -1) {
+                            Object selectedID = table.getValueAt(selectedRow, 0);
+                            Object selectedName = table.getValueAt(selectedRow, 1);
+        
+                            idhs = String.valueOf(selectedID);
+                            txtHS.setText(String.valueOf(selectedName));
+                        }
                     }
+                }
+                else{
+                    txtHS.setText("");
                 }
             }
         }
+        
     private class SendNotiBtnListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             String loaitb = "";
-            if (radioButtonLop.isSelected()) {
-                loaitb = idlop;
-            } else if (radioButtonHS.isSelected()) {
+            if (checkBoxLop.isSelected()&& checkBoxHS.isSelected()) {
                 loaitb = idhs;
+            } else if( checkBoxLop.isSelected()) {
+                loaitb = idlop;
             } else {
                 JOptionPane.showMessageDialog(null, "Bạn chưa chọn đối tượng muốn gửi thông báo");
                 return;
@@ -274,10 +287,12 @@ public class gv_guiTB extends JPanel{
             resetText();
         }
         public void resetText(){
+            txtHS.setText("");
+            txtLop.setText("");
             txtContent.setText("");
             txtHeader.setText("");
-            radioButtonHS.setSelected(false);
-            radioButtonLop.setSelected(false);
+            checkBoxHS.setSelected(false);
+            checkBoxLop.setSelected(false);
 
         }
     }
