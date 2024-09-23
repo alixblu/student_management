@@ -207,14 +207,23 @@ public class phanquyen extends JPanel implements ActionListener {
                         JOptionPane.WARNING_MESSAGE);
             } else {
                 String maquyen = (String) t.getValueAt(selectedRow, 0);
-                int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc xóa quyền này không", "Xác nhận",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                if (result == JOptionPane.YES_OPTION) {
-                    model.removeRow(selectedRow);
-                    pqBUS.deleteQuyen(maquyen);
-                    pqBUS.deleteChitietquyen(maquyen);
-                    JOptionPane.showMessageDialog(this, "Xóa thành công");
+                if("admin".equals(maquyen)) {
+              	  JOptionPane.showMessageDialog(this, 
+                            "Admin không được phép xóa!", 
+                            "Thông báo", 
+                            JOptionPane.WARNING_MESSAGE);
+                    }else {
+              
+                    	int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc xóa quyền này không", "Xác nhận",
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE);
+                        if (result == JOptionPane.YES_OPTION) {
+                            model.removeRow(selectedRow);
+                            pqBUS.deleteQuyen(maquyen);
+                            pqBUS.deleteChitietquyen(maquyen);
+                            JOptionPane.showMessageDialog(this, "Xóa thành công");
+                        }
+                    
                 }
             }
         }

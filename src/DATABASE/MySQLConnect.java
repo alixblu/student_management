@@ -22,7 +22,7 @@ public class MySQLConnect {
     private String url="jdbc:mysql://localhost:3306/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL";
     //private String url="jdbc:mysql://localhost:3306/hung";
     private String user="root";
-    private String password="";
+    private String password="minhman1";
     private Connection conn=null;
     private Statement st=null;
   

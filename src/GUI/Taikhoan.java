@@ -532,18 +532,26 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
             JOptionPane.showMessageDialog(this, "Không tồn tại username này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn xóa tài khoản này",
-                "Xác nhận",
-                JOptionPane.YES_NO_OPTION,
+        if("admin".equals(role)) {
+      	  JOptionPane.showMessageDialog(this, 
+                    "Admin không được phép xóa!", 
+                    "Thông báo", 
+                    JOptionPane.WARNING_MESSAGE);
+            }else {
+      
+      int result = JOptionPane.showConfirmDialog(this,
+              "Bạn có chắc muốn xóa tài khoản này",
+              "Xác nhận",
+              JOptionPane.YES_NO_OPTION,
 
-                JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
-            System.out.println("Ban chon đồn ý xóa");
-            deleteRow();
-        } else if (result == JOptionPane.NO_OPTION) {
-            System.out.println("Bạn chọn không đồng ý xóa");
-        }
+              JOptionPane.QUESTION_MESSAGE);
+      if (result == JOptionPane.YES_OPTION) {
+          System.out.println("Ban chon đồn ý xóa");
+          deleteRow();
+      } else if (result == JOptionPane.NO_OPTION) {
+          System.out.println("Bạn chọn không đồng ý xóa");
+      }
+            }
     }
 
     public void btnSua_actionPerformed() {

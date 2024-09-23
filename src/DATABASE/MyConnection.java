@@ -15,7 +15,7 @@ public class MyConnection {
             con = DriverManager.getConnection(
                 "jdbc:mysql://localhost/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL", 
                 "root", 
-                ""
+                "minhman1"
             );
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
