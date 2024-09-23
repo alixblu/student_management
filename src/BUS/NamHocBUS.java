@@ -167,9 +167,9 @@ public class NamHocBUS {
         return dsnh;
     }
 
-    public void updateEnable(String namhocid){
+    public void updateEnable(){
         NamHocDAO dao = new NamHocDAO();
-        dao.updateEnable(namhocid);
+        dao.updateEnable();
     }
 
     public static void main(String[] args) {

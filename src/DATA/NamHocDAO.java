@@ -184,16 +184,15 @@ public class NamHocDAO {
         return enable; 
     }
     
-    public void updateEnable(String namhocid) {
-        String sql = "UPDATE namhoc SET enable = 1 WHERE NamHocid = ?";
-        
+    public void updateEnable() {
+        String sql = "UPDATE namhoc SET enable = 0 where 1";
         try (java.sql.Connection con = MyConnection.getConnection();
              java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, namhocid);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("đã vào dao updateEnable");
     }
 
 }
