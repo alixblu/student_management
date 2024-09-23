@@ -127,6 +127,25 @@ public class LopBUS {
     public ArrayList<LopDTO> getList() {
         return dslop;
     }
+
+    public ArrayList<String> list_TenLop()
+    {
+        ArrayList<String> arr = new LopDAO().list_Tenlop();
+        return arr;
+    }
+
+    public ArrayList<String> list_TenLop(String khoi)
+    {
+        ArrayList<String> arr = new LopDAO().list_Tenlop(khoi);
+        return arr;
+    }
+
+    public ArrayList<LopDTO> list_lop()
+    {
+        ArrayList<LopDTO> listlop = new LopDAO().list();
+        return listlop;
+    }
+    
     public static void main(String[] args) {
         // Create an instance of LopBUS
         LopBUS lopBUS = new LopBUS(1);

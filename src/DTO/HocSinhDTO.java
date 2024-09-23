@@ -11,6 +11,8 @@ public class HocSinhDTO {
     private String HocPhi;
     private String IMG;
 
+    public HocSinhDTO(){};
+    
     public HocSinhDTO(String hocSinhID, String tenHocSinh, String gioiTinh, String ngaySinh, String dienThoai,
             String diaChi) {
         HocSinhID = hocSinhID;
