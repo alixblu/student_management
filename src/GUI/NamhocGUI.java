@@ -385,10 +385,9 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         
         if(nhBUS.ktraEnabel(manamhoc) == 0){
             btnHK2.setEnabled(false);
-        }else{
+        }else if(nhBUS.ktraEnabel((manamhoc)) == 1 && tf[2].getText().equals("1") ){
             btnHK2.setEnabled(true);
         }
-
     }
 
     public void btnAdd_actionPerformed() {
@@ -409,7 +408,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         }
     
         int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn thêm" + namhoc1 +"-"+ namkt+"; năm học này",
+                "Bạn có chắc muốn thêm " + namhoc1 +"-"+ namkt+" năm học này",
                 "Xác nhận",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
