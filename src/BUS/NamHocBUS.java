@@ -1,5 +1,6 @@
 package BUS;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DATA.NamHocDAO;
@@ -166,11 +167,27 @@ public class NamHocBUS {
         return dsnh;
     }
 
+    public void updateEnable(){
+        NamHocDAO dao = new NamHocDAO();
+        dao.updateEnable();
+    }
+
     public static void main(String[] args) {
         // Create an instance of NamHocBUS
         NamHocBUS namHocBUS = new NamHocBUS(1);
     
         System.out.println(namHocBUS.getByStartYear(2024).getNamHocID());
+    }
+
+    public int ktraEnabel(String manamhoc) throws SQLException{
+        NamHocDAO dao = new NamHocDAO();
+        int enable = dao.ktraEnable(manamhoc);
+        return enable;
+    }
+    public int ktraManh(String manamhoc) throws SQLException{
+        NamHocDAO dao = new NamHocDAO();
+        int mnh = dao.ktraManh(manamhoc);
+        return mnh;
     }
     
 }

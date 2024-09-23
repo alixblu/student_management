@@ -70,7 +70,8 @@ public class phanquyenDAO {
             while (rs.next()) {
                 String machucnang = rs.getString("machucnang");
                 String tenchucnang = rs.getString("tenchucnang");
-                chucnangDTO cn = new chucnangDTO(machucnang, tenchucnang);
+                String img = rs.getString("img");
+                chucnangDTO cn = new chucnangDTO(machucnang, tenchucnang, img);
                 dsquyen.add(cn);
             }
 

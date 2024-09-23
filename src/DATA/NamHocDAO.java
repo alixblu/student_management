@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.mysql.cj.protocol.Resultset;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
@@ -28,8 +29,9 @@ public class NamHocDAO {
                 String id= rs.getString(1);
                 int bd=rs.getInt(2);
                 int kt= rs.getInt(3);
+                String hocky = rs.getString(4);
 
-                NamHocDTO ctd=new NamHocDTO(id,bd, kt);
+                NamHocDTO ctd=new NamHocDTO(id,bd, kt,hocky);
                 dsNH.add(ctd);
             }
             rs.close();
@@ -92,11 +94,13 @@ public class NamHocDAO {
     }
     //SQL thêm
     public void Add(NamHocDTO nh) {
-        String sql = "INSERT INTO namhoc (NamHocid  , NamBatDau , NamKetThuc) VALUES ( ?, ?, ?)";
+        String sql = "INSERT INTO namhoc (NamHocid  , NamBatDau , NamKetThuc , HocKy, enable) VALUES ( ?, ?, ?, ?, ?)";
         try (java.sql.PreparedStatement ps = mySQL.getConnection().prepareStatement(sql)) {
             ps.setString(1, nh.getNamHocID());
             ps.setInt(2, nh.getNamHocBatDau());
             ps.setInt(3, nh.getNamHocKetThuc());
+            ps.setString(4, nh.getHocKy());
+            ps.setInt(5, nh.getEnable());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -130,40 +134,78 @@ public class NamHocDAO {
     //     return dsnh;
     // }
 
-   public void Update(NamHocDTO nh) {
-    String sql = "UPDATE namhoc SET NamBatDau = ?, NamKetThuc = ? WHERE NamHocid = ?";
-    java.sql.Connection con = null;
-    java.sql.PreparedStatement ps = null;
-    
-    try {
-        con = MyConnection.getConnection();
-        if (con != null) {
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, nh.getNamHocBatDau());
-            ps.setInt(2, nh.getNamHocKetThuc());
-            ps.setString(3, nh.getNamHocID());
-            
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Successfully updated NamHocID: " + nh.getNamHocID());
-            } else {
-                System.out.println("No record found with NamHocID: " + nh.getNamHocID());
-            }
-        } else {
-            System.out.println("Failed to establish connection.");
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
+    public void Update(NamHocDTO nh) {
+        String sql = "UPDATE namhoc SET NamBatDau = ?, NamKetThuc = ? WHERE NamHocid = ?, WHERE HocKy = ?";
+        java.sql.Connection con = null;
+        java.sql.PreparedStatement ps = null;
+
         try {
-            if (ps != null) ps.close();
-            if (con != null) MyConnection.closeConnection(con);
+            con = MyConnection.getConnection();
+            if (con != null) {
+                ps = con.prepareStatement(sql);
+                ps.setInt(1, nh.getNamHocBatDau());
+                ps.setInt(2, nh.getNamHocKetThuc());
+                ps.setString(3, nh.getNamHocID());
+                ps.setString(4, nh.getHocKy());
+
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected > 0) {
+                    System.out.println("Successfully updated NamHocID: " + nh.getNamHocID());
+                } else {
+                    System.out.println("No record found with NamHocID: " + nh.getNamHocID());
+                }
+            } else {
+                System.out.println("Failed to establish connection.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (con != null)
+                    MyConnection.closeConnection(con);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int ktraEnable(String manamhoc) throws SQLException {
+        int enable = 0; // Khởi tạo biến enable
+    
+        String sql = "select enable from namhoc where NamHocid = '"+manamhoc+"'";
+    
+        ResultSet rs = mySQL.executeQuery(sql);
+        
+        if (rs.next()) {
+            enable = rs.getInt(1); 
+        }
+        return enable; 
+    }
+    public int ktraManh(String manamhoc) throws SQLException {
+        int enable = 0; 
+    
+        String sql = "select enable from namhoc where NamHocid = '"+manamhoc+"'";
+    
+        ResultSet rs = mySQL.executeQuery(sql);
+        
+        if (rs.next()) {
+            enable = rs.getInt(1); 
+            return 1;
+        }
+        return 0; 
+    }
+    
+    public void updateEnable() {
+        String sql = "UPDATE namhoc SET enable = 0 where 1";
+        try (java.sql.Connection con = MyConnection.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("đã vào dao updateEnable");
     }
-}
-
-
 
 }

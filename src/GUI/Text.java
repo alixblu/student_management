@@ -140,7 +140,8 @@ public class Text extends JFrame implements MouseListener, ActionListener {
                     chucnangDTO cn = listchucnang.get(j);
                     if (ctq.getMachucnang().equals(cn.getMachucnang())) {
                         System.out.println(cn.getTenchucnang());
-                        String text = cn.getTenchucnang() + ":Shop_20px.png:Shop_20px_active.png";
+                        // String text = cn.getTenchucnang() + ":Shop_20px.png:Shop_20px_active.png";
+                        String text = cn.getTenchucnang() + cn.getImg();
                         navItem.add(text);
                         macn.add(cn.getMachucnang());
                         System.out.println(cn.getMachucnang());
