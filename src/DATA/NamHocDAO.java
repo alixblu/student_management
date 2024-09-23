@@ -183,6 +183,19 @@ public class NamHocDAO {
         }
         return enable; 
     }
+    public int ktraManh(String manamhoc) throws SQLException {
+        int enable = 0; 
+    
+        String sql = "select enable from namhoc where NamHocid = '"+manamhoc+"'";
+    
+        ResultSet rs = mySQL.executeQuery(sql);
+        
+        if (rs.next()) {
+            enable = rs.getInt(1); 
+            return 1;
+        }
+        return 0; 
+    }
     
     public void updateEnable() {
         String sql = "UPDATE namhoc SET enable = 0 where 1";

@@ -466,7 +466,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
             Row headerRow = sheet.createRow(0); // Header row at index 0
-            String[] headers = { "Mã năm học", "Năm học bắt đầu", "Năm học kết thúc" };
+            String[] headers = { "Mã năm học", "Năm học bắt đầu", "Năm học kết thúc" , "Học kỳ" };
 
             // Creating header cells
             for (int i = 0; i < headers.length; i++) {
@@ -483,7 +483,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
                 row.createCell(0).setCellValue(namhoc.getNamHocID());
                 row.createCell(1).setCellValue(namhoc.getNamHocBatDau());
                 row.createCell(2).setCellValue(namhoc.getNamHocKetThuc());
-
+                row.createCell(3).setCellValue(namhoc.getHocKy());
             }
             // String path = "D:/Coding/N2_HK2/DAJAVA/java_nhom_9/Excel/hsss.xlsx";
             File file = new File(path);
@@ -509,7 +509,13 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
     }
     
 
-    public void btnHK2_actionPerformed(){
+    public void btnHK2_actionPerformed() throws SQLException{
+        String manamhoc = tf[0].getText(); 
+        String ma2 = manamhoc.substring(0, manamhoc.length() - 2) + "02";
+        if (nhBUS.ktraManh(ma2) == 1) {
+            JOptionPane.showMessageDialog(t, "Học kỳ 2 của năm học " +tf[1].getText()+" dã được tạo");
+            return;
+        }
         
         int result = JOptionPane.showConfirmDialog(this,
                 "Bạn muốn thêm HK2 cho năm học : " + tf[1].getText(),
@@ -605,9 +611,12 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
                 e1.printStackTrace();
             }
         } else if (e.getSource() == btnHK2) {
-
-            btnHK2_actionPerformed();
-
+            try {
+                btnHK2_actionPerformed();
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
 
     }

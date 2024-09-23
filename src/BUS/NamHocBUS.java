@@ -184,5 +184,10 @@ public class NamHocBUS {
         int enable = dao.ktraEnable(manamhoc);
         return enable;
     }
+    public int ktraManh(String manamhoc) throws SQLException{
+        NamHocDAO dao = new NamHocDAO();
+        int mnh = dao.ktraManh(manamhoc);
+        return mnh;
+    }
     
 }
