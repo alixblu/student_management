@@ -83,9 +83,8 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author vhuyn
  */
 public final class NamhocGUI extends JPanel implements MouseListener, ActionListener {
-    private String manamhoc, namhocbatdau, namhocketthuc;
-    private JLabel lblManh, lblTenhs, lblGioitinh, lblDiachi;
-    private JButton btnThem, btnXoa, btnSua, btnFind, btnReset, btnExpExcel;
+    private String manamhoc, namhocbatdau, namhocketthuc, hocky;
+    private JButton btnThem, btnXoa, btnSua, btnFind, btnReset, btnExpExcel , btnHK2;
     private DefaultTableModel tblmodel;
     // private JTable tbl;
     private JScrollPane scrollpane;
@@ -104,7 +103,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
     JDateChooser dateChooser;
     JComboBox<String> genderComboBox;
     NamHocBUS nhBUS = new NamHocBUS();
-    private static String pathAnhdd = "";
+    Object[][] rowData;
 
     ChangeAcc_BUS accBUS = new ChangeAcc_BUS();
 
@@ -114,9 +113,9 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         init();
         btnThem.addMouseListener(this);
         btnXoa.addMouseListener(this);
-        btnSua.addMouseListener(this);
+        // btnSua.addMouseListener(this);
         btnThem.addActionListener(this);
-        btnSua.addActionListener(this);
+        // btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
         btnFind.addActionListener(this);
         btnFind.addMouseListener(this);
@@ -124,6 +123,8 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         JsearchText.addMouseListener(this);
         btnExpExcel.addActionListener(this);
         btnExpExcel.addMouseListener(this);
+        btnHK2.addMouseListener(this);
+        btnHK2.addActionListener(this);
     }
 
     public void init() throws SQLException {
@@ -228,17 +229,19 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         btnXoa.setPreferredSize(new Dimension(155, 40));
         btnXoa.setBorder(raisedBevel);
 
-        java.net.URL imageURL_Edit = getClass().getResource("/image/btnEdit.png");
-        ImageIcon orgIcon_Edit = new ImageIcon(imageURL_Edit);
-        Image scaleImg_Edit = orgIcon_Edit.getImage().getScaledInstance(155, 40, Image.SCALE_SMOOTH);
+        // java.net.URL imageURL_Edit = getClass().getResource("/image/btnEdit.png");
+        // ImageIcon orgIcon_Edit = new ImageIcon(imageURL_Edit);
+        // Image scaleImg_Edit = orgIcon_Edit.getImage().getScaledInstance(155, 40, Image.SCALE_SMOOTH);
 
-        btnSua = new JButton(new ImageIcon(scaleImg_Edit));
-        btnSua.setPreferredSize(new Dimension(155, 40));
-        btnSua.setBorder(raisedBevel);
+        // btnSua = new JButton(new ImageIcon(scaleImg_Edit));
+        // btnSua.setPreferredSize(new Dimension(155, 40));
+        // btnSua.setBorder(raisedBevel);
 
         java.net.URL imageURL_Find = getClass().getResource("/image/btnsearch_qlhs1.png");
         ImageIcon orgIcon_Find = new ImageIcon(imageURL_Find);
         Image scaleImg_Find = orgIcon_Find.getImage().getScaledInstance(155, 40, Image.SCALE_SMOOTH);
+        
+        
         btnFind = new JButton(new ImageIcon(scaleImg_Find));
         btnFind.setPreferredSize(new Dimension(155, 40));
         btnFind.setBorder(raisedBevel);
@@ -251,53 +254,52 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         btnExpExcel.setBorder(raisedBevel);
         btnExpExcel.setBackground(myColor);
 
+        
+        // java.net.URL imageURL_TaoHK2 = getClass().getResource("/image/export_excel.png");
+        // ImageIcon orgIcon_TaoHK2 = new ImageIcon(imageURL_TaoHK2);
+        // Image scaleImg_TaoHK2 = orgIcon_TaoHK2.getImage().getScaledInstance(230, 100, Image.SCALE_SMOOTH);
+        // btnHK2 = new JButton(new ImageIcon(scaleImg_TaoHK2));
+        btnHK2 = new JButton("Tạo HK2 tương ứng");
+        btnHK2.setPreferredSize(new Dimension(155, 40));
+        btnHK2.setBorder(raisedBevel);
+        btnHK2.setEnabled(false);
+        // btnHK2.setBackground(myColor);
+
+
+
+
+
         Pchucnang.setBackground(myColor);
         defaultColor = btnThem.getBackground();
         Pchucnang.add(btnThem);
         Pchucnang.add(btnXoa);
-        Pchucnang.add(btnSua);
+        // Pchucnang.add(btnSua);
         Pchucnang.add(btnFind);
         Pchucnang.add(btnExpExcel);
+        Pchucnang.add(btnHK2);
         return Pchucnang;
     }
 
     public JPanel JHocsinh() {
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
-        String[] arrHocsinh = { "Mã năm học", "Năm bắt đầu", "Năm kết thúc" };
+        String[] arrHocsinh = { "Mã năm học", "Năm bắt đầu", "Năm kết thúc", "Học kỳ" };
         int length = arrHocsinh.length;
         tf = new JTextField[length];
         buttons = new JButton[length];
-        Phocsinh.setLayout(null);
+        // Phocsinh.setLayout(null);
         int toadoXbutton = 10;
         int toadoYbutton = 10;
         int toadoXTextfield = 150;
         int toadoYTextfield = 10;
-        int x = 230;
+        int x = 250;
         int y = 15;
         for (int i = 0; i < arrHocsinh.length; i++) {
-
-            if (i == 6) {
-                buttons[i] = new JButton(arrHocsinh[i]);
-                buttons[i].addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        chooseImage();
-                    }
-                });
-                buttons[i].setBounds(toadoXbutton, toadoYbutton, 120, 30);
-                buttons[i].setForeground(Color.RED);
-                buttons[i].setHorizontalAlignment(JButton.CENTER);
-                buttons[i].setName("btn" + i);
-                Phocsinh.add(buttons[i]);
-            } else {
-                buttons[i] = new JButton(arrHocsinh[i]);
-                buttons[i].setBounds(toadoXbutton +25, toadoYbutton +30, 120, 30);
-                buttons[i].setHorizontalAlignment(JButton.CENTER);
-                buttons[i].setName("btn" + i);
-            }
-
-            toadoYbutton = toadoYbutton + 50;
+            buttons[i] = new JButton(arrHocsinh[i]);
+            buttons[i].setBounds(toadoXbutton +25, toadoYbutton +30, 120, 30);
+            buttons[i].setHorizontalAlignment(JButton.CENTER);
+            buttons[i].setName("btn" + i);
+            toadoYbutton = toadoYbutton + 35;
             Phocsinh.add(buttons[i]);
 
             {
@@ -306,11 +308,21 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
                 tf[i].setBorder(border);
                 tf[i].setName("text" + i);
-                toadoYTextfield = toadoYTextfield + 50;
+                toadoYTextfield = toadoYTextfield + 35;
                 Phocsinh.add(tf[i]);
             }
             y = y + 35;
         }
+        tf[0].setEditable(false);
+        tf[0].setForeground(Color.orange);
+        tf[0].setBackground(Color.gray);
+        tf[2].setEditable(false);
+        tf[2].setBackground(Color.gray);
+        tf[2].setForeground(Color.orange);
+        tf[3].setEditable(false);
+        tf[3].setForeground(Color.orange);
+        tf[3].setBackground(Color.gray);
+
         x = x + 180;
         JPanel Pchucnang = JChucnang();
         Pchucnang.setBounds(510, 25, 290, 150);
@@ -327,17 +339,18 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 400));
-        String[] header = { "Mã năm học", "Năm bắt đầu", "Năm kết thúc" };
+        String[] header = { "Mã năm học", "Năm bắt đầu", "Năm kết thúc" , "Học kỳ" };
 
         if (nhBUS.getList() == null)
             nhBUS.listNH();
         ArrayList<NamHocDTO> nh = nhBUS.getList();
-        Object[][] rowData = new Object[nh.size()][7];
+        rowData = new Object[nh.size()][7];
         for (int i = 0; i < nh.size(); i++) {
             NamHocDTO namhoc = nh.get(i);
             rowData[i][0] = namhoc.getNamHocID();
             rowData[i][1] = namhoc.getNamHocBatDau();
             rowData[i][2] = namhoc.getNamHocKetThuc();
+            rowData[i][3] = namhoc.getHocKy();
         }
 
         Font font = new Font("Arial", Font.BOLD, 12);
@@ -357,6 +370,9 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
                     tableMouseClicked(evt);
                 } catch (ParseException ex) {
                     Logger.getLogger(QuanLiHocSinh.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
             }
         });
@@ -364,45 +380,16 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         return scrollpane;
     }
 
-    public void chooseImage() {
-        JFileChooser fileChooser = new JFileChooser();
-        // Thiết lập chế độ chỉ cho phép chọn file
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        // Hiển thị hộp thoại chọn file
-        int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            // Lấy đường dẫn của tập tin hình ảnh được chọn
-            String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
-            // Hiển thị đường dẫn trong JTextField
-            String fileName = fileChooser.getSelectedFile().getName();
-            pathAnhdd = fileName;
-            tf[6].setText(fileName);
-
-            // Tạo một ImageIcon từ đường dẫn hình ảnh
-            ImageIcon imageIcon = new ImageIcon(imagePath);
-
-            // Chỉnh kích thước của hình ảnh để phù hợp với JLabel
-            // Image image = imageIcon.getImage().getScaledInstance(lblimg.getWidth(),
-            // lblimg.getHeight(),
-            // Image.SCALE_SMOOTH);
-
-            // Tạo một ImageIcon mới từ hình ảnh đã được điều chỉnh kích thước
-            // ImageIcon scaledImageIcon = new ImageIcon(image);
-
-            // Hiển thị hình ảnh trên JLabel
-            // lblimg.setIcon(scaledImageIcon);
-
-        }
-    }
 
     public void addRow() {
 
-        String NamHocid = tf[0].getText();
         int NamBatDau = Integer.parseInt(tf[1].getText());
-        int NamKetThuc = Integer.parseInt(tf[2].getText());
-        NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc);
+        int NamKetThuc = NamBatDau +1;
+        String NamHocid = NamBatDau+""+NamKetThuc+"01";
+
+        NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc,"1" , 0);
         nhBUS.addNH(namhoc);
-        Object[] rowData = { NamHocid, NamBatDau, NamKetThuc };
+        Object[] rowData = { NamHocid, NamBatDau, NamKetThuc, 1 };
         tblmodel.addRow(rowData);
         clearTextFields();
     }
@@ -417,70 +404,99 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         clearTextFields();
     }
 
-    public void updateRow() {
-
-        String NamHocid = tf[0].getText();
-        int NamBatDau = Integer.parseInt(tf[1].getText());
-        int NamKetThuc = Integer.parseInt(tf[2].getText());
-        NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc);
-        nhBUS.updateNH(namhoc);
-        Object[] rowData = { NamHocid, NamBatDau, NamKetThuc };
-        int row = t.getSelectedRow();
-        tblmodel.removeRow(row);
-        tblmodel.addRow(rowData);
-
+    public void updateEnable(String namhocid){
+        nhBUS.updateEnable(namhocid);
     }
+    // public void updateRow() {
+
+    //     String NamHocid = tf[0].getText();
+    //     int NamBatDau = Integer.parseInt(tf[1].getText());
+    //     int NamKetThuc = Integer.parseInt(tf[2].getText());
+    //     NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc);
+    //     nhBUS.updateNH(namhoc);
+    //     Object[] rowData = { NamHocid, NamBatDau, NamKetThuc };
+    //     int row = t.getSelectedRow();
+    //     tblmodel.removeRow(row);
+    //     tblmodel.addRow(rowData);
+
+    // }
 
     public void clearTextFields() {
         tf[0].setText("");
         tf[1].setText("");
         tf[2].setText("");
+        tf[3].setText("");
+        btnHK2.setEnabled(false);
 
     }
 
     public boolean checkEmpty() {
-        boolean isEmpty = tf[0].getText().isEmpty() ||
-                tf[1].getText().isEmpty() ||
-                tf[2].getText().isEmpty();
+        boolean isEmpty = tf[1].getText().isEmpty();
+        //  ||
+                // tf[1].getText().isEmpty() ||
+                // tf[2].getText().isEmpty();
 
         return isEmpty;
     }
 
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) throws ParseException {
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) throws ParseException, SQLException {
         int row = t.getSelectedRow();
         manamhoc = (String) t.getValueAt(row, 0);
         namhocbatdau = (String.valueOf(t.getValueAt(row, 1)));
         namhocketthuc = (String.valueOf(t.getValueAt(row, 2)));
+        hocky = (String.valueOf(t.getValueAt(row, 3)));
 
         tf[0].setText(manamhoc);
         tf[1].setText(namhocbatdau);
         tf[2].setText(namhocketthuc);
+        tf[3].setText(hocky);
+
+        
+        if(nhBUS.ktraEnabel(manamhoc) == 0){
+            btnHK2.setEnabled(true);
+        }else{
+            btnHK2.setEnabled(false);
+        }
 
     }
 
     public void btnAdd_actionPerformed() {
         if (checkEmpty()) {
-            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error",
+            JOptionPane.showMessageDialog(this, "Hãy điền năm học bắt đầu", "Error",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+        if (nhBUS.getList() == null)
+            nhBUS.listNH();
+            int namhoc1 = Integer.parseInt(tf[1].getText());
+        ArrayList<NamHocDTO> nh = nhBUS.getList();
+        for (int i = 0; i < nh.size(); i++) {
+            NamHocDTO namhoc = nh.get(i);
+            System.out.println(namhoc);
+            if (namhoc1 == namhoc.getNamHocBatDau()) { 
+                System.out.println("đã vào");
+                JOptionPane.showMessageDialog(this, "Năm học đã tồn tại", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+    
         int result = JOptionPane.showConfirmDialog(this,
                 "Bạn có chắc muốn Thêm năm học này",
                 "Xác nhận",
                 JOptionPane.YES_NO_OPTION,
-
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(this,
                     "Thêm thành công",
                     "Chức năng thêm",
                     JOptionPane.INFORMATION_MESSAGE);
-            System.out.println("Ban chon them");
+            System.out.println("Bạn chọn thêm");
             tf[0].requestFocus();
             // autoCreateAccount();
             addRow();
         }
     }
+    
 
     public void btnDelete_actionPerformed() {
         String manh = tf[0].getText();
@@ -529,7 +545,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
             System.out.println("Ban chọn đồng ý sửa");
-            updateRow();
+            // updateRow();
         } else if (result == JOptionPane.NO_OPTION) {
             System.out.println("Bạn chọn không đồng ý sửa");
         }
@@ -619,37 +635,57 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
 
         }
     }
+    
 
-    // public void autoCreateAccount() {
-    // accBUS = new ChangeAcc_BUS();
-    // String username = tf[0].getText();
-    // String password = tf[5].getText();
-    // Account_DTO acc = new Account_DTO(username, password);
-    // accBUS.Add(acc);
-    // }
+    public void btnHK2_actionPerformed(){
+        String namhocid = tf[0].getText();
+        if (checkEmpty()) {
+            JOptionPane.showMessageDialog(this, "Hãy điền năm học cần tạo HK2", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int result = JOptionPane.showConfirmDialog(this,
+                "Bạn muốn thêm HK2 cho năm học : " + tf[1].getText() + "-" + tf[2].getText(),
+                "Xác nhận",
+                JOptionPane.YES_NO_OPTION,
+
+                JOptionPane.QUESTION_MESSAGE);
+        if (result == JOptionPane.YES_OPTION) {
+            int NamBatDau = Integer.parseInt(tf[1].getText());
+            int NamKetThuc = NamBatDau + 1;
+            String NamHocid = NamBatDau + "" + NamKetThuc + "02";
+
+            NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc, "2", 1);
+            nhBUS.addNH(namhoc);
+            Object[] rowData = { NamHocid, NamBatDau, NamKetThuc, 2 };
+            tblmodel.addRow(rowData);
+            clearTextFields();
+            btnHK2.setEnabled(false);
+            updateEnable(namhocid);
+        } else if (result == JOptionPane.NO_OPTION) {
+            System.out.println("Bạn chọn không thêm HK2");
+        }
+    }
+
+
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == JsearchText) {
             clearTextFields();
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override
@@ -670,9 +706,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(Color.green);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       
     }
 
     @Override
@@ -688,9 +722,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         } else if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(defaultColor);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override
@@ -721,6 +753,10 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
+        }else if(e.getSource() == btnHK2){
+            
+            btnHK2_actionPerformed();
+
         }
 
     }
