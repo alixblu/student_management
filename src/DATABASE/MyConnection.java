@@ -13,7 +13,7 @@ public class MyConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3307/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL", 
+                "jdbc:mysql://localhost:3306/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL", 
                 "root", 
                 ""
             );
