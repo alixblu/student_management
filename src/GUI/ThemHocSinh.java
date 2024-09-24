@@ -211,6 +211,11 @@ public class ThemHocSinh extends JFrame {
                         JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin", "Thông báo",  JOptionPane.ERROR_MESSAGE);
                         return ;
                     }
+                    else if(checkSDT(textField_sdt.getText())==false)
+                    {
+                        JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!", "Thông báo",  JOptionPane.ERROR_MESSAGE);
+                        return ;
+                    }
                     int result = JOptionPane.showConfirmDialog(null, 
                     "Bạn chắc chắn muốn thêm học sinh này?",
                     "Xác nhận",
@@ -340,6 +345,15 @@ public class ThemHocSinh extends JFrame {
         this.setVisible(true);
 	}
 
+   
+    public boolean checkSDT(String sdt) {
+        // Biểu thức chính quy để kiểm tra số điện thoại, ví dụ: 10-11 chữ số.
+        String regex = "^[0-9]{10,11}$";
+        
+        // Kiểm tra xem sdt có khớp với biểu thức chính quy hay không
+        return sdt.matches(regex);
+    }
+    
     public void chooseImage() {
         JFileChooser fileChooser = new JFileChooser();
         // Thiết lập chế độ chỉ cho phép chọn file
