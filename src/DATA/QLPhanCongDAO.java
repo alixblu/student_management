@@ -14,10 +14,10 @@ public class QLPhanCongDAO {
 
     public ArrayList<QLPhanCongDTO> list() {
         ArrayList<QLPhanCongDTO> dspc = new ArrayList<>();
-        String sql = "SELECT g.GiaoVienid, g.TenGiaoVien, m.TenMonHoc, l.TenLop " +
+        String sql = "SELECT g.GiaoVienid, g.TenGiaoVien, l.TenLop " +
                 "FROM phancong pc " +
                 "JOIN giaovien g ON pc.GiaoVienid = g.GiaoVienid " +
-                "JOIN monhoc m ON pc.MonHocid = m.MonHocid " +
+                // "JOIN monhoc m ON pc.MonHocid = m.MonHocid " +
                 "JOIN lop l ON pc.Lopid = l.Lopid " +
                 "WHERE pc.enable = 1";
 
@@ -27,8 +27,8 @@ public class QLPhanCongDAO {
                 String magv = rs.getString("GiaoVienid");
                 String tengv = rs.getString("TenGiaoVien");
                 String tenlop = rs.getString("TenLop");
-                String tenmon = rs.getString("TenMonHoc");
-                QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop, tenmon);
+                // String tenmon = rs.getString("TenMonHoc");
+                QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop);
 
                 dspc.add(pc);
             }
@@ -41,20 +41,20 @@ public class QLPhanCongDAO {
 
     public void Update(QLPhanCongDTO pc) {
         MySQLConnect mySQL = new MySQLConnect();
-        String mamonhoc = null;
+        // String mamonhoc = null;
         String malop = null;
 
-        String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
-        try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
-            ps1.setString(1, pc.getMon());
-            try (ResultSet rs1 = ps1.executeQuery()) {
-                if (rs1.next()) {
-                    mamonhoc = rs1.getString("MonHocid");
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi ở QLPCBUS trong phần MonHoc: " + e.getMessage());
-        }
+        // String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
+        // try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
+        //     ps1.setString(1, pc.getMon());
+        //     try (ResultSet rs1 = ps1.executeQuery()) {
+        //         if (rs1.next()) {
+        //             mamonhoc = rs1.getString("MonHocid");
+        //         }
+        //     }
+        // } catch (SQLException e) {
+        //     System.err.println("Lỗi ở QLPCBUS trong phần MonHoc: " + e.getMessage());
+        // }
 
         String sql2 = "SELECT Lopid FROM lop WHERE TenLop = ?";
         try (PreparedStatement ps2 = mySQL.getConnection().prepareStatement(sql2)) {
@@ -69,7 +69,7 @@ public class QLPhanCongDAO {
         }
 
         String sql = "UPDATE phancong SET ";
-        sql += "MonHocid = '" + mamonhoc + "' ,";
+        // sql += "MonHocid = '" + mamonhoc + "' ,";
         sql += "Lopid = '" + malop + "'";
         sql += "WHERE GiaoVienid='" + pc.getMagv() + "'";
         mySQL.executeUpdate(sql);
@@ -81,17 +81,17 @@ public class QLPhanCongDAO {
         String mamonhoc = null;
         String malop = null;
 
-        String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
-        try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
-            ps1.setString(1, pc.getMon());
-            try (ResultSet rs1 = ps1.executeQuery()) {
-                if (rs1.next()) {
-                    mamonhoc = rs1.getString("MonHocid");
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi ở QLPCBUS trong phần MonHoc: " + e.getMessage());
-        }
+        // String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
+        // try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
+        //     ps1.setString(1, pc.getMon());
+        //     try (ResultSet rs1 = ps1.executeQuery()) {
+        //         if (rs1.next()) {
+        //             mamonhoc = rs1.getString("MonHocid");
+        //         }
+        //     }
+        // } catch (SQLException e) {
+        //     System.err.println("Lỗi ở QLPCBUS trong phần MonHoc: " + e.getMessage());
+        // }
 
         String sql2 = "SELECT Lopid FROM lop WHERE TenLop = ?";
         try (PreparedStatement ps2 = mySQL.getConnection().prepareStatement(sql2)) {
@@ -107,19 +107,19 @@ public class QLPhanCongDAO {
 
         String n = pc.getMagv();
         System.out.println(n);
-        if (mamonhoc != null && malop != null) {
-            String sql = "INSERT INTO phancong (Giaovienid, MonHocid, Lopid) VALUES (?, ?, ?)";
+        if ( malop != null) {
+            String sql = "INSERT INTO phancong (Giaovienid, Lopid) VALUES (?, ?)";
             try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql)) {
                 ps.setString(1, pc.getMagv());
-                ps.setString(2, mamonhoc);
-                ps.setString(3, malop);
+                // ps.setString(2, mamonhoc);
+                ps.setString(2, malop);
                 ps.executeUpdate();
                 System.out.println("Thêm thành công");
             } catch (SQLException e) {
                 System.err.println("Lỗi ở QLPCBUS trong phần thêm: " + e.getMessage());
             }
         } else {
-            System.err.println("Không tìm thấy MonHocid hoặc Lopid phù hợp");
+            System.err.println("Không tìm thấy Lopid phù hợp");
         }
     }
 
@@ -128,17 +128,17 @@ public class QLPhanCongDAO {
         String mamonhoc = null;
         String malop = null;
 
-        String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
-        try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
-            ps1.setString(1, pc.getMon());
-            try (ResultSet rs1 = ps1.executeQuery()) {
-                if (rs1.next()) {
-                    mamonhoc = rs1.getString("MonHocid");
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi ở QLPCBUS trong phần MonHoc: " + e.getMessage());
-        }
+        // String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
+        // try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
+        //     ps1.setString(1, pc.getMon());
+        //     try (ResultSet rs1 = ps1.executeQuery()) {
+        //         if (rs1.next()) {
+        //             mamonhoc = rs1.getString("MonHocid");
+        //         }
+        //     }
+        // } catch (SQLException e) {
+        //     System.err.println("Lỗi ở QLPCBUS trong phần MonHoc: " + e.getMessage());
+        // }
 
         String sql2 = "SELECT Lopid FROM lop WHERE TenLop = ?";
         try (PreparedStatement ps2 = mySQL.getConnection().prepareStatement(sql2)) {
@@ -152,11 +152,11 @@ public class QLPhanCongDAO {
             System.err.println("Lỗi ở QLPCBUS trong phần Lop: " + e.getMessage());
         }
 
-        String sql = "UPDATE phancong SET enable = '0' WHERE GiaoVienid = ? AND MonHocid = ? AND Lopid = ?";
+        String sql = "UPDATE phancong SET enable = '0' WHERE GiaoVienid = ? AND Lopid = ?";
         try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql)) {
             ps.setString(1, pc.getMagv());
-            ps.setString(2, mamonhoc);
-            ps.setString(3, malop);
+            // ps.setString(2, mamonhoc);
+            ps.setString(2, malop);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Lỗi ở QLPCBUS trong phần PhanCong: " + e.getMessage());
@@ -174,7 +174,7 @@ public class QLPhanCongDAO {
             while (rs.next()) {
                 String magv = rs.getString("GiaoVienid");
 
-                QLPhanCongDTO hocsinh = new QLPhanCongDTO(magv, "", "", "");
+                QLPhanCongDTO hocsinh = new QLPhanCongDTO(magv, "", "");
                 dshs.add(hocsinh);
             }
         } catch (SQLException e) {
@@ -216,21 +216,21 @@ public class QLPhanCongDAO {
         return magvList;
     }
 
-    public ArrayList getTenMonHoc() {
-        ArrayList<String> tenmhList = new ArrayList<>();
-        String sql = " SELECT * FROM monhoc WHERE 1";
-        tenmhList.add("None");
-        try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                String tenmh = rs.getString("TenMonHoc");
-                tenmhList.add(tenmh);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return tenmhList;
-    }
+    // public ArrayList getTenMonHoc() {
+    //     ArrayList<String> tenmhList = new ArrayList<>();
+    //     String sql = " SELECT * FROM monhoc WHERE 1";
+    //     tenmhList.add("None");
+    //     try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql);
+    //             ResultSet rs = ps.executeQuery()) {
+    //         while (rs.next()) {
+    //             String tenmh = rs.getString("TenMonHoc");
+    //             tenmhList.add(tenmh);
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    //     return tenmhList;
+    // }
 
     public ArrayList getTenLop() {
         ArrayList<String> tenlopList = new ArrayList<>();
@@ -265,17 +265,17 @@ public class QLPhanCongDAO {
 
     public boolean checkExist(QLPhanCongDTO pc) {
 
-        String monhocid = "";
+        // String monhocid = "";
         String lopid = "";
-        String sql = " SELECT MonHocid FROM monhoc WHERE TenMonHoc = '" + pc.getMon() + "'";
-        try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                monhocid = rs.getString("MonHocid");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // String sql = " SELECT MonHocid FROM monhoc WHERE TenMonHoc = '" + pc.getMon() + "'";
+        // try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql);
+        //         ResultSet rs = ps.executeQuery()) {
+        //     while (rs.next()) {
+        //         monhocid = rs.getString("MonHocid");
+        //     }
+        // } catch (SQLException e) {
+        //     e.printStackTrace();
+        // }
 
         String sql1 = " SELECT Lopid FROM lop WHERE TenLop = '" + pc.getLop() + "'";
         try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql1);
@@ -287,12 +287,12 @@ public class QLPhanCongDAO {
             e.printStackTrace();
         }
 
-        System.out.println(monhocid);
+        // System.out.println(monhocid);
         System.out.println(lopid);
-        String sql3 = "SELECT * FROM phancong WHERE MonHocid = ? AND Lopid = ?";
+        String sql3 = "SELECT * FROM phancong WHERE Lopid = ?";
         try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql3)) {
-            ps.setString(1, monhocid);
-            ps.setString(2, lopid);
+            // ps.setString(1, monhocid);
+            ps.setString(1, lopid);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 System.out.println("true");
