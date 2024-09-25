@@ -6,166 +6,177 @@ import DATA.MonHocDAO;
 import DTO.MonHocDTO;
 
 public class MonHocBUS {
-    private ArrayList<MonHocDTO> dsmh ;
-    public MonHocBUS(int i1)
-    {
-        list();
-    }
-    
-    public MonHocBUS()
-    {
-        
+    private ArrayList<MonHocDTO> dsmh;
+
+    // Constructor with parameter
+    public MonHocBUS(int i1) {
+        dsmh = new ArrayList<>(); // Khởi tạo danh sách
+        list(); // Nạp danh sách môn học từ cơ sở dữ liệu
     }
 
-    // theem
+    // Default constructor
+    public MonHocBUS() {
+        dsmh = new ArrayList<>(); // Khởi tạo danh sách
+        list(); // Nạp danh sách môn học từ cơ sở dữ liệu
+    }
+
+    // Add a subject
     public void addMH(MonHocDTO mh) {
-        dsmh.add(mh);
-        MonHocDAO hsDAO = new MonHocDAO();
-        hsDAO.add(mh);
+        if (dsmh != null) {
+            dsmh.add(mh);
+            MonHocDAO hsDAO = new MonHocDAO();
+            hsDAO.add(mh);
+        } else {
+            System.out.println("Danh sách môn học chưa được khởi tạo.");
+        }
     }
-   
-    // xoa
-//    public void deleteMH(String mamh) {
-//         for (MonHocDTO mh : dsmh) {
-//             if (mh.getMonHocID().equals(mamh)) {
-//                 MonHocDAO mhDAO = new MonHocDAO();
-//                 mhDAO.delete(mamh);
-//                 dsmh.remove(mh); // Xóa môn học khỏi danh sách
-//                 System.out.println("Đã xóa MonHoc với ID: " + mamh); // Thông báo đăng nhập
-//                 return;
-//             }
-//         }
-//         System.out.println("Không tìm thấy MonHoc với ID " + mamh + " trong danh sách."); // Thông báo đăng nhập nếu không tìm thấy
-//     }
+
+    // Delete a subject
     public void deleteMH(String mamh) {
-        for (MonHocDTO hs : dsmh) {
-            if (hs.getMonHocID().equals(mamh)) {
-                // dshs.remove(mahs);
-                MonHocDAO hsDAO = new MonHocDAO();
-                hsDAO.delete(mamh);
-                return;
+        if (dsmh != null) {
+            for (MonHocDTO mh : dsmh) {
+                if (mh.getMonHocID().equals(mamh)) {
+                    MonHocDAO hsDAO = new MonHocDAO();
+                    hsDAO.delete(mamh);
+                    dsmh.remove(mh); // Xóa môn học khỏi danh sách
+                    System.out.println("Đã xóa môn học với ID: " + mamh);
+                    return;
+                }
             }
+            System.out.println("Không tìm thấy môn học với ID: " + mamh);
         }
     }
 
-    //search by id mon hoc
-    public MonHocDTO get(String id)
-    {
-        for(MonHocDTO mh : dsmh )
-        {
-            if(mh.getMonHocID().equals(id))
-            {
-                return mh;
+    // Search by subject ID
+    public MonHocDTO get(String id) {
+        if (dsmh != null) {
+            for (MonHocDTO mh : dsmh) {
+                if (mh.getMonHocID().equals(id)) {
+                    return mh;
+                }
             }
         }
         return null;
     }
-    // get/set
+
+    // Update a subject
     public void updateMH(MonHocDTO s) {
-        for (int i = 0; i < dsmh.size(); i++) {
-            if (dsmh.get(i).getMonHocID().equals(s.getMonHocID())) {
-                dsmh.set(i, s);
-                MonHocDAO mhDAO = new MonHocDAO();
-                mhDAO.Update(s);
-                return;
+        if (dsmh != null) {
+            for (int i = 0; i < dsmh.size(); i++) {
+                if (dsmh.get(i).getMonHocID().equals(s.getMonHocID())) {
+                    dsmh.set(i, s);
+                    MonHocDAO mhDAO = new MonHocDAO();
+                    mhDAO.Update(s);
+                    return;
+                }
             }
         }
     }
-    public MonHocDTO getByName(String tenmh)
-    {
-        for(MonHocDTO mh : dsmh )
-        {
-            if(mh.getTenMonHoc().equals(tenmh))
-            {
-                return mh;
+
+    // Get subject by name
+    public MonHocDTO getByName(String tenmh) {
+        if (dsmh != null) {
+            for (MonHocDTO mh : dsmh) {
+                if (mh.getTenMonHoc().equals(tenmh)) {
+                    return mh;
+                }
             }
         }
         return null;
     }
-    public void list()
-    {
+
+    // Load the list of subjects from the database
+    public void list() {
         MonHocDAO mhDAO = new MonHocDAO();
-        dsmh = new ArrayList<>();
-        dsmh = mhDAO.list();
+        dsmh = mhDAO.list(); // Lấy danh sách từ cơ sở dữ liệu
     }
-  
-     // kiem tra ma môn học
-    // public boolean checkMaMH(String mamh) {
-    //     MonHocDAO mhDao = new MonHocDAO();
-    //     dsmh = new ArrayList<>();
-    //     dsmh = mhDao.checkMaMH();
-    //     for (MonHocDTO mh : dsmh) {
-    //         System.out.println(mh.getMonHocID());
-    //         if (mh.getMonHocID().equals(dsmh)) {
-    //             return true;
-    //        }
-    //     }
-    //     return false;
-    // }
 
+    // Get list of subject names
+    public ArrayList<String> getTenMonHocs() {
+        ArrayList<String> tenMonHocs = new ArrayList<>();
+        if (dsmh != null) { // Kiểm tra nếu dsmh không null
+            for (MonHocDTO mh : dsmh) {
+                if (mh != null) { // Kiểm tra nếu mh không null
+                    tenMonHocs.add(mh.getTenMonHoc());
+                }
+            }
+        }
+        return tenMonHocs;
+    }
+
+    // Check if subject ID exists
     public boolean checkMaMH(String id) {
-        // Cập nhật danh sách người dùng từ cơ sở dữ liệu
-        list();
-        
-        for (MonHocDTO mh : dsmh) {
-            if (mh.getMonHocID().equals(id)) {
-                return true;
+        list(); // Cập nhật danh sách môn học
+        if (dsmh != null) {
+            for (MonHocDTO mh : dsmh) {
+                if (mh.getMonHocID().equals(id)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public boolean checkMH(String id)
-    {
-        for(MonHocDTO mh : dsmh)
-        {
-            if(mh.getMonHocID().equals(id))
-            {
-                return true;
+    // Check if subject exists by ID
+    public boolean checkMH(String id) {
+        if (dsmh != null) {
+            for (MonHocDTO mh : dsmh) {
+                if (mh.getMonHocID().equals(id)) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public ArrayList<MonHocDTO> search(String id,String monhoc)
-    {
+    // Search for subjects based on ID and name
+    public ArrayList<MonHocDTO> search(String id, String monhoc) {
         ArrayList<MonHocDTO> search = new ArrayList<>();
-        id = id==null?id = "": id;
-        monhoc = (monhoc==null ||monhoc.equals("Tất cả"))?monhoc = "":monhoc;
-        
-        for(MonHocDTO mh : dsmh)
-        {
-            if( mh.getMonHocID().contains(id) &&
-                mh.getTenMonHoc().contains(monhoc))
-            {
-                search.add(mh);
+        id = (id == null) ? "" : id;
+        monhoc = (monhoc == null || monhoc.equals("Tất cả")) ? "" : monhoc;
+
+        if (dsmh != null) {
+            for (MonHocDTO mh : dsmh) {
+                if (mh.getMonHocID().contains(id) && mh.getTenMonHoc().contains(monhoc)) {
+                    search.add(mh);
+                }
             }
         }
         return search;
     }
 
-  
+    // Get the list of subjects
     public ArrayList<MonHocDTO> getList() {
         return dsmh;
     }
+
     public static void main(String[] args) {
         // Create an instance of MonHocBUS
         MonHocBUS monHocBUS = new MonHocBUS(1);
-    
-        // // Search for MonHocDTO with TenMonHoc="Toan"
-        // String subjectToSearch = "Tất cả";
-        // ArrayList<MonHocDTO> searchResult = monHocBUS.search(null, subjectToSearch);
-    
-        // // Print the search result
-        // if (!searchResult.isEmpty()) {
-        //     System.out.println("Search Result for Subject " + subjectToSearch + ":");
-        //     for (MonHocDTO mh : searchResult) {
-        //         System.out.println(mh);
-        //     }
-        // } else {
-        //     System.out.println("No result found for Subject " + subjectToSearch);
-        // }
-        System.out.println(monHocBUS.getByName("Vật Lý").getMonHocID());
+
+        // Get the list of subjects
+        ArrayList<MonHocDTO> danhSachMonHoc = monHocBUS.getList();
+
+        // Print the list of subjects
+        if (danhSachMonHoc != null && !danhSachMonHoc.isEmpty()) {
+            System.out.println("Danh sách môn học:");
+            for (MonHocDTO mh : danhSachMonHoc) {
+                System.out.println(mh.getMonHocID() + " - " + mh.getTenMonHoc());
+            }
+        } else {
+            System.out.println("Không có môn học nào trong danh sách.");
+        }
+
+        // Search for a subject by name
+        String tenMonHocCanTim = "Vật Lý";
+        MonHocDTO monHocTimThay = monHocBUS.getByName(tenMonHocCanTim);
+
+        // Check and print found subject information
+        if (monHocTimThay != null) {
+            System.out.println("Thông tin môn học tìm thấy:");
+            System.out.println("ID: " + monHocTimThay.getMonHocID() + ", Tên: " + monHocTimThay.getTenMonHoc());
+        } else {
+            System.out.println("Không tìm thấy môn học với tên: " + tenMonHocCanTim);
+        }
     }
-    
 }

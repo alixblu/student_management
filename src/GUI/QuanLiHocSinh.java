@@ -163,7 +163,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
         JLabel lblSearch = new JLabel("Tìm kiếm theo: ");
         lblSearch.setFont(new Font("arial", Font.BOLD, 14));
-        String searchOption[] = { "Mã học sinh", "Họ và tên" };
+        String searchOption[] = { "Mã học sinh", "Họ và tên","Lớp" };
         searchselectBox = new JComboBox<>(searchOption);
 
         java.net.URL imageURL = getClass().getResource("/image/home.png");
@@ -440,6 +440,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         String dateString = sdf.format(date); // Convert Date to String
 
         // Lấy các giá trị từ các trường nhập
+        
         Integer countHS = +hsBUS.CountHS() + 1;
         System.out.println("Số lượng học sinh: " + countHS);
         String hocSinhID = "HSK" + soKhoa + countHS;
@@ -678,6 +679,9 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             sorter.setRowFilter(RowFilter.regexFilter(searchText, 0));
         } else if (selectedOption.equals("Họ và tên")) {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 1));
+        }
+        else if(selectedOption.equals("Lớp")){
+            sorter.setRowFilter(RowFilter.regexFilter(searchText, 7));
         }
     }
 

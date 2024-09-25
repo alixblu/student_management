@@ -82,15 +82,24 @@ public class GiaoVienBUS {
     }
 
     public void updateGV(GiaoVienDTO s) {
+        GiaoVienDAO gvDAO = new GiaoVienDAO(); // Khởi tạo DAO một lần
+    
+        boolean isUpdated = false; // Cờ để kiểm tra xem có bản ghi nào được cập nhật hay không
         for (int i = 0; i < dsgv.size(); i++) {
             if (dsgv.get(i).getMaGV().equals(s.getMaGV())) {
-                dsgv.set(i, s);
-                GiaoVienDAO gvDAO = new GiaoVienDAO();
-                gvDAO.Update(s);
-                return;
+                dsgv.set(i, s); // Cập nhật đối tượng trong danh sách
+                gvDAO.Update(s); // Cập nhật cơ sở dữ liệu
+                isUpdated = true; // Đánh dấu là đã cập nhật
+                break; // Thoát vòng lặp sau khi tìm thấy và cập nhật
             }
         }
+        
+        // Nếu không tìm thấy giáo viên trong danh sách, in ra thông báo
+        if (!isUpdated) {
+            System.out.println("Không tìm thấy giáo viên có mã: " + s.getMaGV());
+        }
     }
+    
 
     public static void main(String[] args) {
         GiaoVienBUS giaoVienBUS = new GiaoVienBUS();
@@ -103,6 +112,7 @@ public class GiaoVienBUS {
             System.out.println("GioiTinh: " + gv.getGioiTinh());
             System.out.println("NamSinh: " + gv.getNamSinh());
             System.out.println("DienThoai: " + gv.getDienThoai());
+            System.out.println("PhanMon: " + gv.getphanMon());
             System.out.println("IMG: " + gv.getIMG());
             System.out.println("-------------------------------");
         }

@@ -140,7 +140,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         JPanel p2 = new JPanel();
         p2.setLayout(new FlowLayout(1, 0, 0));
         p2.add(initTable());
-        p2.setPreferredSize(new Dimension(0, 345));
+        p2.setPreferredSize(new Dimension(0, 335));
         p2.setBackground(Color.gray);
 
         this.add(p1, BorderLayout.CENTER);
@@ -173,7 +173,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         lblSearch.setFont(new Font("arial", Font.BOLD, 14));
 
         pcBUS.listTenmh();
-        pcBUS.listTenlop();
+        pcBUS.listTenlop(); 
         ArrayList<String> listlop = pcBUS.getTenLopList();
         ArrayList<String> listmh = pcBUS.getTenMHList();
 
@@ -274,10 +274,10 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         pcBUS.listTenmh();
         pcBUS.listTenlop();
         ArrayList<String> listlop = pcBUS.getTenLopList();
-        ArrayList<String> listmh = pcBUS.getTenMHList();
+        // ArrayList<String> listmh = pcBUS.getTenMHList();
         ArrayList<String> listmagv = pcBUS.getMaGVList();
 
-        String[] arrphancong = { "Mã Giáo Viên", "Tên Giáo Viên", "Phân Lớp", "Phân Môn" };
+        String[] arrphancong = { "Mã Giáo Viên", "Tên Giáo Viên", "Phân Lớp"};
 
         int length = arrphancong.length;
         tf = new JTextField[length];
@@ -310,12 +310,14 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
                 phanlopComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(phanlopComboBox);
                 toadoYTextfield = toadoYTextfield + 35 + 20;
-            } else if (i == 3) {
-                phanmonComboBox = new JComboBox<>(listmh.toArray(new String[0]));
-                phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
-                Phocsinh.add(phanmonComboBox);
-                toadoYTextfield = toadoYTextfield + 35 + 20;
-            } else {
+            }
+            //  else if (i == 3) {
+            //     phanmonComboBox = new JComboBox<>(listmh.toArray(new String[0]));
+            //     phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
+            //     Phocsinh.add(phanmonComboBox);
+            //     toadoYTextfield = toadoYTextfield + 35 + 20;
+            // } 
+            else {
                 tf[i] = new JTextField();
                 tf[i].setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
@@ -330,7 +332,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         tf[1].setEditable(false);
         tf[1].setFocusable(false);
         JPanel Pchucnang = JChucnang();
-        Pchucnang.setBounds(660, 3, 165, y + 75);
+        Pchucnang.setBounds(660, 3, 165, y + 115);
         lblimg = new JLabel();
         lblimg.setBounds(0, 0, 180, y + 80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(5, 5, 5), 4, true));
@@ -351,7 +353,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 370));
-        String[] header = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp", "Tên Môn" };
+        String[] header = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp"};
 
         Integer lenght = header.length;
         pcBUS.listPC();
@@ -363,7 +365,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
             rowData[i][0] = pc.getMagv();
             rowData[i][1] = pc.getTengv();
             rowData[i][2] = pc.getLop();
-            rowData[i][3] = pc.getMon();
+            // rowData[i][3] = pc.getMon();
         }
 
         Font font = new Font("Arial", Font.BOLD, 12);

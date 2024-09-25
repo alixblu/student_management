@@ -2,10 +2,10 @@ package DTO;
 
 public class GiaoVienDTO {
    private String maGV, TenGV,GioiTinh,IMG;
-   private String NamSinh,DienThoai,Diachi;
+   private String NamSinh,DienThoai,Diachi, PhanMon;
 
    
-    public GiaoVienDTO(String maGV, String tenGV, String gioiTinh, String iMG, String namSinh, String dienThoai,
+    public GiaoVienDTO(String maGV, String tenGV, String gioiTinh, String iMG, String namSinh, String dienThoai, String phanMon,
         String diachi) {
     this.maGV = maGV;
     TenGV = tenGV;
@@ -13,6 +13,7 @@ public class GiaoVienDTO {
     IMG = iMG;
     NamSinh = namSinh;
     DienThoai = dienThoai;
+    PhanMon = phanMon;
     Diachi = diachi;
 }
     public String getDiachi() {
@@ -24,7 +25,12 @@ public class GiaoVienDTO {
     public String getMaGV() {
         return maGV;
     }
-
+    public void setphanMon(String phanMon) {
+        Diachi = phanMon;
+    }
+    public String getphanMon() {
+        return PhanMon;
+    }
     public void setMaGV(String maGV) {
         this.maGV = maGV;
     }

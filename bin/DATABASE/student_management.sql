@@ -692,6 +692,7 @@ CREATE TABLE `giaovien` (
   `NamSinh` varchar(10) NOT NULL,
   `DiaChi` varchar(50) NOT NULL,
   `DienThoai` varchar(11) NOT NULL DEFAULT '',
+  `PhanMon` varchar(50) NOT NULL,
   `IMG` text DEFAULT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -700,11 +701,11 @@ CREATE TABLE `giaovien` (
 -- Dumping data for table `giaovien`
 --
 
-INSERT INTO `giaovien` (`GiaoVienid`, `TenGiaoVien`, `GioiTinh`, `NamSinh`, `DiaChi`, `DienThoai`, `IMG`, `enable`) VALUES
-('GV1', 'Nguyễn Quốc Liêm', 'nam', '28/07/1997', '455/40 An Dương Vương', '0982134576', '001.jpg', 1),
-('GV2', 'Phạm Thị Loan', 'nữ', '13/12/1989', 'Phường 2, Gò Vấp', '0831054319', '002.jpg', 1),
-('GV3', 'Huỳnh Văn Hiền', 'nam', '11/06/1985', 'Trảng Bàng', '0957461238', '003.jpg', 1),
-('GV4', 'Nguyen Dinh Hung', 'Nam', '11/06/1985', 'Trảng Bàng', '0957461238', '003.jpg', 1);
+INSERT INTO `giaovien` (`GiaoVienid`, `TenGiaoVien`, `GioiTinh`, `NamSinh`, `DiaChi`, `DienThoai`, `PhanMon`, `IMG`, `enable`) VALUES
+('GV1', 'Nguyễn Quốc Liêm', 'nam', '28/07/1997', '455/40 An Dương Vương', '0982134576', 'Toan', '001.jpg', 1),
+('GV2', 'Phạm Thị Loan', 'nữ', '13/12/1989', 'Phường 2, Gò Vấp', '0831054319', 'Van','002.jpg', 1),
+('GV3', 'Huỳnh Văn Hiền', 'nam', '11/06/1985', 'Trảng Bàng', '0957461238', 'Anh','003.jpg', 1),
+('GV4', 'Nguyen Dinh Hung', 'Nam', '11/06/1985', 'Trảng Bàng', '0957461238', 'VatLy', '003.jpg', 1);
 
 -- --------------------------------------------------------
 
