@@ -47,7 +47,7 @@ import DTO.PhanLopDTO;
 public class GVQuanLyDiem extends JPanel {
     protected int StatusDiem = 0 ;
     String magiaovien;
-    private JFrame f;
+    //private JFrame f;
     private JPanel topPanel, radioPanel, dropdownPanel, selectPanel, totalPanel, btnPanel, btnPanel2, contentPanel,
             detailPanel, main_detailPanel;
     private JLabel b1, b3, b4, b5, b6;
@@ -88,11 +88,10 @@ public class GVQuanLyDiem extends JPanel {
     public GVQuanLyDiem(String magiaovien) {
 
         this.magiaovien = magiaovien;
-        //this.width = width;
-        //this.height = height;
-        f = new JFrame();
-        f.setLayout(new BorderLayout());
-        f.setSize(850, 670);
+        this.width = width;
+        this.height = height;
+        setLayout(new BorderLayout());
+        setSize(850, 670);
 
         topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
@@ -233,7 +232,7 @@ public class GVQuanLyDiem extends JPanel {
         topPanel.add(selectPanel, BorderLayout.CENTER);
         topPanel.add(btnPanel, BorderLayout.EAST);
 
-        f.add(topPanel, BorderLayout.NORTH);
+        add(topPanel, BorderLayout.NORTH);
 
         btnPanel2.add(delBtn, gbcExportBtn);
         btnPanel2.add(editBtn, gbcShowBtn);
@@ -245,8 +244,8 @@ public class GVQuanLyDiem extends JPanel {
         contentPanel.add(initTable(), BorderLayout.CENTER);
         loaddatatoTable();
         contentPanel.add(detailPanel, BorderLayout.NORTH);
-        f.add(contentPanel);
-        f.setVisible(true);
+        add(contentPanel);
+        setVisible(true);
 
         checkStatus();
         filterBtn.addActionListener(new FilterBtnListener());
