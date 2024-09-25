@@ -13,17 +13,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -291,10 +294,12 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 dateChooser.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(dateChooser);
                 toadoYTextfield = toadoYTextfield + 35;
+                dateChooser.setEnabled(false);
             } else if (i == 2) {
                 String[] genders = { "Nam", "Nữ", "Khác" };
                 genderComboBox = new JComboBox<>(genders);
                 genderComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
+                genderComboBox.setEnabled(false);
                 Phocsinh.add(genderComboBox);
                 toadoYTextfield = toadoYTextfield + 35;
             } else if (i == 7) {
@@ -302,6 +307,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 ArrayList<String> classes = lopbus.list_TenLop();
                 classComboBox = new JComboBox<>(classes.toArray(new String[0]));
                 classComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
+                classComboBox.setEnabled(false);
                 Phocsinh.add(classComboBox);
                 toadoYTextfield = toadoYTextfield + 35;
             } else {
@@ -310,6 +316,9 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
                 tf[i].setBorder(border);
                 tf[i].setName("text" + i);
+                tf[i].setEnabled(false);
+                tf[i].setDisabledTextColor(Color.BLACK);
+                tf[i].setBackground(Color.WHITE);
                 toadoYTextfield = toadoYTextfield + 35;
                 Phocsinh.add(tf[i]);
                 tf[0].setEditable(false);

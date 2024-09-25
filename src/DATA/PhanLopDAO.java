@@ -63,8 +63,6 @@ public class PhanLopDAO {
                 sql += "'"+pl.getHocSinhID()+"',";
                 sql += "'"+pl.getLopID()+"',";
                 sql += "'"+pl.getNamHocID()+"')";
-
-         System.out.println(sql);
          mySQL.executeUpdate(sql);
     }
     
