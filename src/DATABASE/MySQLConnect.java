@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class MySQLConnect {
 // student_management?zeroDateTimeBehavior=CONVERT_TO_NULL
-    private String url="jdbc:mysql://localhost:3307/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL";
+    private String url="jdbc:mysql://localhost:3306/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL";
     //private String url="jdbc:mysql://localhost:3306/hung";
     private String user="root";
     private String password="";
@@ -77,5 +77,8 @@ public class MySQLConnect {
     {
         return conn!=null?true:false;
     }
-
+    public static void main(String[] args) {
+        MySQLConnect sql = new MySQLConnect();
+        sql.Connect();
+    }
 }
