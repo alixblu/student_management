@@ -257,7 +257,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
         pcBUS.listMagv();
-        pcBUS.listTenmh();
+        // pcBUS.listTenmh();
         pcBUS.listTenlop();
         ArrayList<String> listlop = pcBUS.getTenLopList();
         ArrayList<MonHocDTO> listmh = mhBus.getList();

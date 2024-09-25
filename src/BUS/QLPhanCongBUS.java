@@ -11,7 +11,7 @@ public class QLPhanCongBUS {
     private ArrayList<QLPhanCongDTO> dspc;
 
     private ArrayList<String> dsmagv;
-    private ArrayList<String> dstenmh;
+    // private ArrayList<String> dstenmh;
     private ArrayList<String> dstenlop;
 
     public void listPC() {
@@ -28,12 +28,12 @@ public class QLPhanCongBUS {
 
     }
 
-    public void listTenmh() {
-        QLPhanCongDAO pc = new QLPhanCongDAO();
-        dstenmh = new ArrayList<>();
-        dstenmh = pc.getTenMonHoc();
+    // public void listTenmh() {
+    //     QLPhanCongDAO pc = new QLPhanCongDAO();
+    //     dstenmh = new ArrayList<>();
+    //     dstenmh = pc.getTenMonHoc();
 
-    }
+    // }
 
     public void listTenlop() {
         QLPhanCongDAO pc = new QLPhanCongDAO();
@@ -71,9 +71,9 @@ public class QLPhanCongBUS {
         return dsmagv;
     }
 
-    public ArrayList<String> getTenMHList() {
-        return dstenmh;
-    }
+    // public ArrayList<String> getTenMHList() {
+    //     return dstenmh;
+    // }
 
     public ArrayList<String> getTenLopList() {
         return dstenlop;
