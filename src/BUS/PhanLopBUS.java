@@ -19,7 +19,7 @@ public class PhanLopBUS {
     
     public PhanLopBUS()
     {
-        
+        list();
     }
 
     public void list()

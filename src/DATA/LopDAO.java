@@ -102,6 +102,22 @@ public class LopDAO {
         return listTenLop;
     }
 
+    public String getIdByCondition(String tenlop) {
+        String idlop = "";
+        try {
+            String sql = "SELECT Lopid FROM lop WHERE tenlop = '" + tenlop + "'";
+            ResultSet rs = mySQL.executeQuery(sql);
+            if (rs.next()) {
+                idlop = rs.getString("Lopid"); // Retrieve Lopid from the result set
+            }
+            mySQL.disConnect();
+        } catch (SQLException ex) {
+            Logger.getLogger(LopDTO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return idlop;
+    }
+    
+
     public ArrayList<String> list_Tenlop(String khoi)
     {
         ArrayList<String> listTenLop = list_Tenlop();
@@ -118,12 +134,8 @@ public class LopDAO {
     }
 
     public static void main(String[] args) {
-        ArrayList<String> arr = new ArrayList<>();
-        LopDAO lopdao = new LopDAO();
-        arr = lopdao.list_Tenlop("10");
-        for (String string : arr) {
-            System.out.println(string);
-        }
+       String id = new LopDAO().getIdByCondition("10A1");
+       System.out.println(id);
     }
 
 }

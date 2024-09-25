@@ -6,7 +6,10 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.awt.Image;
 import BUS.LopBUS;
+import BUS.PhanLopBUS;
 import DTO.HocSinhDTO;
+import DTO.PhanLopDTO;
+
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -35,7 +38,7 @@ public class ThemHocSinh extends JFrame {
     public JLabel labelimg;
     private int namSinh=0;
     private int tuoi=15;
-    public HocSinhDTO hocSinh;
+    private  HocSinhDTO hocSinh;
 	/**
 	 * Launch the application.
 	 */
@@ -46,6 +49,11 @@ public class ThemHocSinh extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+
+    public HocSinhDTO getSinhDTO()
+    {
+        return hocSinh;
+    }
 	public ThemHocSinh() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize( 945, 449);
@@ -238,11 +246,22 @@ public class ThemHocSinh extends JFrame {
                         hocSinh.setIMG(IMG);
                         HocSinhBUS hsBUS = new HocSinhBUS();
                         hsBUS.add(hocSinh);
+                        String tenlop = comboBox_lop.getSelectedItem().toString();
+                        Calendar calendar = Calendar.getInstance();
+                        // Lấy năm từ Calendar
+                        int nam = calendar.get(Calendar.YEAR);
+                        int namke = nam+1;
+                        String manh = nam+""+namke;
+                        String idlop = new LopBUS().getIdByCondString(tenlop);
+                        PhanLopDTO phanlop = new PhanLopDTO(hocSinh.getHocSinhID(), idlop, manh);
+                        new PhanLopBUS().add(phanlop);
 
                         JOptionPane.showMessageDialog(null,
                         "Thêm thành công",
                         "Chức năng thêm",
                         JOptionPane.INFORMATION_MESSAGE);
+
+                        System.out.println(hocSinh.toString());
                         dispose();
                     } 
                     else if (result == JOptionPane.NO_OPTION) 

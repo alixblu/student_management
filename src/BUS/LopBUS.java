@@ -146,6 +146,11 @@ public class LopBUS {
         return listlop;
     }
     
+    
+    public String getIdByCondString(String tenlop){
+        return new LopDAO().getIdByCondition(tenlop);
+    }
+
     public static void main(String[] args) {
         // Create an instance of LopBUS
         LopBUS lopBUS = new LopBUS(1);

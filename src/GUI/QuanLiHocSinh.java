@@ -609,13 +609,17 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             addRow();
         }*/
         ThemHocSinh themHS = new ThemHocSinh();
+        HocSinhDTO hocSinh = new HocSinhDTO();
+        
         Integer countHS = +hsBUS.CountHS() + 1;
         String hocSinhID = "HSK" + soKhoa + countHS;
         themHS.textField_mahs.setText(hocSinhID);
-        Object[] rowData = { themHS.hocSinh.getHocSinhID(), themHS.hocSinh.getTenHocSinh(), themHS.hocSinh.getGioiTinh(), themHS.hocSinh.getNgaySinh(),themHS.hocSinh.getDiaChi() , themHS.hocSinh.getDienThoai(), themHS.hocSinh.getIMG() };
-        System.out.println(themHS.hocSinh.toString());
+        hocSinh = themHS.getSinhDTO();
+        Object[] rowData = { hocSinh.getHocSinhID(), hocSinh.getTenHocSinh(), hocSinh.getGioiTinh(), hocSinh.getNgaySinh(),hocSinh.getDiaChi() , hocSinh.getDienThoai(), hocSinh.getIMG() };
+        System.out.println(hocSinh.getHocSinhID()+"  ádfassafsafasfd");
         tblmodel.addRow(rowData);
-        autoCreateAccount(themHS.hocSinh.getHocSinhID(), themHS.hocSinh.getDienThoai());
+        autoCreateAccount(hocSinh.getHocSinhID(), hocSinh.getDienThoai());
+        // autoCreateAccount();
     }
 
     public void btnDelete_actionPerformed() {
@@ -753,13 +757,13 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         }
     }
 
-    public void autoCreateAccount() {
-        accBUS = new ChangeAcc_BUS();
-        String username = tf[0].getText();
-        String password = tf[5].getText();
-        Account_DTO acc = new Account_DTO(username, password);
-        accBUS.Add(acc);
-    }
+    // public void autoCreateAccount() {
+    //     accBUS = new ChangeAcc_BUS();
+    //     String username = tf[0].getText();
+    //     String password = tf[5].getText();
+    //     Account_DTO acc = new Account_DTO(username, password);
+    //     accBUS.Add(acc);
+    // }
 
     public void autoCreateAccount(String username, String password) {
         accBUS = new ChangeAcc_BUS();
