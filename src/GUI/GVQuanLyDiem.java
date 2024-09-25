@@ -47,6 +47,7 @@ import DTO.PhanLopDTO;
 public class GVQuanLyDiem extends JPanel {
     protected int StatusDiem = 0 ;
     String magiaovien;
+    
     //private JFrame f;
     private JPanel topPanel, radioPanel, dropdownPanel, selectPanel, totalPanel, btnPanel, btnPanel2, contentPanel,
             detailPanel, main_detailPanel;
@@ -388,13 +389,12 @@ private void removeAllListeners() {
         System.out.println("id mon GV :" + idmon);
         for (HocSinhDTO hs : dshs) {
             for (NamHocDTO nh : dsnh) {
-                String idnamhoc = nh.getNamHocID();//2024202502
+                String idNamHoc = nh.getNamHocID();
                 String idhs = hs.getHocSinhID();
-                String idlop = plbus.get(idhs, idnamhoc) != null ? plbus.get(idhs, idnamhoc).getLopID() : "";
+                String idlop = plbus.get(idhs, idNamHoc) != null ? plbus.get(idhs, idNamHoc).getLopID() : "";
                 
                     for (int heso = 1; heso < 4; heso++) {
                         String idHocKy = nh.getHocKy();
-                        String idNamHoc = nh.getNamHocID();
                         String idDiemHocKy = ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso) != null
                                 ? String.valueOf(ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso).getDiem())
                                 : "";
@@ -414,7 +414,7 @@ private void removeAllListeners() {
                                 idDiemHocKy,
                                 hkbus.get(idHocKy).getTenHocKy(),
                                 idDiemTrungBinhHocKy,
-                                nhbus.get(idnamhoc).getNamHocBatDau() + "-" + nhbus.get(idnamhoc).getNamHocKetThuc(),
+                                nhbus.get(idNamHoc).getNamHocBatDau() + "-" + nhbus.get(idNamHoc).getNamHocKetThuc(),
                                 idDiemTrungBinhNam
                         };
                         tblModel.addRow(rowData);
@@ -837,7 +837,4 @@ private void removeAllListeners() {
         outputLop = null;
     }
 
-    public static void main(String[] args) {
-        new GVQuanLyDiem("GV2");
-    }
 }
