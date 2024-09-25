@@ -10,7 +10,6 @@ import com.mysql.cj.protocol.Resultset;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
-import DATABASE.MyConnection;
 import DATABASE.MySQLConnect;
 import DTO.NamHocDTO;
 
@@ -68,7 +67,7 @@ public class NamHocDAO {
         java.sql.Connection con = null;
         java.sql.PreparedStatement ps = null;
         try {
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             if (con != null) {
                 ps = con.prepareStatement(sql);
                 ps.setString(1, id);
@@ -86,7 +85,7 @@ public class NamHocDAO {
         } finally {
             try {
                 if (ps != null) ps.close();
-                if (con != null) MyConnection.closeConnection(con);
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -140,7 +139,7 @@ public class NamHocDAO {
         java.sql.PreparedStatement ps = null;
 
         try {
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             if (con != null) {
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, nh.getNamHocBatDau());
@@ -163,8 +162,7 @@ public class NamHocDAO {
             try {
                 if (ps != null)
                     ps.close();
-                if (con != null)
-                    MyConnection.closeConnection(con);
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -199,7 +197,7 @@ public class NamHocDAO {
     
     public void updateEnable() {
         String sql = "UPDATE namhoc SET enable = 0 where 1";
-        try (java.sql.Connection con = MyConnection.getConnection();
+        try (java.sql.Connection con = new MySQLConnect().getConnection();
              java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -212,7 +210,7 @@ public class NamHocDAO {
         String namHocID = null; // Initialize as null if no record is found
         String sql = "SELECT NamHocid FROM namhoc WHERE enable = 1";
 
-        try (java.sql.Connection con = MyConnection.getConnection();
+        try (java.sql.Connection con = new MySQLConnect().getConnection();
              java.sql.PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -229,7 +227,7 @@ public class NamHocDAO {
 
     public void updateHocKy(String hocky){
         String sql = "update namhoc set hocky = 2 where NamHocid = '" + hocky + "'";
-        try (java.sql.Connection con = MyConnection.getConnection();
+        try (java.sql.Connection con = new MySQLConnect().getConnection();
                 java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
             ps.executeUpdate();
         } catch (SQLException e) {

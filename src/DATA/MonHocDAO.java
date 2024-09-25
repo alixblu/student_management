@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
-import DATABASE.MyConnection;
 import DATABASE.MySQLConnect;
 
 
@@ -79,7 +78,7 @@ public class MonHocDAO {
         java.sql.Connection con = null;
         java.sql.PreparedStatement ps = null;
         try {
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             if (con != null) {
                 ps = con.prepareStatement(sql);
                 ps.setString(1, id);
@@ -97,7 +96,7 @@ public class MonHocDAO {
         } finally {
             try {
                 if (ps != null) ps.close();
-                if (con != null) MyConnection.closeConnection(con);
+               
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -112,7 +111,7 @@ public class MonHocDAO {
         java.sql.PreparedStatement ps = null;
        
         try {
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             if (con != null) {
                 ps = con.prepareStatement(sql);
                 ps.setString(1, mh.getTenMonHoc());
@@ -132,7 +131,7 @@ public class MonHocDAO {
         } finally {
             try {
                 if (ps != null) ps.close();
-                if (con != null) MyConnection.closeConnection(con);
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
