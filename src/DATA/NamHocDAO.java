@@ -226,6 +226,18 @@ public class NamHocDAO {
 
         return namHocID; // Return the NamHocID or null if not found
     }
+
+    public void updateHocKy(String hocky){
+        String sql = "update namhoc set hocky = 2 where NamHocid = '" + hocky + "'";
+        try (java.sql.Connection con = MyConnection.getConnection();
+                java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("đã vào dao updateHocky");
+    }
+
     public static void main(String[] args) {
         NamHocDAO dao = new NamHocDAO();
         try {

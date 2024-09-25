@@ -206,9 +206,22 @@ public class NamHocBUS {
         }
         return null;
     }
+//tach hocki khoi namhoc id
+    public String yearOnlyID(String manamhoc){
+        if(manamhoc == null){
+            System.out.println("yearOnlyID() error");
+        };
+        return manamhoc.substring(0, 8);
+    }
+
+
+    public void updateHocKy(String hocky){
+        NamHocDAO dao = new NamHocDAO();
+        dao.updateHocKy(hocky);
+    }
 
     public static void main(String[] args) {
         NamHocBUS bus = new NamHocBUS(1);
-        System.out.println(bus.isCurrentYear("2024-2025", "2"));
+        System.out.println(bus.yearOnlyID("2024202501"));
     }
 }
