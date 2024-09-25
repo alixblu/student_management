@@ -118,14 +118,15 @@ public class NamHocBUS {
     }
     public String getByAcademicYear(String academicYear) {
         for (NamHocDTO nh : dsnh) {
-            String namHocID = nh.getNamHocBatDau() + "-" + nh.getNamHocKetThuc();
-            if (namHocID.equals(academicYear)) {
+            String namHoc = nh.getNamHocBatDau() + "-" + nh.getNamHocKetThuc();
+            if (namHoc.equals(academicYear)) {
                 return nh.getNamHocID();
             }
         }
         return null;
     }
     
+
     public void list()
     {
         NamHocDAO nhDATA = new NamHocDAO();
@@ -172,13 +173,6 @@ public class NamHocBUS {
         dao.updateEnable();
     }
 
-    public static void main(String[] args) {
-        // Create an instance of NamHocBUS
-        NamHocBUS namHocBUS = new NamHocBUS(1);
-    
-        System.out.println(namHocBUS.getByStartYear(2024).getNamHocID());
-    }
-
     public int ktraEnabel(String manamhoc) throws SQLException{
         NamHocDAO dao = new NamHocDAO();
         int enable = dao.ktraEnable(manamhoc);
@@ -189,5 +183,32 @@ public class NamHocBUS {
         int mnh = dao.ktraManh(manamhoc);
         return mnh;
     }
-    
+
+    public boolean isCurrentYear(String tennamhoc, String idhocky){
+        String idnam = getNamhocByName(tennamhoc, idhocky).getNamHocID(); 
+        try {
+            if (ktraEnabel(idnam) == 1) return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public NamHocDTO getNamhocByName(String tennamhoc, String idhocky)
+    {
+        //2024-2025
+        for(NamHocDTO nh : dsnh )
+        {
+            if(nh.getNamHocKetThuc()==(Integer.parseInt(tennamhoc.substring(5))) && nh.getHocKy().equals(idhocky))
+            {
+                return nh;
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        NamHocBUS bus = new NamHocBUS(1);
+        System.out.println(bus.isCurrentYear("2024-2025", "2"));
+    }
 }
