@@ -78,7 +78,7 @@ public class QLPhanCongDAO {
 
     public void Add(QLPhanCongDTO pc) {
         MySQLConnect mySQL = new MySQLConnect();
-        String mamonhoc = null;
+        // String mamonhoc = null;
         String malop = null;
 
         // String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
@@ -264,46 +264,44 @@ public class QLPhanCongDAO {
     }
 
     public boolean checkExist(QLPhanCongDTO pc) {
-
-        // String monhocid = "";
-        String lopid = "";
-        // String sql = " SELECT MonHocid FROM monhoc WHERE TenMonHoc = '" + pc.getMon() + "'";
-        // try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql);
-        //         ResultSet rs = ps.executeQuery()) {
-        //     while (rs.next()) {
-        //         monhocid = rs.getString("MonHocid");
-        //     }
-        // } catch (SQLException e) {
-        //     e.printStackTrace();
-        // }
-
-        String sql1 = " SELECT Lopid FROM lop WHERE TenLop = '" + pc.getLop() + "'";
-        try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql1);
-                ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lopid = rs.getString("Lopid");
+        MySQLConnect mySQL = new MySQLConnect();
+        String malop = null;
+    
+        // Lấy Lopid từ bảng lop
+        String sql2 = "SELECT Lopid FROM lop WHERE TenLop = ?";
+        try (PreparedStatement ps2 = mySQL.getConnection().prepareStatement(sql2)) {
+            ps2.setString(1, pc.getLop());
+            try (ResultSet rs2 = ps2.executeQuery()) {
+                if (rs2.next()) {
+                    malop = rs2.getString("Lopid");
+                }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Lỗi ở QLPCBUS trong phần Lop: " + e.getMessage());
         }
-
-        // System.out.println(monhocid);
-        System.out.println(lopid);
-        String sql3 = "SELECT * FROM phancong WHERE Lopid = ?";
-        try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql3)) {
-            // ps.setString(1, monhocid);
-            ps.setString(1, lopid);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                System.out.println("true");
-                return true; // Tồn tại
+    
+        if (malop != null) {
+            // Kiểm tra sự tồn tại của Giaovienid và Lopid trong bảng phancong
+            String checkSql = "SELECT * FROM phancong WHERE Giaovienid = ? AND Lopid = ?";
+            try (PreparedStatement checkPs = mySQL.getConnection().prepareStatement(checkSql)) {
+                checkPs.setString(1, pc.getMagv());
+                checkPs.setString(2, malop);
+                ResultSet rs = checkPs.executeQuery();
+                if (rs.next()) {
+                    // Bản ghi đã tồn tại
+                    return true;  // Phân công đã tồn tại
+                }
+            } catch (SQLException e) {
+                System.err.println("Lỗi kiểm tra sự tồn tại của bản ghi: " + e.getMessage());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            System.err.println("Không tìm thấy Lopid phù hợp");
         }
-
-        return false;
+        
+        return false;  // Phân công chưa tồn tại
     }
+    
+    
 
     public String getIMG(String magv) {
         MySQLConnect mysql = new MySQLConnect();

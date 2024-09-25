@@ -498,34 +498,45 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+    
+        // Lấy mã giáo viên và tên lớp từ giao diện
         String magv = (String) phangiaoviencomboBox.getSelectedItem();
         String tenlop = (String) phanlopComboBox.getSelectedItem();
-        // String tenmon = (String) phanmonComboBox.getSelectedItem();
-
-        QLPhanCongDTO pc = new QLPhanCongDTO(magv,"" , tenlop);
+    
+        // Tạo đối tượng QLPhanCongDTO
+        QLPhanCongDTO pc = new QLPhanCongDTO(magv, "", tenlop);
+    
+        // Kiểm tra sự tồn tại của phân công
         if (pcBUS.checkExist(pc)) {
             JOptionPane.showMessageDialog(this, "Đã tồn tại sự phân công này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else {
-            System.out.println("lỗi");
         }
-
+    
+        // Xác nhận từ người dùng
         int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn Thêm sự phân công này",
+                "Bạn có chắc muốn thêm sự phân công này?",
                 "Xác nhận",
                 JOptionPane.YES_NO_OPTION,
-
                 JOptionPane.QUESTION_MESSAGE);
+    
         if (result == JOptionPane.YES_OPTION) {
+            // Thực hiện thêm phân công
+            pcBUS.add(pc);
+    
+            // Hiển thị thông báo thêm thành công
             JOptionPane.showMessageDialog(this,
                     "Thêm thành công",
                     "Chức năng thêm",
                     JOptionPane.INFORMATION_MESSAGE);
+    
+            // Đặt focus lại vào một trường
             tf[1].requestFocus();
+    
+            // Cập nhật bảng (nếu có bảng hiển thị)
             addRow();
         }
     }
+    
 
     public void clearSelectSearch() {
         phangiaoviencomboBox.setSelectedItem("None");

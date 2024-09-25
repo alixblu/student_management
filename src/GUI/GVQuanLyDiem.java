@@ -84,8 +84,8 @@ public class GVQuanLyDiem extends JPanel {
     PhanCongBUS pcbus = new PhanCongBUS(1);
     int width, height;
 
-    // public GVQuanLyDiem(int width, int height, String magiaovien) {
-    public GVQuanLyDiem(String magiaovien) {
+    public GVQuanLyDiem(int width, int height, String magiaovien) {
+    //public GVQuanLyDiem(String magiaovien) {
 
         this.magiaovien = magiaovien;
         this.width = width;
