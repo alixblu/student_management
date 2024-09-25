@@ -140,7 +140,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         JPanel p2 = new JPanel();
         p2.setLayout(new FlowLayout(1, 0, 0));
         p2.add(initTable());
-        p2.setPreferredSize(new Dimension(0, 345));
+        p2.setPreferredSize(new Dimension(0, 335));
         p2.setBackground(Color.gray);
 
         this.add(p1, BorderLayout.CENTER);
@@ -172,17 +172,17 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         JLabel lblSearch = new JLabel("Tìm kiếm theo: ");
         lblSearch.setFont(new Font("arial", Font.BOLD, 14));
 
-        pcBUS.listTenmh();
-        pcBUS.listTenlop();
+        // pcBUS.listTenmh();
+        pcBUS.listTenlop(); 
         ArrayList<String> listlop = pcBUS.getTenLopList();
-        ArrayList<String> listmh = pcBUS.getTenMHList();
+        // ArrayList<String> listmh = pcBUS.getTenMHList();
 
         String searchOption[] = { "None", "Mã giáo viên", "Họ và tên" };
         searchselectBox = new JComboBox<>(searchOption);
 
         searchselectBox1 = new JComboBox<>(listlop.toArray(new String[0]));
 
-        searchselectBox2 = new JComboBox<>(listmh.toArray(new String[0]));
+        // searchselectBox2 = new JComboBox<>(listmh.toArray(new String[0]));
 
         java.net.URL imageURL = getClass().getResource("/image/home.png");
         ImageIcon originalIcon = new ImageIcon(imageURL); // Tạo ImageIcon từ đường dẫn
@@ -203,7 +203,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         JSearch.add(lblSearch);
         JSearch.add(searchselectBox);
         JSearch.add(searchselectBox1);
-        JSearch.add(searchselectBox2);
+        // JSearch.add(searchselectBox2);
         JSearch.add(btnReset);
 
         return JSearch;
@@ -271,13 +271,13 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
         pcBUS.listMagv();
-        pcBUS.listTenmh();
+        // pcBUS.listTenmh();
         pcBUS.listTenlop();
         ArrayList<String> listlop = pcBUS.getTenLopList();
-        ArrayList<String> listmh = pcBUS.getTenMHList();
+        // ArrayList<String> listmh = pcBUS.getTenMHList();
         ArrayList<String> listmagv = pcBUS.getMaGVList();
 
-        String[] arrphancong = { "Mã Giáo Viên", "Tên Giáo Viên", "Phân Lớp", "Phân Môn" };
+        String[] arrphancong = { "Mã Giáo Viên", "Tên Giáo Viên", "Phân Lớp"};
 
         int length = arrphancong.length;
         tf = new JTextField[length];
@@ -310,12 +310,14 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
                 phanlopComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(phanlopComboBox);
                 toadoYTextfield = toadoYTextfield + 35 + 20;
-            } else if (i == 3) {
-                phanmonComboBox = new JComboBox<>(listmh.toArray(new String[0]));
-                phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
-                Phocsinh.add(phanmonComboBox);
-                toadoYTextfield = toadoYTextfield + 35 + 20;
-            } else {
+            }
+            //  else if (i == 3) {
+            //     phanmonComboBox = new JComboBox<>(listmh.toArray(new String[0]));
+            //     phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
+            //     Phocsinh.add(phanmonComboBox);
+            //     toadoYTextfield = toadoYTextfield + 35 + 20;
+            // } 
+            else {
                 tf[i] = new JTextField();
                 tf[i].setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
@@ -330,7 +332,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         tf[1].setEditable(false);
         tf[1].setFocusable(false);
         JPanel Pchucnang = JChucnang();
-        Pchucnang.setBounds(660, 3, 165, y + 75);
+        Pchucnang.setBounds(660, 3, 165, y + 115);
         lblimg = new JLabel();
         lblimg.setBounds(0, 0, 180, y + 80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(5, 5, 5), 4, true));
@@ -351,7 +353,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 370));
-        String[] header = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp", "Tên Môn" };
+        String[] header = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp"};
 
         Integer lenght = header.length;
         pcBUS.listPC();
@@ -363,7 +365,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
             rowData[i][0] = pc.getMagv();
             rowData[i][1] = pc.getTengv();
             rowData[i][2] = pc.getLop();
-            rowData[i][3] = pc.getMon();
+            // rowData[i][3] = pc.getMon();
         }
 
         Font font = new Font("Arial", Font.BOLD, 12);
@@ -394,10 +396,10 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         String magv = (String) phangiaoviencomboBox.getSelectedItem();
         String tengv = tf[1].getText();
         String tenlop = (String) phanlopComboBox.getSelectedItem();
-        String tenmon = (String) phanmonComboBox.getSelectedItem();
+        // String tenmon = (String) phanmonComboBox.getSelectedItem();
         Object rowdata[] = { magv, tengv, tenlop, tenmon };
 
-        QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop, tenmon);
+        QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop);
         pcBUS.add(pc);
 
         tblmodel.addRow(rowdata);
@@ -411,9 +413,9 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         }
 
         String magv = (String) phangiaoviencomboBox.getSelectedItem();
-        String tenmonhoc = (String) phanmonComboBox.getSelectedItem();
+        // String tenmonhoc = (String) phanmonComboBox.getSelectedItem();
         String tenlop = (String) phanlopComboBox.getSelectedItem();
-        QLPhanCongDTO pc = new QLPhanCongDTO(magv, "", tenlop, tenmonhoc);
+        QLPhanCongDTO pc = new QLPhanCongDTO(magv, "", tenlop);
         pcBUS.delete(pc);
 
         clearTextFields();
@@ -423,9 +425,9 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         String magv = (String) phangiaoviencomboBox.getSelectedItem();
         String tengv = tf[1].getText();
         String tenlop = (String) phanlopComboBox.getSelectedItem();
-        String tenmon = (String) phanmonComboBox.getSelectedItem();
-        Object[] rowData = { magv, tengv, tenlop, tenmon };
-        QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop, tenmon);
+        // String tenmon = (String) phanmonComboBox.getSelectedItem();
+        Object[] rowData = { magv, tengv, tenlop };
+        QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop);
         if (pcBUS.checkExist(pc)) {
             JOptionPane.showMessageDialog(this, "Đã tồn tại sự phân công này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -446,7 +448,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     public void clearTextFields() {
         phangiaoviencomboBox.setSelectedItem("None");
         phanlopComboBox.setSelectedItem("None");
-        phanmonComboBox.setSelectedItem("None");
+        // phanmonComboBox.setSelectedItem("None");
         tf[1].setText("none");
     }
 
@@ -454,8 +456,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         if (phangiaoviencomboBox.getSelectedItem() == "None"
                 || phangiaoviencomboBox.getSelectedItem().toString().isEmpty() || tf[1].getText().isEmpty()
                 || phanlopComboBox.getSelectedItem() == "None"
-                || phanlopComboBox.getSelectedItem().toString().isEmpty() || phanmonComboBox.getSelectedItem() == "None"
-                || phanmonComboBox.getSelectedItem().toString().isEmpty()) {
+                || phanlopComboBox.getSelectedItem().toString().isEmpty()) {
             return true;
         }
         return false;
@@ -466,12 +467,12 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         magv = (String) t.getValueAt(row, 0);
         tengiaovien = (String.valueOf(t.getValueAt(row, 1)));
         tenlop = (String.valueOf(t.getValueAt(row, 2)));
-        tenmon = (String.valueOf(t.getValueAt(row, 3)));
+        // tenmon = (String.valueOf(t.getValueAt(row, 3)));
 
         phangiaoviencomboBox.setSelectedItem(magv);
         tf[1].setText(tengiaovien);
         phanlopComboBox.setSelectedItem(tenlop);
-        phanmonComboBox.setSelectedItem(tenmon);
+        // phanmonComboBox.setSelectedItem(tenmon);
         String img = null;
 
         img = pcBUS.getIMG(magv);
@@ -497,39 +498,50 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+    
+        // Lấy mã giáo viên và tên lớp từ giao diện
         String magv = (String) phangiaoviencomboBox.getSelectedItem();
         String tenlop = (String) phanlopComboBox.getSelectedItem();
-        String tenmon = (String) phanmonComboBox.getSelectedItem();
-
-        QLPhanCongDTO pc = new QLPhanCongDTO(magv, "", tenlop, tenmon);
+    
+        // Tạo đối tượng QLPhanCongDTO
+        QLPhanCongDTO pc = new QLPhanCongDTO(magv, "", tenlop);
+    
+        // Kiểm tra sự tồn tại của phân công
         if (pcBUS.checkExist(pc)) {
             JOptionPane.showMessageDialog(this, "Đã tồn tại sự phân công này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else {
-            System.out.println("lỗi");
         }
-
+    
+        // Xác nhận từ người dùng
         int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn Thêm sự phân công này",
+                "Bạn có chắc muốn thêm sự phân công này?",
                 "Xác nhận",
                 JOptionPane.YES_NO_OPTION,
-
                 JOptionPane.QUESTION_MESSAGE);
+    
         if (result == JOptionPane.YES_OPTION) {
+            // Thực hiện thêm phân công
+            pcBUS.add(pc);
+    
+            // Hiển thị thông báo thêm thành công
             JOptionPane.showMessageDialog(this,
                     "Thêm thành công",
                     "Chức năng thêm",
                     JOptionPane.INFORMATION_MESSAGE);
+    
+            // Đặt focus lại vào một trường
             tf[1].requestFocus();
+    
+            // Cập nhật bảng (nếu có bảng hiển thị)
             addRow();
         }
     }
+    
 
     public void clearSelectSearch() {
         phangiaoviencomboBox.setSelectedItem("None");
         phanlopComboBox.setSelectedItem("None");
-        phanmonComboBox.setSelectedItem("None");
+        // phanmonComboBox.setSelectedItem("None");
     }
 
     public void btnDelete_actionPerformed() {
@@ -623,7 +635,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachPhanCong");
             Row headerRow = sheet.createRow(0);
-            String[] headers = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp", "Tên Môn" };
+            String[] headers = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp" };
 
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);

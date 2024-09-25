@@ -10,7 +10,6 @@ import com.mysql.cj.protocol.Resultset;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 
-import DATABASE.MyConnection;
 import DATABASE.MySQLConnect;
 import DTO.NamHocDTO;
 
@@ -68,7 +67,7 @@ public class NamHocDAO {
         java.sql.Connection con = null;
         java.sql.PreparedStatement ps = null;
         try {
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             if (con != null) {
                 ps = con.prepareStatement(sql);
                 ps.setString(1, id);
@@ -86,7 +85,7 @@ public class NamHocDAO {
         } finally {
             try {
                 if (ps != null) ps.close();
-                if (con != null) MyConnection.closeConnection(con);
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -140,7 +139,7 @@ public class NamHocDAO {
         java.sql.PreparedStatement ps = null;
 
         try {
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             if (con != null) {
                 ps = con.prepareStatement(sql);
                 ps.setInt(1, nh.getNamHocBatDau());
@@ -163,8 +162,7 @@ public class NamHocDAO {
             try {
                 if (ps != null)
                     ps.close();
-                if (con != null)
-                    MyConnection.closeConnection(con);
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -179,7 +177,7 @@ public class NamHocDAO {
         ResultSet rs = mySQL.executeQuery(sql);
         
         if (rs.next()) {
-            enable = rs.getInt(1); 
+            enable = rs.getInt("enable"); 
         }
         return enable; 
     }
@@ -199,7 +197,7 @@ public class NamHocDAO {
     
     public void updateEnable() {
         String sql = "UPDATE namhoc SET enable = 0 where 1";
-        try (java.sql.Connection con = MyConnection.getConnection();
+        try (java.sql.Connection con = new MySQLConnect().getConnection();
              java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -207,5 +205,44 @@ public class NamHocDAO {
         }
         System.out.println("đã vào dao updateEnable");
     }
+    //lay id nam hoc hien tai
+    public String currentYearID() {
+        String namHocID = null; // Initialize as null if no record is found
+        String sql = "SELECT NamHocid FROM namhoc WHERE enable = 1";
 
+        try (java.sql.Connection con = new MySQLConnect().getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            // Check if a result exists
+            if (rs.next()) {
+                namHocID = rs.getString("NamHocid"); // Retrieve NamHocID from the result set
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle any SQL exceptions
+        }
+
+        return namHocID; // Return the NamHocID or null if not found
+    }
+
+    public void updateHocKy(String hocky){
+        String sql = "update namhoc set hocky = 2 where NamHocid = '" + hocky + "'";
+        try (java.sql.Connection con = new MySQLConnect().getConnection();
+                java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("đã vào dao updateHocky");
+    }
+
+    public static void main(String[] args) {
+        NamHocDAO dao = new NamHocDAO();
+        try {
+            System.out.println(dao.ktraEnable("2024202502"));
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

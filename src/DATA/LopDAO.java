@@ -44,7 +44,7 @@ public class LopDAO {
         return ds;
     }
     
-        public void set(LopDTO lop) {
+    public void set(LopDTO lop) {
             MySQLConnect mySQL = new MySQLConnect();
             String sql = "UPDATE hocsinh SET ";
             sql += "Lopid='"+lop.getLopID()+"', ";
@@ -82,16 +82,48 @@ public class LopDAO {
             sql = "delete lop where Lopid ='"+lop.getLopID()+"'";
             mySQL.executeUpdate(sql);
     }
-    public static void main(String[] args) {
-    LopDAO lopDAO = new LopDAO();
-    ArrayList<LopDTO> lopList = lopDAO.list();
-    
-    // Print the data of each LopDTO object in the list
-    for (LopDTO lop : lopList) {
-        System.out.println("LopID: " + lop.getLopID());
-        System.out.println("TenLop: " + lop.getTenLop());
-        System.out.println(); // for readability
+
+    public ArrayList<String> list_Tenlop()
+    {
+        ArrayList<String> listTenLop = new ArrayList<>();
+        try{
+            String sql="select TenLop from lop";
+            ResultSet rs=mySQL.executeQuery(sql);
+            
+            while(rs.next()){
+                String ten=rs.getString("TenLop");
+                listTenLop.add(ten);
+            }
+            rs.close();
+            mySQL.disConnect();
+        }catch(SQLException ex){
+            Logger.getLogger(LopDTO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listTenLop;
     }
-}
+
+    public ArrayList<String> list_Tenlop(String khoi)
+    {
+        ArrayList<String> listTenLop = list_Tenlop();
+        ArrayList<String> listTenLop_Khoi = new ArrayList<>();
+        for(int i=0;i<listTenLop.size();i++)
+        {
+            String tmp = String.valueOf(listTenLop.get(i).charAt(0)) + listTenLop.get(i).charAt(1);
+            if(khoi.equals(tmp))
+            {
+                listTenLop_Khoi.add(listTenLop.get(i));
+            }
+        }
+        return listTenLop_Khoi;
+    }
+
+    public static void main(String[] args) {
+        ArrayList<String> arr = new ArrayList<>();
+        LopDAO lopdao = new LopDAO();
+        arr = lopdao.list_Tenlop("10");
+        for (String string : arr) {
+            System.out.println(string);
+        }
+    }
 
 }

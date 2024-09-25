@@ -19,7 +19,7 @@ public class HocSinhBUS{
     
     public HocSinhBUS()
     {
-       
+        list();
     }
     public HocSinhDTO get(String id)
     {

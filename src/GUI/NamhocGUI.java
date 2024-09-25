@@ -348,7 +348,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
     public void addRow() {
         int NamBatDau = LocalDate.now().getYear();
         int NamKetThuc = NamBatDau + 1;
-        String NamHocid = NamBatDau + "" + NamKetThuc + "01";
+        String NamHocid = NamBatDau + "" + NamKetThuc;
         NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc, "1", 1);
         nhBUS.addNH(namhoc);
         Object[] rowData = { NamHocid, NamBatDau, NamKetThuc, 1 };
@@ -526,12 +526,19 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         if (result == JOptionPane.YES_OPTION) {
             int NamBatDau = LocalDate.now().getYear();
             int NamKetThuc = NamBatDau + 1;
-            String NamHocid = NamBatDau + "" + NamKetThuc + "02";
+            // String NamHocid = NamBatDau + "" + NamKetThuc + "02";
+            String namhocid = tf[0].getText();
+            // NamHocDTO namhoc = new NamHocDTO(manamhoc, NamBatDau, NamKetThuc, "2", 1);
+            // nhBUS.addNH(namhoc);
+            Object[] rowData = { namhocid, NamBatDau, NamKetThuc, 2 };
+            // tblmodel.addRow(rowData);
 
-            NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc, "2", 1);
-            nhBUS.addNH(namhoc);
-            Object[] rowData = { NamHocid, NamBatDau, NamKetThuc, 2 };
+            
+            int row = t.getSelectedRow();
+            tblmodel.removeRow(row);
             tblmodel.addRow(rowData);
+            nhBUS.updateHocKy(namhocid);
+
             clearTextFields();
             btnHK2.setEnabled(false);
         } else if (result == JOptionPane.NO_OPTION) {

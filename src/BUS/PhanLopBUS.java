@@ -148,4 +148,10 @@ public class PhanLopBUS {
         return dspl;
     }
 
+    public ArrayList<PhanLopDTO> ds_phanlop()
+    {
+        PhanLopDAO pl = new PhanLopDAO();
+        ArrayList<PhanLopDTO> dsphanlop = pl.list();
+        return dsphanlop; 
+    }
 }

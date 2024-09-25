@@ -1,7 +1,6 @@
 package DATA;
 
 import DTO.GiaoVienDTO;
-import DATABASE.MyConnection;
 import DATABASE.MySQLConnect;
 
 import java.io.File;
@@ -33,8 +32,9 @@ public class GiaoVienDAO {
                 String NamSinh= rs.getString("NamSinh");
                 String DiaChi = rs.getString("DiaChi");
                 String DienThoai = rs.getString("DienThoai");
+                String PhanMon = rs.getString("PhanMon");
                 String IMG = rs.getString("IMG");
-                GiaoVienDTO s = new GiaoVienDTO(maGV, tenGV, GioiTinh, IMG, NamSinh, DienThoai, DiaChi);
+                GiaoVienDTO s = new GiaoVienDTO(maGV, tenGV, GioiTinh, IMG, NamSinh, DienThoai, PhanMon, DiaChi);
                 gv.add(s);
             }
             rs.close();
@@ -55,6 +55,7 @@ public class GiaoVienDAO {
         sql += "'"+gv.getNamSinh()+"',";
         sql += "'"+gv.getDiachi()+"',";
         sql += "'"+gv.getDienThoai()+"',";
+        sql += "'"+gv.getphanMon()+"',";
         sql += "'"+gv.getIMG()+"',";
         sql += "'1')";
         System.out.println(sql);
@@ -77,7 +78,7 @@ public class GiaoVienDAO {
 
         try {
             // Lấy kết nối từ MyConnection
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, idGV);
 
@@ -98,7 +99,6 @@ public class GiaoVienDAO {
                     e.printStackTrace();
                 }
             }
-            MyConnection.closeConnection(con);
         }
     }
   
@@ -132,43 +132,54 @@ public class GiaoVienDAO {
     //     mysql.executeUpdate(sql);
     //     System.out.println(sql); // Đoạn này để kiểm tra xem câu lệnh SQL có đúng không
     // }
-   public void Update(GiaoVienDTO gv) {
-    String sql = "UPDATE giaovien SET TenGiaoVien = ?, GioiTinh = ? , NamSinh = ? , DiaChi = ? , DienThoai = ? , IMG = ? WHERE GiaoVienid = ?";
-    java.sql.Connection con = null;
-    java.sql.PreparedStatement ps = null;
-    
-    try {
-        con = MyConnection.getConnection();
-        if (con != null) {
-            ps = con.prepareStatement(sql);
-            ps.setString(1, gv.getTenGV());
-            ps.setString(2, gv.getGioiTinh());
-            ps.setString(3, gv.getNamSinh());
-            ps.setString(4, gv.getDiachi());
-            ps.setString(5, gv.getDienThoai());
-            ps.setString(6, gv.getIMG());
-            ps.setString(7, gv.getMaGV());
-            
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Successfully updated NamHocID: " + gv.getMaGV());
-            } else {
-                System.out.println("No record found with NamHocID: " + gv.getMaGV());
-            }
-        } else {
-            System.out.println("Failed to establish connection.");
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
+    public boolean Update(GiaoVienDTO gv) {
+        String sql = "UPDATE giaovien SET TenGiaoVien = ?, GioiTinh = ?, NamSinh = ?, DiaChi = ?, DienThoai = ?, PhanMon = ?, IMG = ? WHERE GiaoVienid = ?";
+        java.sql.Connection con = null;
+        java.sql.PreparedStatement ps = null;
+        
         try {
-            if (ps != null) ps.close();
-            if (con != null) MyConnection.closeConnection(con);
+            // Kết nối cơ sở dữ liệu
+            con = new MySQLConnect().getConnection();
+            if (con != null) {
+                // Chuẩn bị câu lệnh SQL
+                ps = con.prepareStatement(sql);
+                ps.setString(1, gv.getTenGV());
+                ps.setString(2, gv.getGioiTinh());
+                ps.setString(3, gv.getNamSinh());
+                ps.setString(4, gv.getDiachi());
+                ps.setString(5, gv.getDienThoai());
+                ps.setString(6, gv.getphanMon());
+                ps.setString(7, gv.getIMG());
+                ps.setString(8, gv.getMaGV());
+                
+                // Thực thi câu lệnh SQL
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected > 0) {
+                    System.out.println("Cập nhật thành công giáo viên ID: " + gv.getMaGV());
+                    return true;
+                } else {
+                    System.out.println("Không tìm thấy giáo viên có ID: " + gv.getMaGV());
+                    return false;
+                }
+            } else {
+                System.out.println("Không thể kết nối đến cơ sở dữ liệu.");
+                return false;
+            }
         } catch (SQLException e) {
+            // In chi tiết lỗi SQL và thông báo lỗi
+            System.out.println("Lỗi khi cập nhật giáo viên: " + e.getMessage());
             e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-}
+    
 
 
 
@@ -202,7 +213,7 @@ public ArrayList<GiaoVienDTO> checkMagv() {
             while (rs.next()) {
                 String mahs = rs.getString("GiaoVienid");
 
-                GiaoVienDTO gv = new GiaoVienDTO(mahs, "", "", "", "", "","");
+                GiaoVienDTO gv = new GiaoVienDTO(mahs, "", "", "", "", "","","");
                 dsgv.add(gv);
             }
         } catch (SQLException e) {

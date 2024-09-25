@@ -1,14 +1,10 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.HeadlessException;
-
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -32,21 +27,17 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.ChangeAcc_BUS;
+import BUS.MonHocBUS;
+import DTO.MonHocDTO;
 import BUS.GiaoVienBUS;
-import BUS.QLHS_BUS;
+import BUS.QLPhanCongBUS;
 import DTO.Account_DTO;
 import DTO.GiaoVienDTO;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,7 +46,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -71,7 +61,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author vhuyn
  */
 public final class QLGV extends JPanel implements MouseListener, ActionListener {
-    private String mahs, hoten, gioitinh, diachi, namsinh, sodienthoai, img;
+    private String mahs, hoten, gioitinh, diachi, namsinh, sodienthoai,phanMon, img;
     private JLabel  lblimg;
     private JButton btnThem, btnXoa, btnSua, btnFind, btnReset, btnExpExcel;
     private DefaultTableModel tblmodel;
@@ -91,10 +81,14 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     TableRowSorter<DefaultTableModel> sorter;
     JDateChooser dateChooser;
     JComboBox<String> genderComboBox;
+    private JComboBox<String> phanmonComboBox;
+    private ArrayList<MonHocDTO> listmh;
     GiaoVienBUS gvBUS = new GiaoVienBUS();
+    MonHocBUS mhBus = new MonHocBUS();
     private static String pathAnhdd = "";
     ChangeAcc_BUS accBUS = new ChangeAcc_BUS();
-
+    QLPhanCongBUS pcBUS = new QLPhanCongBUS();
+    // Arraylist <MonHocDTO>  = new MonHocDTO();
     public QLGV(int width, int height) throws SQLException {
         this.width = width;
         this.height = height;
@@ -132,7 +126,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         JPanel p2 = new JPanel();
         p2.setLayout(new FlowLayout(1, 0, 0));
         p2.add(initTable());
-        p2.setPreferredSize(new Dimension(0, 320));
+        p2.setPreferredSize(new Dimension(0, 280));
         p2.setBackground(Color.gray);
 
         this.add(p1, BorderLayout.CENTER);
@@ -147,7 +141,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     public JPanel searchGV() {
         Color imgSearchlbl = new Color(180, 204, 227);
         Color btnResets = new Color(52, 48, 128);
-
+        
         JPanel JSearch = new JPanel();
         JSearch.setLayout(new FlowLayout(1, 10, 5));
 
@@ -159,17 +153,23 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         imgSearch.setBackground(imgSearchlbl);
         imgSearch.setPreferredSize(new Dimension(50, 50));
         // imgSearch.setOpaque(true);
+        // ArrayList<String> listlop = pcBUS.getTenLopList();
 
         // imgSearch.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0,
         // 0, 0), 4, true));
 
         JsearchText = new JTextField();
         JsearchText.setPreferredSize(new Dimension(300, 40));
-
+        MonHocBUS mhBus = new MonHocBUS(1); // Khởi tạo với tham số cần thiết
+        ArrayList<MonHocDTO> listmh = mhBus.getList();
+        
+        // Tạo danh sách tên môn học
+        ArrayList<String> tenMonHocs = mhBus.getTenMonHocs();
         JLabel lblSearch = new JLabel("Tìm kiếm theo: ");
         lblSearch.setFont(new Font("arial", Font.BOLD, 14));
         String searchOption[] = { "Mã giáo viên", "Họ và tên" };
         searchselectBox = new JComboBox<>(searchOption);
+        JComboBox<String> phanmonComboBox = new JComboBox<>(tenMonHocs.toArray(new String[0]));        
 
         java.net.URL imageURL = getClass().getResource("/image/home.png");
         ImageIcon originalIcon = new ImageIcon(imageURL); // Tạo ImageIcon từ đường dẫn
@@ -190,6 +190,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         JSearch.add(JsearchText);
         JSearch.add(lblSearch);
         JSearch.add(searchselectBox);
+        JSearch.add(phanmonComboBox); // this
         JSearch.add(btnReset);
 
         return JSearch;
@@ -255,7 +256,13 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     public JPanel JHocsinh() {
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
-        String[] arrHocsinh = { "Mã giáo viên ", "Tên giáo viên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại",
+        pcBUS.listMagv();
+        // pcBUS.listTenmh();
+        pcBUS.listTenlop();
+        ArrayList<String> listlop = pcBUS.getTenLopList();
+        ArrayList<MonHocDTO> listmh = mhBus.getList();
+        ArrayList<String> listmagv = pcBUS.getMaGVList();
+        String[] arrHocsinh = { "Mã giáo viên ", "Tên giáo viên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại", "Phân môn",
                 "Chọn ảnh" };
         int length = arrHocsinh.length;
         tf = new JTextField[length];
@@ -269,7 +276,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         int y = 15;
         for (int i = 0; i < arrHocsinh.length; i++) {
 
-            if (i == 6) {
+            if (i == 7) {
                 buttons[i] = new JButton(arrHocsinh[i]);
                 buttons[i].addActionListener(new ActionListener() {
                     @Override
@@ -282,7 +289,9 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                 buttons[i].setHorizontalAlignment(JButton.CENTER);
                 buttons[i].setName("btn" + i);
                 Phocsinh.add(buttons[i]);
-            } else {
+            } 
+             
+             else {
                 buttons[i] = new JButton(arrHocsinh[i]);
                 buttons[i].setBounds(toadoXbutton, toadoYbutton, 120, 30);
                 buttons[i].setHorizontalAlignment(JButton.CENTER);
@@ -291,21 +300,31 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
             toadoYbutton = toadoYbutton + 35;
             Phocsinh.add(buttons[i]);
-            if (i == 3) {
+            if (i == 6) {
+                MonHocBUS mhBus = new MonHocBUS();
+                ArrayList<String> tenMonHocs = mhBus.getTenMonHocs();;
+                phanmonComboBox = new JComboBox<>(tenMonHocs.toArray(new String[0]));        
+                phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
+                Phocsinh.add(phanmonComboBox);
+                toadoYTextfield = toadoYTextfield + 35;
+            }
+            else if (i == 3) {
                 dateChooser = new JDateChooser();
                 dateChooser.setDateFormatString("dd/MM/yyyy");
                 dateChooser.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(dateChooser);
                 toadoYTextfield = toadoYTextfield + 35;
 
-            } else if (i == 2) { // Thay thế TextField của giới tính bằng JComboBox
+            }
+             else if (i == 2) { // Thay thế TextField của giới tính bằng JComboBox
                 String[] genders = { "Nam", "Nữ", "Khác" };
                 genderComboBox = new JComboBox<>(genders);
                 genderComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(genderComboBox);
                 toadoYTextfield = toadoYTextfield + 35;
 
-            } else {
+            } 
+            else {
                 tf[i] = new JTextField();
                 tf[i].setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
@@ -337,13 +356,13 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 310));
-                        String[] header = { "Mã giáo viên", "Họ và tên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại",
+                        String[] header = { "Mã giáo viên", "Họ và tên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại", "Phân Môn",
                 "Ảnh chân dung" };
 
         if (gvBUS.getList() == null)
            gvBUS.listGV();
         ArrayList<GiaoVienDTO> hs = gvBUS.getList();
-        Object[][] rowData = new Object[hs.size()][7];
+        Object[][] rowData = new Object[hs.size()][8];
         for (int i = 0; i < hs.size(); i++) {
             GiaoVienDTO student = hs.get(i);
             rowData[i][0] = student.getMaGV();
@@ -352,7 +371,8 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             rowData[i][3] = student.getNamSinh();
             rowData[i][4] = student.getDiachi();
             rowData[i][5] = student.getDienThoai();
-            rowData[i][6] = student.getIMG();
+            rowData[i][6] = student.getphanMon();
+            rowData[i][7] = student.getIMG();
         }
     
         Font font = new Font("Arial", Font.BOLD, 12);
@@ -391,7 +411,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             // Hiển thị đường dẫn trong JTextField
             String fileName = fileChooser.getSelectedFile().getName();
             pathAnhdd = fileName;
-            tf[6].setText(fileName);
+            tf[7].setText(fileName);
 
             // Tạo một ImageIcon từ đường dẫn hình ảnh
             ImageIcon imageIcon = new ImageIcon(imagePath);
@@ -410,32 +430,40 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     }
 
     public void addRow() {
+        phanmonComboBox.setEnabled(false);
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
         String dateString = sdf.format(date); // Convert Date to String
-
+    
         // Lấy các giá trị từ các trường nhập
-
-        Integer countGV =+ gvBUS.CountGV() +1;
+        Integer countGV = gvBUS.CountGV() + 1;
         System.out.println("Số Giáo viên: " + countGV);
         String giaovienID = "GV" + countGV;
-        // String hocSinhID = tf[0].getText();
         String tenGV = tf[1].getText();
         String gioiTinh = (String) genderComboBox.getSelectedItem();
         String ngaySinh = dateString;
         String diaChi = tf[4].getText();
         String soDienThoai = tf[5].getText();
-        String IMG = tf[6].getText();
-
-        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID,tenGV,gioiTinh,IMG,ngaySinh,soDienThoai,diaChi);
+        String phanMon = (String) phanmonComboBox.getSelectedItem();
+        String IMG = tf[7].getText();
+    
+        // Tạo đối tượng giáo viên mới
+        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, ngaySinh, soDienThoai, phanMon, diaChi);
         
-
+        // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
-
-        Object[] rowData = { giaovienID, tenGV, gioiTinh, ngaySinh, diaChi, soDienThoai, IMG };
+    
+        // Thêm dữ liệu vào bảng
+        Object[] rowData = { giaovienID, tenGV, gioiTinh, ngaySinh, diaChi, soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
+    
+        // Gọi phương thức clearTextFields() để xóa dữ liệu cũ
         clearTextFields();
+    
+        // Vô hiệu hóa phân môn sau khi thêm giáo viên
     }
+    
 
     public void deleteRow() {
         int row = t.getSelectedRow();
@@ -472,55 +500,67 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     //     clearTextFields();
     // }
     public void updateRow() {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    Date date = dateChooser.getDate();
-    String dateString = sdf.format(date);
-
-    // Lấy các giá trị từ các trường nhập
-    String giaovienID = tf[0].getText();
-    String tenGiaoVien = tf[1].getText();
-    String gioiTinh = (String) genderComboBox.getSelectedItem();
-    String ngaySinh = dateString;
-    String soDienThoai = tf[4].getText();
-    String diaChi = tf[5].getText();
-    String IMG = tf[6].getText();
-
-    // Kiểm tra xem tất cả các trường nhập đều có giá trị
-    if (giaovienID.isEmpty() || tenGiaoVien.isEmpty() || gioiTinh.isEmpty() || ngaySinh.isEmpty() ||
-        soDienThoai.isEmpty() || diaChi.isEmpty() || IMG.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin");
-        return;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = dateChooser.getDate();
+        
+        // Kiểm tra xem ngày có hợp lệ không
+        if (date == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sinh hợp lệ.");
+            return;
+        }
+        
+        String dateString = sdf.format(date);
+    
+        // Lấy các giá trị từ các trường nhập
+        String giaovienID = tf[0].getText();
+        String tenGiaoVien = tf[1].getText();
+        String gioiTinh = (String) genderComboBox.getSelectedItem();
+        String ngaySinh = dateString;
+        String soDienThoai = tf[5].getText();
+        String diaChi = tf[4].getText();
+        String phanMon = (String) phanmonComboBox.getSelectedItem();
+        String IMG = tf[7].getText();
+    
+        // Kiểm tra xem tất cả các trường nhập đều có giá trị
+        if (giaovienID.isEmpty() || tenGiaoVien.isEmpty() || gioiTinh.isEmpty() || ngaySinh.isEmpty() ||
+            soDienThoai.isEmpty() || diaChi.isEmpty() || phanMon.isEmpty() || IMG.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+    
+        // Khởi tạo đối tượng GiaoVienDTO
+        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGiaoVien, gioiTinh, IMG, ngaySinh, soDienThoai, phanMon, diaChi);
+    
+        // Gọi phương thức cập nhật từ GiaoVienBUS (không cần kiểm tra giá trị trả về)
+        gvBUS.updateGV(giaovien);
+    
+        // Cập nhật bảng nếu quá trình cập nhật cơ sở dữ liệu thành công
+        int row = t.getSelectedRow();
+        if (row != -1) {
+            Object[] rowData = { giaovienID, tenGiaoVien, gioiTinh, ngaySinh, diaChi, soDienThoai, phanMon, IMG };
+            tblmodel.removeRow(row); // Xóa dòng cũ
+            tblmodel.insertRow(row, rowData); // Chèn lại dòng mới
+            clearTextFields(); // Xóa các trường nhập liệu sau khi cập nhật thành công
+        } else {
+            JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn để cập nhật.");
+        }
     }
+    
 
-    // Khởi tạo đối tượng GiaoVienDTO
-    GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGiaoVien, gioiTinh, IMG, ngaySinh, soDienThoai, diaChi);
 
-    // Gọi phương thức cập nhật từ GiaoVienBUS
-    gvBUS.updateGV(giaovien);
-
-    // Cập nhật bảng nếu quá trình cập nhật cơ sở dữ liệu thành công
-    int row = t.getSelectedRow();
-    if (row != -1) {
-        Object[] rowData = { giaovienID, tenGiaoVien, gioiTinh, ngaySinh, diaChi, soDienThoai, IMG };
-        tblmodel.removeRow(row);
-        tblmodel.insertRow(row, rowData);
-        clearTextFields();
-    } else {
-        JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn để cập nhật");
-    }
+public void clearTextFields() {
+    phanmonComboBox.setEnabled(true);
+    tf[0].setText("");
+    tf[1].setText("");
+    genderComboBox.setSelectedItem(null); // Thiết lập cho genderComboBox trống
+    dateChooser.setDate(null);
+    tf[4].setText("");
+    tf[5].setText("");
+    phanmonComboBox.setSelectedItem(null); // Thiết lập cho phanmonComboBox trống
+    tf[7].setText("");
+    lblimg.setIcon(null);
 }
 
-
-    public void clearTextFields() {
-        tf[0].setText("");
-        tf[1].setText("");
-        genderComboBox.setSelectedItem(2);
-        dateChooser.setDate(null);
-        tf[4].setText("");
-        tf[5].setText("");
-        tf[6].setText("");
-        lblimg.setIcon(null);
-    }
 
     public boolean checkEmpty() {
         boolean isEmpty = tf[0].getText().isEmpty() ||
@@ -537,40 +577,47 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
     private void tableMouseClicked(java.awt.event.MouseEvent evt) throws ParseException {
         int row = t.getSelectedRow();
+        
+        // Lấy thông tin từ các cột của hàng được chọn
         mahs = (String) t.getValueAt(row, 0);
         hoten = (String.valueOf(t.getValueAt(row, 1)));
         gioitinh = (String.valueOf(t.getValueAt(row, 2)));
         namsinh = (String.valueOf(t.getValueAt(row, 3)));
         diachi = (String.valueOf(t.getValueAt(row, 4)));
         sodienthoai = (String.valueOf(t.getValueAt(row, 5)));
-        img = (String.valueOf(t.getValueAt(row, 6)));
-
+        phanMon = (String.valueOf(t.getValueAt(row, 6)));
+        img = (String.valueOf(t.getValueAt(row, 7)));
+    
+        // Hiển thị thông tin lên các trường
         tf[0].setText(mahs);
         tf[1].setText(hoten);
         genderComboBox.setSelectedItem(gioitinh);
+        
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = sdf.parse(namsinh);
         dateChooser.setDate(date);
+        
         tf[4].setText(diachi);
         tf[5].setText(sodienthoai);
-        tf[6].setText(img);
-
+        phanmonComboBox.setSelectedItem(phanMon);
+        tf[7].setText(img);
+    
+        // Hiển thị ảnh nếu có
         if (!img.isEmpty()) {
             String path = "/image/Avatar/" + img;
             java.net.URL imgHS = getClass().getResource(path);
             ImageIcon orgIcon_HS = new ImageIcon(imgHS);
-            Image scaleImg_HS = orgIcon_HS.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(),
-                    Image.SCALE_SMOOTH);
-
+            Image scaleImg_HS = orgIcon_HS.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon scaledImage_HS = new ImageIcon(scaleImg_HS);
-
-            // Hiển thị hình ảnh trên JLabel
             lblimg.setIcon(scaledImage_HS);
         } else {
             lblimg.setIcon(null);
         }
-
+    
+        // Sau khi hiển thị thông tin giáo viên, vô hiệu hóa phân môn (không cho phép chỉnh sửa)
+        phanmonComboBox.setEnabled(false);
     }
+    
 
     public void btnAdd_actionPerformed() {
         if (checkEmpty()) {
@@ -686,7 +733,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
             Row headerRow = sheet.createRow(0); // Header row at index 0
-            String[] headers = { "STT", "GiaovienID", "Tên Giao viên", "Giới Tính", "Năm Sinh", "Địa chỉ", "SĐT" };
+            String[] headers = { "STT", "GiaovienID", "Tên Giao viên", "Giới Tính", "Năm Sinh", "Địa chỉ", "SĐT", "Phân môn" };
 
             // Creating header cells
             for (int i = 0; i < headers.length; i++) {
@@ -708,6 +755,8 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                 row.createCell(4).setCellValue(gv.getNamSinh());
                 row.createCell(5).setCellValue(gv.getDiachi());
                 row.createCell(6).setCellValue(gv.getDienThoai());
+                row.createCell(7).setCellValue(gv.getphanMon());
+
             }
 
             // String path = "D:/Coding/N2_HK2/DAJAVA/java_nhom_9/Excel/hsss.xlsx";
