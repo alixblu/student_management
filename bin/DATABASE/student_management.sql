@@ -918,7 +918,6 @@ INSERT INTO `namhoc` (`NamHocid`, `NamBatDau`, `NamKetThuc`, `HocKy`, `enable`) 
 CREATE TABLE `phancong` (
   `GiaoVienid` varchar(5) NOT NULL DEFAULT 'GV',
   `Lopid` int(11) NOT NULL,
-  `MonHocid` varchar(11) NOT NULL,
   `enable` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -926,19 +925,19 @@ CREATE TABLE `phancong` (
 -- Dumping data for table `phancong`
 --
 
-INSERT INTO `phancong` (`GiaoVienid`, `Lopid`, `MonHocid`, `enable`) VALUES
-('GV1', 10, 'TOAN', 1),
-('GV1', 11, 'TOAN', 1),
-('GV1', 12, 'TOAN', 1),
-('GV2', 10, 'LY', 1),
-('GV2', 11, 'LY', 1),
-('GV2', 12, 'LY', 1),
-('GV3', 10, 'HOA', 1),
-('GV3', 11, 'HOA', 1),
-('GV3', 12, 'HOA', 1),
-('GV4', 10, 'ANH', 1),
-('GV4', 11, 'ANH', 1),
-('GV4', 12, 'ANH', 1);
+INSERT INTO `phancong` (`GiaoVienid`, `Lopid`, `enable`) VALUES
+('GV1', 10, 1),
+('GV1', 11, 1),
+('GV1', 12, 1),
+('GV2', 10, 1),
+('GV2', 11, 1),
+('GV2', 12, 1),
+('GV3', 10, 1),
+('GV3', 11, 1),
+('GV3', 12, 1),
+('GV4', 10, 1),
+('GV4', 11, 1),
+('GV4', 12, 1);
 
 -- --------------------------------------------------------
 
@@ -1158,7 +1157,7 @@ ALTER TABLE `namhoc`
 -- Indexes for table `phancong`
 --
 ALTER TABLE `phancong`
-  ADD PRIMARY KEY (`GiaoVienid`,`Lopid`,`MonHocid`);
+  ADD PRIMARY KEY (`GiaoVienid`,`Lopid`);
 
 --
 -- Indexes for table `phanlop`

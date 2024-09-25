@@ -316,7 +316,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
                 tf[i].setBorder(border);
                 tf[i].setName("text" + i);
-                tf[i].setEnabled(false);
+                //tf[i].setEnabled(false);
                 tf[i].setDisabledTextColor(Color.BLACK);
                 tf[i].setBackground(Color.WHITE);
                 toadoYTextfield = toadoYTextfield + 35;

@@ -77,5 +77,8 @@ public class MySQLConnect {
     {
         return conn!=null?true:false;
     }
-
+    public static void main(String[] args) {
+        MySQLConnect sql = new MySQLConnect();
+        sql.Connect();
+    }
 }

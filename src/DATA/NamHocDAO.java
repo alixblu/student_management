@@ -179,7 +179,7 @@ public class NamHocDAO {
         ResultSet rs = mySQL.executeQuery(sql);
         
         if (rs.next()) {
-            enable = rs.getInt(1); 
+            enable = rs.getInt("enable"); 
         }
         return enable; 
     }
@@ -207,5 +207,32 @@ public class NamHocDAO {
         }
         System.out.println("đã vào dao updateEnable");
     }
+    //lay id nam hoc hien tai
+    public String currentYearID() {
+        String namHocID = null; // Initialize as null if no record is found
+        String sql = "SELECT NamHocid FROM namhoc WHERE enable = 1";
 
+        try (java.sql.Connection con = MyConnection.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            // Check if a result exists
+            if (rs.next()) {
+                namHocID = rs.getString("NamHocid"); // Retrieve NamHocID from the result set
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle any SQL exceptions
+        }
+
+        return namHocID; // Return the NamHocID or null if not found
+    }
+    public static void main(String[] args) {
+        NamHocDAO dao = new NamHocDAO();
+        try {
+            System.out.println(dao.ktraEnable("2024202502"));
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
