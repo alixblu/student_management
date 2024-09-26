@@ -35,6 +35,7 @@ import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.ChangeAcc_BUS;
+import BUS.HocSinhBUS;
 import BUS.LopBUS;
 import BUS.NamHocBUS;
 import BUS.PhanLopBUS;
@@ -71,7 +72,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     private String mahs, hoten, gioitinh, diachi, namsinh, sodienthoai, img, tenlop;
     private JLabel lblMahs, lblTenhs, lblGioitinh, lblDiachi, lblimg;
     private JButton btnThem, btnXoa, btnSua, btnFind, btnReset, btnExpExcel;
-    private DefaultTableModel tblmodel;
+    public static DefaultTableModel tblmodel;
     // private JTable tbl;
     private JScrollPane scrollpane;
     JTextField[] tf;
@@ -92,7 +93,6 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     QLHS_BUS hsBUS = new QLHS_BUS();
     private static String pathAnhdd = "";
     NamHocBUS nhBUS = new NamHocBUS();
-
     ChangeAcc_BUS accBUS = new ChangeAcc_BUS();
 
     public QuanLiHocSinh(int width, int height) throws SQLException {
@@ -574,54 +574,13 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     }
 
     public void btnAdd_actionPerformed() {
-        /*if (checkEmpty()) {
-            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // String mahs = tf[0].getText();
-        // System.out.println(mahs);
-
-        // if (hsBUS.checkMaHS(mahs) == true) {
-        // JOptionPane.showMessageDialog(this, "Mã học sinh này đã tồn tại", "CHECK",
-        // JOptionPane.ERROR_MESSAGE);
-        // return;
-        // }
-
-        JOptionPane.showMessageDialog(this, "Mã học sinh tăng tự động", "Lưu ý", JOptionPane.INFORMATION_MESSAGE);
-
-        int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn Thêm học sinh này",
-                "Xác nhận",
-                JOptionPane.YES_NO_OPTION,
-
-                JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this,
-                    "Thêm thành công",
-                    "Chức năng thêm",
-                    JOptionPane.INFORMATION_MESSAGE);
-            System.out.println("Ban chon them");
-            tf[0].requestFocus();
-            autoCreateAccount();
-            System.out.println(tf[0].getText());
-            addRow();
-        }*/
         ThemHocSinh themHS = new ThemHocSinh();
-        HocSinhDTO hocSinh = new HocSinhDTO();
-        
         Integer countHS = +hsBUS.CountHS() + 1;
         String hocSinhID = "HSK" + soKhoa + countHS;
         themHS.textField_mahs.setText(hocSinhID);
-        hocSinh = themHS.getSinhDTO();
-        Object[] rowData = { hocSinh.getHocSinhID(), hocSinh.getTenHocSinh(), hocSinh.getGioiTinh(), hocSinh.getNgaySinh(),hocSinh.getDiaChi() , hocSinh.getDienThoai(), hocSinh.getIMG() };
-        System.out.println(hocSinh.getHocSinhID()+"  ádfassafsafasfd");
-        tblmodel.addRow(rowData);
-        autoCreateAccount(hocSinh.getHocSinhID(), hocSinh.getDienThoai());
-        // autoCreateAccount();
     }
 
+   
     public void btnDelete_actionPerformed() {
         String mahs = tf[0].getText();
         System.out.println(mahs);
@@ -757,19 +716,6 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         }
     }
 
-    // public void autoCreateAccount() {
-    //     accBUS = new ChangeAcc_BUS();
-    //     String username = tf[0].getText();
-    //     String password = tf[5].getText();
-    //     Account_DTO acc = new Account_DTO(username, password);
-    //     accBUS.Add(acc);
-    // }
-
-    public void autoCreateAccount(String username, String password) {
-        accBUS = new ChangeAcc_BUS();
-        Account_DTO acc = new Account_DTO(username, password);
-        accBUS.Add(acc);
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
