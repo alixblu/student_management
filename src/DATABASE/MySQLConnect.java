@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DATABASE;
 
 
@@ -18,8 +14,8 @@ import java.util.logging.Logger;
  * @author PHUONG ANH
  */
 public class MySQLConnect {
-// student_management?zeroDateTimeBehavior=CONVERT_TO_NULL
-    private String url="jdbc:mysql://localhost:3306/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL";
+    // student_management?zeroDateTimeBehavior=CONVERT_TO_NULL
+    private String url="jdbc:mysql://localhost:3307/student_management?zeroDateTimeBehavior=CONVERT_TO_NULL";
     //private String url="jdbc:mysql://localhost:3306/hung";
     private String user="root";
     private String password="";
@@ -78,7 +74,10 @@ public class MySQLConnect {
         return conn!=null?true:false;
     }
     public static void main(String[] args) {
-        MySQLConnect sql = new MySQLConnect();
-        sql.Connect();
+        Connection c = new  MySQLConnect().getConnection();
+        if(c!=null)
+        {
+            System.out.println("nammmmm");
+        }
     }
 }

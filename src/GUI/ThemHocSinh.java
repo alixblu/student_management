@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.Image;
 import BUS.LopBUS;
 import BUS.PhanLopBUS;
+import DTO.Account_DTO;
 import DTO.HocSinhDTO;
 import DTO.PhanLopDTO;
 
@@ -19,6 +20,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+
+import BUS.ChangeAcc_BUS;
 import BUS.HocSinhBUS;
 import java.util.Date;
 
@@ -39,6 +42,7 @@ public class ThemHocSinh extends JFrame {
     private int namSinh=0;
     private int tuoi=15;
     private  HocSinhDTO hocSinh;
+    private ChangeAcc_BUS accBUS;
 	/**
 	 * Launch the application.
 	 */
@@ -242,7 +246,7 @@ public class ThemHocSinh extends JFrame {
                         String DienThoai =  textField_sdt.getText();
                         String DiaChi = textField_diachi.getText();
                         String IMG = textField_chonanh.getText();
-                        hocSinh = new HocSinhDTO(HocSinhID,TenHocSinh,GioiTinh,NgaySinh,DienThoai,DiaChi);
+                        hocSinh = new HocSinhDTO(HocSinhID, TenHocSinh, GioiTinh, NgaySinh, DienThoai, DiaChi);
                         hocSinh.setIMG(IMG);
                         HocSinhBUS hsBUS = new HocSinhBUS();
                         hsBUS.add(hocSinh);
@@ -256,7 +260,9 @@ public class ThemHocSinh extends JFrame {
                         String idlop = new LopBUS().getIdByCondString(tenlop);
                         PhanLopDTO phanlop = new PhanLopDTO(hocSinh.getHocSinhID(), idlop, manh);
                         new PhanLopBUS().add(phanlop);
-
+                        autoCreateAccount(hocSinh.getHocSinhID(), hocSinh.getDienThoai());
+                        Object[] rowData = { hocSinh.getHocSinhID(), hocSinh.getTenHocSinh(), hocSinh.getGioiTinh(), hocSinh.getNgaySinh(),hocSinh.getDiaChi() , hocSinh.getDienThoai(), hocSinh.getIMG() };
+                        QuanLiHocSinh.tblmodel.addRow(rowData);
                         JOptionPane.showMessageDialog(null,
                         "Thêm thành công",
                         "Chức năng thêm",
@@ -400,6 +406,12 @@ public class ThemHocSinh extends JFrame {
             // Hiển thị hình ảnh trên JLabel
             labelimg.setIcon(scaledImageIcon);
         }
+    }
+
+     public void autoCreateAccount(String username, String password) {
+        accBUS = new ChangeAcc_BUS();
+        Account_DTO acc = new Account_DTO(username, password);
+        accBUS.Add(acc);
     }
 }
 
