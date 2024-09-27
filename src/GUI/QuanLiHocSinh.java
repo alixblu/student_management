@@ -120,8 +120,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         Color searchPanel = new Color(180, 204, 227);
         this.setLayout(new BorderLayout());
         JPanel p3 = SearchHocSinh();
-        // p3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0,0,0) , 4
-        // , true));
+        
         p3.setPreferredSize(new Dimension(0, 60));
         p3.setBackground(searchPanel);
 
@@ -131,7 +130,6 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         p1.setPreferredSize(new Dimension(0, 0));
 
         JPanel p2 = new JPanel();
-        //p2.setLayout(new FlowLayout(1, 0, 0));
         p2.setLayout(new BorderLayout());
         p2.add(initTable(), BorderLayout.SOUTH);
         p2.setPreferredSize(new Dimension(0, 300));
