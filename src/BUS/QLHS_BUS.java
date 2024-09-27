@@ -1,6 +1,5 @@
 package BUS;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import DATA.*;
@@ -89,4 +88,8 @@ public class QLHS_BUS {
         return dao.getRole(username);
     }
 
+    public boolean checkSDT(String sdt){
+        QLHS_DAO hs = new QLHS_DAO();
+        return hs.checkSDT(sdt);
+    }
 }

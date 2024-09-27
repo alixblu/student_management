@@ -522,7 +522,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         String IMG = tf[7].getText();
     
         // Kiểm tra xem tất cả các trường nhập đều có giá trị
-        if (giaovienID.isEmpty() || tenGiaoVien.isEmpty() || gioiTinh.isEmpty() || ngaySinh.isEmpty() ||
+        if (tenGiaoVien.isEmpty() || gioiTinh.isEmpty() || ngaySinh.isEmpty() ||
             soDienThoai.isEmpty() || diaChi.isEmpty() || phanMon.isEmpty() || IMG.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin.");
             return;
@@ -563,7 +563,8 @@ public void clearTextFields() {
 
 
     public boolean checkEmpty() {
-        boolean isEmpty = tf[0].getText().isEmpty() ||
+        boolean isEmpty = 
+        // tf[0].getText().isEmpty() ||
                 tf[1].getText().isEmpty() ||
                 tf[4].getText().isEmpty() ||
                 tf[5].getText().isEmpty();

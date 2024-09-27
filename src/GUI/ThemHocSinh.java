@@ -1,5 +1,7 @@
 package GUI;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
@@ -7,6 +9,7 @@ import javax.swing.*;
 import java.awt.Image;
 import BUS.LopBUS;
 import BUS.PhanLopBUS;
+import BUS.QLHS_BUS;
 import DTO.Account_DTO;
 import DTO.HocSinhDTO;
 import DTO.PhanLopDTO;
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
@@ -43,6 +47,8 @@ public class ThemHocSinh extends JFrame {
     private int tuoi=15;
     private  HocSinhDTO hocSinh;
     private ChangeAcc_BUS accBUS;
+    private ImageIcon imageIcon;
+    private String pathAnhdd;
 	/**
 	 * Launch the application.
 	 */
@@ -218,6 +224,7 @@ public class ThemHocSinh extends JFrame {
             {
                 if(e.getSource()==button_xacnhan)
                 {   
+                    QLHS_BUS qlhsBUS = new QLHS_BUS();
                     if(textField_tenhs.getText().equals("")||textField_diachi.getText().equals("")||textField_sdt.getText().equals("")||dateChooser.getDate().toString().equals(""))
                     {
                         JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin", "Thông báo",  JOptionPane.ERROR_MESSAGE);
@@ -226,6 +233,11 @@ public class ThemHocSinh extends JFrame {
                     else if(checkSDT(textField_sdt.getText())==false)
                     {
                         JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!", "Thông báo",  JOptionPane.ERROR_MESSAGE);
+                        return ;
+                    }
+                    else if(qlhsBUS.checkSDT(textField_sdt.getText())==false)
+                    {
+                        JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại!", "Thông báo",  JOptionPane.ERROR_MESSAGE);
                         return ;
                     }
                     int result = JOptionPane.showConfirmDialog(null, 
@@ -263,12 +275,16 @@ public class ThemHocSinh extends JFrame {
                         autoCreateAccount(hocSinh.getHocSinhID(), hocSinh.getDienThoai());
                         Object[] rowData = { hocSinh.getHocSinhID(), hocSinh.getTenHocSinh(), hocSinh.getGioiTinh(), hocSinh.getNgaySinh(),hocSinh.getDiaChi() , hocSinh.getDienThoai(), hocSinh.getIMG() };
                         QuanLiHocSinh.tblmodel.addRow(rowData);
+                        Image image = imageIcon.getImage().getScaledInstance(QuanLiHocSinh.lblimg.getWidth(), QuanLiHocSinh.lblimg.getHeight(), Image.SCALE_SMOOTH);
+                        ImageIcon scaledImageIcon = new ImageIcon(image);
+                        QuanLiHocSinh.lblimg.setIcon(scaledImageIcon);
                         JOptionPane.showMessageDialog(null,
                         "Thêm thành công",
                         "Chức năng thêm",
                         JOptionPane.INFORMATION_MESSAGE);
-
-                        System.out.println(hocSinh.toString());
+                        String destinationDir = "src/image/Avatar/"; // Thư mục img trong project
+                        Path destinationPath = Paths.get(destinationDir + pathAnhdd);
+                        System.out.println(destinationPath.toString());
                         dispose();
                     } 
                     else if (result == JOptionPane.NO_OPTION) 
@@ -391,10 +407,10 @@ public class ThemHocSinh extends JFrame {
             String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
             // Hiển thị đường dẫn trong JTextField
             String fileName = fileChooser.getSelectedFile().getName();
-            String pathAnhdd = fileName;
+            pathAnhdd = fileName;
             textField_chonanh.setText(pathAnhdd);
             // Tạo một ImageIcon từ đường dẫn hình ảnh
-            ImageIcon imageIcon = new ImageIcon(imagePath);
+            imageIcon = new ImageIcon(imagePath);
 
             // Chỉnh kích thước của hình ảnh để phù hợp với JLabel
             Image image = imageIcon.getImage().getScaledInstance(labelimg.getWidth(), labelimg.getHeight(),
