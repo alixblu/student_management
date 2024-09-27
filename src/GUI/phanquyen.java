@@ -198,7 +198,15 @@ public class phanquyen extends JPanel implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng để sửa.", "Cảnh báo",
                         JOptionPane.WARNING_MESSAGE);
             } else {
-                showEditDialog();
+                String maquyen = (String) t.getValueAt(selectedRow, 0);
+                if ("admin".equals(maquyen)) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Admin không được phép chỉnh sửa!", 
+                        "Thông báo", 
+                        JOptionPane.WARNING_MESSAGE);
+                } else {
+                    showEditDialog();
+                }
             }
         } else if (e.getSource() == btnDelete) {
             int selectedRow = t.getSelectedRow();
@@ -207,27 +215,28 @@ public class phanquyen extends JPanel implements ActionListener {
                         JOptionPane.WARNING_MESSAGE);
             } else {
                 String maquyen = (String) t.getValueAt(selectedRow, 0);
-                if("admin".equals(maquyen)) {
-              	  JOptionPane.showMessageDialog(this, 
-                            "Admin không được phép xóa!", 
-                            "Thông báo", 
-                            JOptionPane.WARNING_MESSAGE);
-                    }else {
-              
-                    	int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc xóa quyền này không", "Xác nhận",
-                                JOptionPane.YES_NO_OPTION,
-                                JOptionPane.QUESTION_MESSAGE);
-                        if (result == JOptionPane.YES_OPTION) {
-                            model.removeRow(selectedRow);
-                            pqBUS.deleteQuyen(maquyen);
-                            pqBUS.deleteChitietquyen(maquyen);
-                            JOptionPane.showMessageDialog(this, "Xóa thành công");
-                        }
-                    
+                if ("admin".equals(maquyen)) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Admin không được phép xóa!", 
+                        "Thông báo", 
+                        JOptionPane.WARNING_MESSAGE);
+                } else {
+                    int result = JOptionPane.showConfirmDialog(this, 
+                            "Bạn có chắc xóa quyền này không?", 
+                            "Xác nhận", 
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if (result == JOptionPane.YES_OPTION) {
+                        model.removeRow(selectedRow);
+                        pqBUS.deleteQuyen(maquyen);
+                        pqBUS.deleteChitietquyen(maquyen);
+                        JOptionPane.showMessageDialog(this, "Xóa thành công");
+                    }
                 }
             }
         }
     }
+    
 
     private void showAddDialog() {
         // Lấy kích thước màn hình
