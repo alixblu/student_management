@@ -297,16 +297,21 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
                 Ptaikhoan.add(tf[i]);
             } else {
                 phanquyenBUS pqbus = new phanquyenBUS();
-                pqbus.listquyen();
-                ArrayList<phanquyenDTO> dsquyen = pqbus.getlistquyen();
+            pqbus.listquyen();
+            ArrayList<phanquyenDTO> dsquyen = pqbus.getlistquyen();
 
-                roleComboBox = new JComboBox<>();
-                    for (phanquyenDTO pq : dsquyen) {
-                        roleComboBox.addItem(pq.getMaquyen());
-                    }
-                roleComboBox.setBounds(toadoXTextfield, toadoYTextfield +20, 320, 30);
-                Ptaikhoan.add(roleComboBox);
-                toadoYTextfield += 35;
+            roleComboBox = new JComboBox<>();
+            for (phanquyenDTO pq : dsquyen) {
+                // Chỉ thêm các quyền không phải "admin"
+                if (!"admin".equals(pq.getMaquyen())) {
+                    roleComboBox.addItem(pq.getMaquyen());
+                }
+            }
+
+            roleComboBox.setBounds(toadoXTextfield, toadoYTextfield + 20, 320, 30);
+            Ptaikhoan.add(roleComboBox);
+            toadoYTextfield += 35;
+
             }
 
             y += 35;
@@ -556,30 +561,37 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
 
     public void btnSua_actionPerformed() {
         String user = tf[0].getText();
-
+    
         if (user.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Hãy nhập username cần sửa", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+    
         if (uBUS.check(user) == false) {
             JOptionPane.showMessageDialog(this, "Không tồn tại username này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+    
+        // Kiểm tra nếu tài khoản là "admin" thì không cho phép sửa
+        if ("admin".equals(user)) {
+            JOptionPane.showMessageDialog(this, "Tài khoản admin không được phép chỉnh sửa", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    
         int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn sửa tài khoản này",
+                "Bạn có chắc muốn sửa tài khoản này",
                 "Xác nhận",
                 JOptionPane.YES_NO_OPTION,
-
                 JOptionPane.QUESTION_MESSAGE);
+    
         if (result == JOptionPane.YES_OPTION) {
-            System.out.println("Ban chọn đồng ý sửa");
+            System.out.println("Bạn chọn đồng ý sửa");
             updateRow();
         } else if (result == JOptionPane.NO_OPTION) {
             System.out.println("Bạn chọn không đồng ý sửa");
         }
     }
+    
 
     public void btnFind_actionPerformed() {
         searchText = JsearchText.getText().trim();
