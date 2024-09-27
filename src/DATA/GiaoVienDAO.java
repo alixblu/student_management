@@ -1,7 +1,6 @@
 package DATA;
 
 import DTO.GiaoVienDTO;
-import DATABASE.MyConnection;
 import DATABASE.MySQLConnect;
 
 import java.io.File;
@@ -79,7 +78,7 @@ public class GiaoVienDAO {
 
         try {
             // Lấy kết nối từ MyConnection
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, idGV);
 
@@ -100,7 +99,6 @@ public class GiaoVienDAO {
                     e.printStackTrace();
                 }
             }
-            MyConnection.closeConnection(con);
         }
     }
   
@@ -141,7 +139,7 @@ public class GiaoVienDAO {
         
         try {
             // Kết nối cơ sở dữ liệu
-            con = MyConnection.getConnection();
+            con = new MySQLConnect().getConnection();
             if (con != null) {
                 // Chuẩn bị câu lệnh SQL
                 ps = con.prepareStatement(sql);
@@ -175,7 +173,7 @@ public class GiaoVienDAO {
         } finally {
             try {
                 if (ps != null) ps.close();
-                if (con != null) MyConnection.closeConnection(con);
+                
             } catch (SQLException e) {
                 e.printStackTrace();
             }

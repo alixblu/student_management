@@ -43,7 +43,7 @@ public class ChangeAcc_DAO {
         String sql = "INSERT INTO user VALUE (";
         sql += "'" + acc.getUsername() + "',";
         sql += "'" + acc.getPassword() + "',";
-        sql += "'" + "user" + "',";
+        sql += "'" + "HS" + "',";
         sql += "'" + "1" + "')";
         mysql.executeUpdate(sql);
         System.out.println(sql);
