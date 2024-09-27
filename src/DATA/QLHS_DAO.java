@@ -93,6 +93,18 @@ public class QLHS_DAO {
         return dshs;
     }
 
+    public boolean checkSDT(String sdt)
+    {
+        ArrayList<HocSinhDTO> dshs = list();
+        for (HocSinhDTO hocSinhDTO : dshs) {
+            if(hocSinhDTO.getDienThoai().equals(sdt))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Integer CountHS() {
         String sql = "SELECT COUNT(*) AS count FROM hocsinh";
         Integer count = 0;

@@ -70,7 +70,8 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public final class QuanLiHocSinh extends JPanel implements MouseListener, ActionListener {
     private String mahs, hoten, gioitinh, diachi, namsinh, sodienthoai, img, tenlop;
-    private JLabel lblMahs, lblTenhs, lblGioitinh, lblDiachi, lblimg;
+    private JLabel lblMahs, lblTenhs, lblGioitinh, lblDiachi;
+    public static JLabel lblimg;
     private JButton btnThem, btnXoa, btnSua, btnFind, btnReset, btnExpExcel;
     public static DefaultTableModel tblmodel;
     // private JTable tbl;
@@ -346,7 +347,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         t = new JTable();
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
-        scrollpane.setPreferredSize(new Dimension(846, 300));
+        scrollpane.setPreferredSize(new Dimension(846, 295));
         String[] header = { "Mã học sinh", "Họ và tên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại",
                 "Ảnh chân dung","Lớp" };
 
