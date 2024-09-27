@@ -135,7 +135,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         //p2.setLayout(new FlowLayout(1, 0, 0));
         p2.setLayout(new BorderLayout());
         p2.add(initTable(), BorderLayout.SOUTH);
-        p2.setPreferredSize(new Dimension(0, 300));
+        p2.setPreferredSize(new Dimension(0, 295));
         p2.setBackground(Color.gray);
 
         this.add(p1, BorderLayout.CENTER);
