@@ -67,12 +67,7 @@ public final class QuanLiHocSinh_GV extends JPanel implements MouseListener, Act
         this.width = width;
         this.height = height;
         init();
-        // btnThem.addMouseListener(this);
-        // btnXoa.addMouseListener(this);
-        // btnSua.addMouseListener(this);
-        // btnThem.addActionListener(this);
-        // btnSua.addActionListener(this);
-        // btnXoa.addActionListener(this);
+      
         btnFind.addActionListener(this);
         btnFind.addMouseListener(this);
         btnReset.addActionListener(this);
@@ -339,16 +334,12 @@ public final class QuanLiHocSinh_GV extends JPanel implements MouseListener, Act
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+      
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+      
     }
 
     @Override

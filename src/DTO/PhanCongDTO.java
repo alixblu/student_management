@@ -3,14 +3,14 @@ package DTO;
 public class PhanCongDTO {
     private String giaoVienID;
     private String lopID;
-    private String monHocID;
+    // private String monHocID;
     // Add other attributes as needed
 
     // Constructor
-    public PhanCongDTO(String giaoVienID, String lopID, String monHocID) {
+    public PhanCongDTO(String giaoVienID, String lopID) {
         this.giaoVienID = giaoVienID;
         this.lopID = lopID;
-        this.monHocID = monHocID;
+        // this.monHocID = monHocID;
        // Initialize other attributes
     }
 
@@ -32,13 +32,13 @@ public class PhanCongDTO {
         this.lopID = lopID;
     }
 
-    public String getMonHocID() {
-        return monHocID;
-    }
+    // public String getMonHocID() {
+    //     return monHocID;
+    // }
 
-    public void setMonHocID(String monHocID) {
-        this.monHocID = monHocID;
-    }
+    // public void setMonHocID(String monHocID) {
+    //     this.monHocID = monHocID;
+    // }
 
     // Override toString method to display all attributes
     @Override
@@ -46,7 +46,7 @@ public class PhanCongDTO {
         return "PhanCongDTO{" +
                 "giaoVienID='" + giaoVienID + '\'' +
                 ", lopID='" + lopID + '\'' +
-                ", monHocID='" + monHocID + '\'' +
+                // ", monHocID='" + monHocID + '\'' +
                 // Include other attributes here
                 '}';
     }
