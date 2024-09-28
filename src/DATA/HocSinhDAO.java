@@ -88,6 +88,10 @@ public class HocSinhDAO {
         mySQL.executeUpdate(sql);
         System.out.println(sql);
     }
+
+    public void addToNextGrade(){
+        
+    }
     public static void main(String[] args) {
     HocSinhDAO test = new HocSinhDAO();
     ArrayList<HocSinhDTO> list = test.list();
@@ -104,6 +108,7 @@ public class HocSinhDAO {
         System.out.println("IMG: " + hs.getIMG());
         System.out.println(); // for readability
     }
-}
+
+    }
 
 }

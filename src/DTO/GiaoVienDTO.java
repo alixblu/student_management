@@ -3,7 +3,6 @@ package DTO;
 public class GiaoVienDTO {
    private String maGV, TenGV,GioiTinh,IMG;
    private String NamSinh,DienThoai,Diachi, PhanMon;
-
    
     public GiaoVienDTO(String maGV, String tenGV, String gioiTinh, String iMG, String namSinh, String dienThoai, String phanMon,
         String diachi) {

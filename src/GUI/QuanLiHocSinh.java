@@ -36,6 +36,7 @@ import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.ChangeAcc_BUS;
+import BUS.ChiTietDiemBUS;
 import BUS.HocSinhBUS;
 import BUS.LopBUS;
 import BUS.NamHocBUS;
@@ -443,35 +444,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         }
     }
 
-    public void addRow() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = dateChooser.getDate();
-        String dateString = sdf.format(date); // Convert Date to String
-
-        // Lấy các giá trị từ các trường nhập
-        
-        Integer countHS = +hsBUS.CountHS() + 1;
-        System.out.println("Số lượng học sinh: " + countHS);
-        String hocSinhID = "HSK" + soKhoa + countHS;
-        // String hocSinhID = tf[0].getText();
-        String tenHocSinh = tf[1].getText();
-        String gioiTinh = (String) genderComboBox.getSelectedItem();
-        String ngaySinh = dateString;
-        String diaChi = tf[4].getText();
-        String soDienThoai = tf[5].getText();
-        String IMG = tf[6].getText();
-        System.out.println(diaChi);
-        HocSinhDTO hocSinh = new HocSinhDTO(hocSinhID, tenHocSinh, gioiTinh, ngaySinh,
-                soDienThoai, diaChi);
-        hocSinh.setIMG(IMG);
-       
-        hsBUS.addHS(hocSinh);
-
-        Object[] rowData = { hocSinhID, tenHocSinh, gioiTinh, ngaySinh, diaChi, soDienThoai, IMG };
-        tblmodel.addRow(rowData);
-        clearTextFields();
-    }
-
+    
     public void deleteRow() {
         int row = t.getSelectedRow();
         if (row != -1) {
@@ -578,6 +551,12 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         Integer countHS = +hsBUS.CountHS() + 1;
         String hocSinhID = "HSK" + soKhoa + countHS;
         themHS.textField_mahs.setText(hocSinhID);
+        
+        System.out.println("Tao data chi tiet diem");
+        //tạo 1 loạt data trong ChiTietDiem table
+        NamHocBUS nhbus = new NamHocBUS(1);
+        ChiTietDiemBUS ctdbus = new ChiTietDiemBUS();
+        ctdbus.createChiTietDiem(hocSinhID, nhbus.getCurrYearId());
     }
 
    

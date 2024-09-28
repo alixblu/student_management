@@ -184,36 +184,31 @@ public class NamHocBUS {
         return mnh;
     }
 
-    public boolean isCurrentYear(String tennamhoc, String idhocky){
-        String idnam = getNamhocByName(tennamhoc, idhocky).getNamHocID(); 
+    public boolean isCurrentSem(String tennamhoc, String idhocky){
+        NamHocDTO nam = getByName(tennamhoc); 
         try {
-            if (ktraEnabel(idnam) == 1) return true;
+            if (ktraEnabel(nam.getNamHocID()) == 1 & nam.getHocKy().equals(idhocky)) return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public NamHocDTO getNamhocByName(String tennamhoc, String idhocky)
-    {
-        //2024-2025
-        for(NamHocDTO nh : dsnh )
+    public String getCurrYearId(){
+        for(NamHocDTO nh : dsnh)
         {
-            if(nh.getNamHocKetThuc()==(Integer.parseInt(tennamhoc.substring(5))) && nh.getHocKy().equals(idhocky))
-            {
-                return nh;
+            try {
+                if( ktraEnabel(nh.getNamHocID())==1)
+                {
+                    return nh.getNamHocID();
+                }
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
-        return null;
+        return "Không có năm học đang tồn tại";
     }
-//tach hocki khoi namhoc id
-    public String yearOnlyID(String manamhoc){
-        if(manamhoc == null){
-            System.out.println("yearOnlyID() error");
-        };
-        return manamhoc.substring(0, 8);
-    }
-
 
     public void updateHocKy(String hocky){
         NamHocDAO dao = new NamHocDAO();
@@ -222,6 +217,6 @@ public class NamHocBUS {
 
     public static void main(String[] args) {
         NamHocBUS bus = new NamHocBUS(1);
-        System.out.println(bus.yearOnlyID("2024202501"));
+        System.out.println(bus.isCurrentSem("2024-2025", "2"));
     }
 }

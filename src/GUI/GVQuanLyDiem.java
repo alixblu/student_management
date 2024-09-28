@@ -21,6 +21,7 @@ import javax.swing.table.JTableHeader;
 
 import BUS.ChiTietDiemBUS;
 import BUS.DTB_HocKyBUS;
+import BUS.GiaoVienBUS;
 import BUS.HocKyBUS;
 import BUS.HocSinhBUS;
 import BUS.KQ_HocSinhCaNamBUS;
@@ -45,9 +46,8 @@ import DTO.PhanLopDTO;
  * @author PHUONG ANH
  */
 public class GVQuanLyDiem extends JPanel {
-    protected int StatusDiem = 0 ;
+    protected int isSubmit;
     String magiaovien;
-    
     //private JFrame f;
     private JPanel topPanel, radioPanel, dropdownPanel, selectPanel, totalPanel, btnPanel, btnPanel2, contentPanel,
             detailPanel, main_detailPanel;
@@ -55,7 +55,7 @@ public class GVQuanLyDiem extends JPanel {
     private JComboBox<String> optionLop, optionHe, optionHocky, optionNam;
     private JTextField s, inputID, outputDiem;
     private JLabel l1, l2;
-    private JButton filterBtn, editBtn, delBtn, sendBtn;
+    private JButton filterBtn, editBtn, delBtn, submitBtn;
     private NonEditableTableModel tblModel;
     private JScrollPane scrollPane;
     private JTable t;
@@ -83,14 +83,16 @@ public class GVQuanLyDiem extends JPanel {
     KQ_HocSinhCaNamBUS kqbus = new KQ_HocSinhCaNamBUS(1);
     NamHocBUS nhbus = new NamHocBUS(1);
     PhanCongBUS pcbus = new PhanCongBUS(1);
+    GiaoVienBUS gvbus = new GiaoVienBUS();
     int width, height;
 
     public GVQuanLyDiem(int width, int height, String magiaovien) {
-    //public GVQuanLyDiem(String magiaovien) {
+    // public GVQuanLyDiem(String magiaovien) {
 
         this.magiaovien = magiaovien;
         this.width = width;
         this.height = height;
+        //f = new JFrame();
         setLayout(new BorderLayout());
         setSize(850, 670);
 
@@ -163,10 +165,10 @@ public class GVQuanLyDiem extends JPanel {
         filterBtn.setBackground(new Color(31, 28, 77));
         filterBtn.setForeground(Color.WHITE);
 
-        sendBtn = new JButton("Gửi lên hệ thống");
-        sendBtn.setPreferredSize(new Dimension(160, 30));
-        sendBtn.setBackground(new Color(100, 100, 255)); // Customize the color as needed
-        sendBtn.setForeground(Color.WHITE);
+        submitBtn = new JButton("Gửi lên hệ thống");
+        submitBtn.setPreferredSize(new Dimension(160, 30));
+        submitBtn.setBackground(new Color(100, 100, 255)); // Customize the color as needed
+        submitBtn.setForeground(Color.WHITE);
 
         detailPanel = new JPanel();
         detailPanel.setLayout(new BorderLayout());
@@ -186,10 +188,10 @@ public class GVQuanLyDiem extends JPanel {
         gbcExportBtn.gridy = 1;
         gbcExportBtn.insets = new Insets(5, 0, 5, 10);
 
-        GridBagConstraints gbcsendBtn = new GridBagConstraints();
-        gbcsendBtn.gridx = 0;
-        gbcsendBtn.gridy = 2; // Set it to row 2, just below filterBtn (which is in row 1)
-        gbcsendBtn.insets = new Insets(5, 0, 5, 10);
+        GridBagConstraints gbcsubmitBtn = new GridBagConstraints();
+        gbcsubmitBtn.gridx = 0;
+        gbcsubmitBtn.gridy = 2; // Set it to row 2, just below filterBtn (which is in row 1)
+        gbcsubmitBtn.insets = new Insets(5, 0, 5, 10);
 
         ///////////////
         main_detailPanel = new JPanel();
@@ -197,7 +199,7 @@ public class GVQuanLyDiem extends JPanel {
 
         JLabel a1 = new JLabel("Nhập thay đổi điểm:    ");
         outputDiem = new JTextField(5);
-        a1.setPreferredSize(new Dimension(200, 30));
+a1.setPreferredSize(new Dimension(200, 30));
         outputDiem.setPreferredSize(new Dimension(200, 30));
         Font font = a1.getFont();
         float fontSize = font.getSize() + 5; // Increase the font size by 5 points (adjust as needed)
@@ -208,7 +210,7 @@ public class GVQuanLyDiem extends JPanel {
 
         /////////
         btnPanel.add(filterBtn, gbcExportBtn);
-        btnPanel.add(sendBtn, gbcsendBtn);
+        btnPanel.add(submitBtn, gbcsubmitBtn);
 
         totalPanel.add(l2);
         totalPanel.add(s);
@@ -248,81 +250,82 @@ public class GVQuanLyDiem extends JPanel {
         add(contentPanel);
         setVisible(true);
 
-        checkStatus();
+        checkSubmit();
         filterBtn.addActionListener(new FilterBtnListener());
         
     }
 
-    public void checkStatus() {
-    // Remove all existing listeners before adding new ones
-    removeAllListeners();
-
-    if (StatusDiem == 1) {  // StatusDiem == 1, meaning points are already submitted
-        outputDiem.setEditable(false);  // Disable editing
-        // Add the same listener for both edit and delete buttons
-        ActionListener listener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Không thể thay đổi điểm sau khi đã gửi lên hệ thống");
-            }
-        };
+    public void checkSubmit() {
+        // Remove all existing listeners before adding new ones
+        removeAllListeners();
         
-        // Add listener to edit and delete buttons
-        editBtn.addActionListener(listener);
-        delBtn.addActionListener(listener);
-
-        // Disable the send button
-        sendBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                sendBtn.setEnabled(false);
-            }
-        });
-
-    } else {  // StatusDiem != 1, meaning points are still editable
-        outputDiem.setEditable(true);  // Allow editing
-
-        // Add specific listeners for edit, delete, and send actions
-        editBtn.addActionListener(new EditBtnListener());
-        delBtn.addActionListener(new DelBtnListener());
-
-        sendBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(
-                    null,
-                    "Tài khoản này sẽ không thể thay đổi điểm sau khi gửi lên hệ thống!",
-                    "Bạn có chắc muốn tiếp tục?",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.PLAIN_MESSAGE
-                );
-
-                if (result == JOptionPane.YES_OPTION) {
-                    StatusDiem = 1;
-                    checkStatus();  // Re-check status after submission
+        if (isSubmit == 1) {  // isSubmit == 1, meaning points are already submitted
+            outputDiem.setEditable(false);  // Disable editing
+            // Add the same listener for both edit and delete buttons
+            ActionListener listener = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JOptionPane.showMessageDialog(null, "Không thể thay đổi điểm sau khi đã gửi lên hệ thống");
                 }
+            };
+            
+            // Add listener to edit and delete buttons
+            editBtn.addActionListener(listener);
+            delBtn.addActionListener(listener);
+
+            submitBtn.setEnabled(false);
+            
+
+        } else {  // isSubmit != 1, meaning points are still editable
+            if(ctbus.isAnyDiemNull(magiaovien)){
+                ActionListener listener = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ điểm trước khi gửi");
+                    }
+                };
+                submitBtn.addActionListener(listener);
             }
-        });
-    }
-}
 
-// Method to remove all ActionListeners from buttons
-private void removeAllListeners() {
-    // Remove all ActionListeners from edit button
-    for (ActionListener al : editBtn.getActionListeners()) {
-        editBtn.removeActionListener(al);
-    }
-    
-    // Remove all ActionListeners from delete button
-    for (ActionListener al : delBtn.getActionListeners()) {
-        delBtn.removeActionListener(al);
+            outputDiem.setEditable(true);  // Allow editing
+
+            removeAllListeners();
+            // Add specific listeners for edit, delete, and send actions
+            editBtn.addActionListener(new EditBtnListener());
+            delBtn.addActionListener(new DelBtnListener());
+
+            submitBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int result = JOptionPane.showConfirmDialog(
+                        null,
+                        "Tài khoản này sẽ không thể thay đổi điểm sau khi gửi lên hệ thống!",
+                        "Bạn có chắc muốn tiếp tục?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
+                    );
+
+                    if (result == JOptionPane.YES_OPTION) {
+                        isSubmit = 1;
+                        checkSubmit();  // Re-check status after submission
+                    }
+                }
+            });
+        }
     }
 
-    // Remove all ActionListeners from send button
-    for (ActionListener al : sendBtn.getActionListeners()) {
-        sendBtn.removeActionListener(al);
+    // Method to remove all ActionListeners from buttons
+    private void removeAllListeners() {
+        for (ActionListener al : editBtn.getActionListeners()) {
+            editBtn.removeActionListener(al);
+        }
+        for (ActionListener al : delBtn.getActionListeners()) {
+            delBtn.removeActionListener(al);
+        }
+        for (ActionListener al : submitBtn.getActionListeners()) {
+            submitBtn.removeActionListener(al);
+        }
     }
-}
 
 
     public JScrollPane initTable() {
@@ -385,16 +388,17 @@ private void removeAllListeners() {
         dsdtb = dtbbus.getList();
         dshk = hkbus.getList();
         dsnh = nhbus.getList();
-        String idmon = pcbus.get(magiaovien).getMonHocID();
+        String idmon = gvbus.getIdMon(magiaovien);
         System.out.println("id mon GV :" + idmon);
         for (HocSinhDTO hs : dshs) {
             for (NamHocDTO nh : dsnh) {
                 String idNamHoc = nh.getNamHocID();
                 String idhs = hs.getHocSinhID();
                 String idlop = plbus.get(idhs, idNamHoc) != null ? plbus.get(idhs, idNamHoc).getLopID() : "";
-                
+                for(HocKyDTO hk: dshk){
+
                     for (int heso = 1; heso < 4; heso++) {
-                        String idHocKy = nh.getHocKy();
+                        String idHocKy = hk.getHocKyID();
                         String idDiemHocKy = ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso) != null
                                 ? String.valueOf(ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso).getDiem())
                                 : "";
@@ -420,6 +424,7 @@ private void removeAllListeners() {
                         tblModel.addRow(rowData);
                         
                     }
+                }
             }
         }
         tblModel.fireTableDataChanged();
@@ -515,7 +520,7 @@ private void removeAllListeners() {
     }
 
     private void tableMouseClicked(java.awt.event.MouseEvent e) throws ParseException {
-        checkStatus();
+        checkSubmit();
 
         outputDiem.setEditable(true);
         int row = t.getSelectedRow();
@@ -532,8 +537,8 @@ private void removeAllListeners() {
         outputDiemcanam = (String) t.getValueAt(row, 9);
 
         String hockyid = outputHK.substring(outputHK.length() - 1);
-        //sua diem hoc ky truoc
-        if(!nhbus.isCurrentYear(outputNam, hockyid)){
+        //khi sua diem o hoc ky truoc
+        if(!nhbus.isCurrentSem(outputNam, hockyid)){
             removeAllListeners();
             editBtn.addActionListener(new CannotEditListener());
             delBtn.addActionListener(new CannotEditListener());
@@ -712,10 +717,8 @@ private void removeAllListeners() {
         System.out.println(idhs);
         int idhe = Integer.parseInt(outputHeid);
         System.out.println(idhe);
-        Float diemHK = (outputDiemhk == null || outputDiemhk.equals("")) ? -1 : Float.parseFloat(outputDiemhk);// sử lý
-                                                                                                               // hàm
-                                                                                                               // set
-                                                                                                               // với -1
+        Float diemHK = (outputDiemhk == null || outputDiemhk.equals("")) ? -1 : Float.parseFloat(outputDiemhk);
+                                                                                                         
         System.out.println(diemHK);
         Float diemCanam = (outputDiemcanam == null || outputDiemcanam.equals("")) ? -1
                 : Float.parseFloat(outputDiemcanam);
@@ -837,4 +840,7 @@ private void removeAllListeners() {
         outputLop = null;
     }
 
+    // public static void main(String[] args) {
+    //     new GVQuanLyDiem("GV1");
+    // }
 }

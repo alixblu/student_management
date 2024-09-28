@@ -52,16 +52,6 @@ public class NamHocDAO {
             mySQL.executeUpdate(sql);
     }
     
-    public void add(NamHocDTO nh) {
-        MySQLConnect mySQL = new MySQLConnect();
-         String sql = "INSERT INTO namhoc VALUES (";
-                sql += "'"+nh.getNamHocID()+"',";
-                sql += "'"+nh.getNamHocBatDau()+"',";
-                sql += "'"+nh.getNamHocKetThuc()+"',";
-         System.out.println(sql);
-         mySQL.executeUpdate(sql);
-    }
-
     public void delete(String id) {
         String sql = "DELETE FROM namhoc WHERE NamHocid  = ?";
         java.sql.Connection con = null;
@@ -238,11 +228,6 @@ public class NamHocDAO {
 
     public static void main(String[] args) {
         NamHocDAO dao = new NamHocDAO();
-        try {
-            System.out.println(dao.ktraEnable("2024202502"));
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        
     }
 }

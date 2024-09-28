@@ -73,19 +73,13 @@ public class ChiTietDiemBUS {
                 dsctd.remove( s);
                 ChiTietDiemDAO ctdDATA = new ChiTietDiemDAO();
                 ctdDATA.delete(s);
-                System.out.println("set chitietdiem-------");
+                System.out.println("delete chitietdiem-------");
                 return;
             }
         }
     }
-    public void add(ChiTietDiemDTO ctd)
-    {
-        dsctd.add(ctd);
-        ChiTietDiemDAO ctdDATA = new ChiTietDiemDAO();
-        ctdDATA.add(ctd);
-    }
+
     public void set(ChiTietDiemDTO s){
-        boolean found = false;
         for(int i = 0 ; i < dsctd.size() ; i++)
         {
             if(dsctd.get(i).getHocSinhID().equals(s.getHocSinhID()) &&
@@ -97,14 +91,10 @@ public class ChiTietDiemBUS {
                 ChiTietDiemDAO ctdDATA = new ChiTietDiemDAO();
                 ctdDATA.set(s);
                 System.out.println("set chitietdiem-------");
-                found = true;
                 break;
             }
         }
-        if (!found) {
-            add(s);
-        }
-}
+    }
 
     
     public boolean check(String id)
@@ -140,7 +130,14 @@ public class ChiTietDiemBUS {
         }
         return search;
     }
-
+    public void createChiTietDiem(String hocsinhID, String namhocID){
+        ChiTietDiemDAO dao = new ChiTietDiemDAO();
+        dao.createChiTietDiem(hocsinhID, namhocID);
+    }
+    public boolean isAnyDiemNull(String magv){
+        ChiTietDiemDAO dao = new ChiTietDiemDAO();
+        return dao.isAnyDiemNull(magv);
+    }
     public ArrayList<ChiTietDiemDTO> getList() {
         return dsctd;
     }

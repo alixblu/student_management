@@ -101,7 +101,6 @@ public class GiaoVienDAO {
             }
         }
     }
-  
     // public void set(GiaoVienDTO gv)
     // {
     //     String sql = "UPDATE giaovien SET ";
@@ -181,10 +180,46 @@ public class GiaoVienDAO {
     }
     
 
+    public String getMonHocId( String magv) {
+        String monHocId = null;  // Single result
+        String sql = "SELECT monhoc.MonHocid FROM giaovien "
+                   + "JOIN monhoc ON giaovien.PhanMon = monhoc.TenMonHoc and enable = 1 where GiaoVienid = ?" ;
+        
+        java.sql.Connection con = null;
+        java.sql.PreparedStatement ps = null;
+        ResultSet rs = null;
+    
+        try {
+            // Connect to the database
+            con = new MySQLConnect().getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, magv);
+            
+            // Execute the query
+            rs = ps.executeQuery();
+            
+            // Get the result (if it exists)
+            if (rs.next()) {
+                monHocId = rs.getString("MonHocid");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();  // Log any SQL errors
+        } finally {
+            // Close the resources properly
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return monHocId;
+    }
 
-
-
-public Integer CountGV() {
+    public Integer CountGV() {
         String sql = "SELECT COUNT(*) AS count FROM giaovien";
         Integer count = 0;
 
@@ -220,5 +255,9 @@ public ArrayList<GiaoVienDTO> checkMagv() {
             e.printStackTrace();
         }
         return dsgv;
+    }
+    public static void main(String[] args) {
+        GiaoVienDAO dao = new GiaoVienDAO();
+        System.out.println(dao.getMonHocId("GV1"));
     }
 }
