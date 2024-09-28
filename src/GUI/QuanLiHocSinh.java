@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -330,7 +331,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         Phocsinh.add(Pchucnang);
     
         lblimg = new JLabel();
-        lblimg.setBounds(0, 0, 180, y);
+        lblimg.setBounds(0, 0, 180, y-80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
         lblimg.setOpaque(true);
         Phocsinh.add(lblimg);
@@ -810,6 +811,19 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 e1.printStackTrace();
             }
         }
-
+    }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(850, 670);
+        QuanLiHocSinh panel;
+        try {
+            panel = new QuanLiHocSinh(850, 670);
+            frame.add(panel);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        frame.setVisible(true);
     }
 }

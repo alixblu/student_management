@@ -341,7 +341,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         Phocsinh.add(Pchucnang);
 
         lblimg = new JLabel();
-        lblimg.setBounds(0, 0, 180, y);
+        lblimg.setBounds(0, 0, 180, y-80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
         lblimg.setOpaque(true);
         Phocsinh.add(lblimg);

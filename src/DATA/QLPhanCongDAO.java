@@ -79,7 +79,7 @@ public class QLPhanCongDAO {
     public void Add(QLPhanCongDTO pc) {
         MySQLConnect mySQL = new MySQLConnect();
         // String mamonhoc = null;
-        String malop = null;
+        String malop = "";
 
         // String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
         // try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
@@ -108,11 +108,11 @@ public class QLPhanCongDAO {
         String n = pc.getMagv();
         System.out.println(n);
         if ( malop != null) {
-            String sql = "INSERT INTO phancong (Giaovienid, Lopid) VALUES (?, ?)";
+            String sql = "INSERT INTO phancong (Giaovienid, Lopid , enable)  VALUES (?, ? ,?)";
             try (PreparedStatement ps = mySQL.getConnection().prepareStatement(sql)) {
                 ps.setString(1, pc.getMagv());
-                // ps.setString(2, mamonhoc);
                 ps.setString(2, malop);
+                ps.setInt(3, 1);
                 ps.executeUpdate();
                 System.out.println("Thêm thành công");
             } catch (SQLException e) {
@@ -125,20 +125,7 @@ public class QLPhanCongDAO {
 
     public void delete(QLPhanCongDTO pc) {
         MySQLConnect mySQL = new MySQLConnect();
-        String mamonhoc = null;
         String malop = null;
-
-        // String sql1 = "SELECT MonHocid FROM monhoc WHERE TenMonHoc = ?";
-        // try (PreparedStatement ps1 = mySQL.getConnection().prepareStatement(sql1)) {
-        //     ps1.setString(1, pc.getMon());
-        //     try (ResultSet rs1 = ps1.executeQuery()) {
-        //         if (rs1.next()) {
-        //             mamonhoc = rs1.getString("MonHocid");
-        //         }
-        //     }
-        // } catch (SQLException e) {
-        //     System.err.println("Lỗi ở QLPCBUS trong phần MonHoc: " + e.getMessage());
-        // }
 
         String sql2 = "SELECT Lopid FROM lop WHERE TenLop = ?";
         try (PreparedStatement ps2 = mySQL.getConnection().prepareStatement(sql2)) {
