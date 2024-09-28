@@ -262,6 +262,7 @@ public class ThemHocSinh extends JFrame {
                         hocSinh.setIMG(IMG);
                         HocSinhBUS hsBUS = new HocSinhBUS();
                         hsBUS.add(hocSinh);
+                        System.out.println("thêm học sinh thành công");
                         String tenlop = comboBox_lop.getSelectedItem().toString();
                         Calendar calendar = Calendar.getInstance();
                         // Lấy năm từ Calendar

@@ -154,4 +154,21 @@ public class MonHocDAO {
         }
         return dsmh;
     }
+    
+    public Integer CountMH() {
+        String sql = "SELECT COUNT(*) AS count FROM monhoc";
+        Integer count = 0;
+
+        try {
+            ResultSet rs = mySQL.executeQuery(sql);
+
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý ngoại lệ
+        }
+        return count;
+    }
 }

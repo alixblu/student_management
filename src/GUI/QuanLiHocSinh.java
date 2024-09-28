@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -122,8 +123,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         Color searchPanel = new Color(180, 204, 227);
         this.setLayout(new BorderLayout());
         JPanel p3 = SearchHocSinh();
-        // p3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0,0,0) , 4
-        // , true));
+        
         p3.setPreferredSize(new Dimension(0, 60));
         p3.setBackground(searchPanel);
 
@@ -133,10 +133,9 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         p1.setPreferredSize(new Dimension(0, 0));
 
         JPanel p2 = new JPanel();
-        //p2.setLayout(new FlowLayout(1, 0, 0));
         p2.setLayout(new BorderLayout());
         p2.add(initTable(), BorderLayout.SOUTH);
-        p2.setPreferredSize(new Dimension(0, 300));
+        p2.setPreferredSize(new Dimension(0, 295));
         p2.setBackground(Color.gray);
 
         this.add(p1, BorderLayout.CENTER);
@@ -333,7 +332,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         Phocsinh.add(Pchucnang);
     
         lblimg = new JLabel();
-        lblimg.setBounds(0, 0, 180, y);
+        lblimg.setBounds(0, 0, 180, y-80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
         lblimg.setOpaque(true);
         Phocsinh.add(lblimg);
@@ -791,6 +790,19 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 e1.printStackTrace();
             }
         }
-
+    }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(850, 670);
+        QuanLiHocSinh panel;
+        try {
+            panel = new QuanLiHocSinh(850, 670);
+            frame.add(panel);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        frame.setVisible(true);
     }
 }

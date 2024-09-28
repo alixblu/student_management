@@ -44,8 +44,13 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
+import BUS.GiaoVienBUS;
+import BUS.MonHocBUS;
 import BUS.QLPhanCongBUS;
+import DATA.GiaoVienDAO;
+import DTO.GiaoVienDTO;
 import DTO.HocSinhDTO;
+import DTO.MonHocDTO;
 import DTO.QLPhanCongDTO;
 
 import java.text.ParseException;
@@ -101,6 +106,10 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     private String tenlop;
     private String tenmon;
     private JComboBox phangiaoviencomboBox;
+
+    private MonHocBUS mhBus;
+    private GiaoVienBUS gvBus = new GiaoVienBUS();
+    ArrayList<GiaoVienDTO> list_gv;
 
     public QuanLiPhanCong(int width, int height) throws SQLException {
         this.width = width;
@@ -277,7 +286,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         // ArrayList<String> listmh = pcBUS.getTenMHList();
         ArrayList<String> listmagv = pcBUS.getMaGVList();
 
-        String[] arrphancong = { "Mã Giáo Viên", "Tên Giáo Viên", "Phân Lớp"};
+        String[] arrphancong = { "Mã Giáo Viên", "Tên Giáo Viên","Môn học", "Phân Lớp"};
 
         int length = arrphancong.length;
         tf = new JTextField[length];
@@ -305,18 +314,12 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
                 phangiaoviencomboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(phangiaoviencomboBox);
                 toadoYTextfield = toadoYTextfield + 35 + 20;
-            } else if (i == 2) {
+            } else if (i == 3) {
                 phanlopComboBox = new JComboBox<>(listlop.toArray(new String[0]));
                 phanlopComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(phanlopComboBox);
                 toadoYTextfield = toadoYTextfield + 35 + 20;
             }
-            //  else if (i == 3) {
-            //     phanmonComboBox = new JComboBox<>(listmh.toArray(new String[0]));
-            //     phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
-            //     Phocsinh.add(phanmonComboBox);
-            //     toadoYTextfield = toadoYTextfield + 35 + 20;
-            // } 
             else {
                 tf[i] = new JTextField();
                 tf[i].setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
@@ -331,13 +334,15 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         x = x + 180;
         tf[1].setEditable(false);
         tf[1].setFocusable(false);
+        tf[2].setEditable(false);
+        tf[2].setFocusable(false);
         JPanel Pchucnang = JChucnang();
         Pchucnang.setBounds(660, 3, 165, y + 115);
         lblimg = new JLabel();
         lblimg.setBounds(0, 0, 180, y + 80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(5, 5, 5), 4, true));
         lblimg.setOpaque(true);
-        lblimg.setBackground(Color.BLACK);
+        lblimg.setBackground(Color.GRAY);
         lblimg.setOpaque(true);
         Phocsinh.add(lblimg);
         Phocsinh.add(Pchucnang);
@@ -353,20 +358,30 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 370));
-        String[] header = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp"};
+        String[] header = { "Mã giáo viên", "Tên Giáo Viên", "Môn dạy học", "Tên lớp"};
 
         Integer lenght = header.length;
         pcBUS.listPC();
         ArrayList<QLPhanCongDTO> dspc = pcBUS.getList();
+
+        list_gv = gvBus.getList();
 
         Object[][] rowData = new Object[dspc.size()][lenght];
         for (int i = 0; i < dspc.size(); i++) {
             QLPhanCongDTO pc = dspc.get(i);
             rowData[i][0] = pc.getMagv();
             rowData[i][1] = pc.getTengv();
-            rowData[i][2] = pc.getLop();
-            // rowData[i][3] = pc.getMon();
+            for(int j = 0 ; i <list_gv.size(); i++){
+                GiaoVienDTO gv = list_gv.get(j);
+                if(pc.getMagv().equals(gv.getMaGV())){
+                    rowData[i][2] = gv.getphanMon();
+                    rowData[i][3] = pc.getLop();
+                }
+            }
         }
+
+
+
 
         Font font = new Font("Arial", Font.BOLD, 12);
         Color title_color = new Color(31, 28, 77);
@@ -395,9 +410,10 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     public void addRow() {
         String magv = (String) phangiaoviencomboBox.getSelectedItem();
         String tengv = tf[1].getText();
+        String tenmh = tf[2].getText();
         String tenlop = (String) phanlopComboBox.getSelectedItem();
         // String tenmon = (String) phanmonComboBox.getSelectedItem();
-        Object rowdata[] = { magv, tengv, tenlop, tenmon };
+        Object rowdata[] = { magv, tengv, tenmh ,tenlop };
 
         QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop);
         pcBUS.add(pc);
@@ -424,9 +440,10 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     public void updateRow() {
         String magv = (String) phangiaoviencomboBox.getSelectedItem();
         String tengv = tf[1].getText();
+        String tenmh = tf[2].getText();
         String tenlop = (String) phanlopComboBox.getSelectedItem();
         // String tenmon = (String) phanmonComboBox.getSelectedItem();
-        Object[] rowData = { magv, tengv, tenlop };
+        Object[] rowData = { magv, tengv, tenmh ,tenlop };
         QLPhanCongDTO pc = new QLPhanCongDTO(magv, tengv, tenlop);
         if (pcBUS.checkExist(pc)) {
             JOptionPane.showMessageDialog(this, "Đã tồn tại sự phân công này", "Error", JOptionPane.ERROR_MESSAGE);
@@ -450,6 +467,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         phanlopComboBox.setSelectedItem("None");
         // phanmonComboBox.setSelectedItem("None");
         tf[1].setText("none");
+        tf[2].setText("none");
     }
 
     public boolean checkEmpty() {
@@ -466,11 +484,13 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         int row = t.getSelectedRow();
         magv = (String) t.getValueAt(row, 0);
         tengiaovien = (String.valueOf(t.getValueAt(row, 1)));
-        tenlop = (String.valueOf(t.getValueAt(row, 2)));
+        String tenmh = (String.valueOf(t.getValueAt(row, 2)));
+        tenlop = (String.valueOf(t.getValueAt(row, 3)));
         // tenmon = (String.valueOf(t.getValueAt(row, 3)));
 
         phangiaoviencomboBox.setSelectedItem(magv);
         tf[1].setText(tengiaovien);
+        tf[2].setText(tenmh);
         phanlopComboBox.setSelectedItem(tenlop);
         // phanmonComboBox.setSelectedItem(tenmon);
         String img = null;
@@ -633,6 +653,7 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
             String path = chooser.getSelectedFile().toString().concat(".xls");
 
             Workbook workbook = new HSSFWorkbook();
+
             Sheet sheet = workbook.createSheet("DanhSachPhanCong");
             Row headerRow = sheet.createRow(0);
             String[] headers = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp" };
@@ -719,7 +740,15 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         if (e.getSource() == phangiaoviencomboBox) {
             String magv = (String) phangiaoviencomboBox.getSelectedItem();
             String tengv = pcBUS.getName(magv);
+            String tenmh = "";
+            for(int i = 0 ; i <list_gv.size(); i++){
+                GiaoVienDTO gv = list_gv.get(i);
+                if(gv.getMaGV().equals(magv)){
+                    tenmh = gv.getphanMon();
+                }
+            }
             tf[1].setText(tengv);
+            tf[2].setText(tenmh);
         }
 
         if (e.getSource() == btnThem) {

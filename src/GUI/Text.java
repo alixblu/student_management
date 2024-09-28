@@ -213,7 +213,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
             case "CN1": // QUẢN LÝ Hoc Sinh
                 main.removeAll();
                 try {
-                    main.add(new QuanLiHocSinh(850, 670));
+                    main.add(new QuanLiHocSinh(850, 660));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -224,7 +224,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
             case "CN2": // QUẢN LÝ Giao Vien
                 main.removeAll();
                 try {
-                    main.add(new QLGV(850, 670));
+                    main.add(new QLGV(850, 660));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
