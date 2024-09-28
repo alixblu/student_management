@@ -140,7 +140,9 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
         this.add(p3, BorderLayout.NORTH);
         this.setSize(new Dimension(width, height));
         this.setVisible(true);
-
+        tf[0].setEnabled(false);
+        btnSua.setEnabled(false);
+        
     }
 //tìm kiếm, 
     public JPanel SearchHocSinh() {
@@ -337,11 +339,12 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
     }
 
     public void addRow() {
-        String MonHocid = tf[0].getText();
+    	Integer countHS = +mhBUS.CountMH() + 1;
+    	String monhocID = "MH" + String.valueOf(countHS);
         String TenMonHoc = tf[1].getText();
-        MonHocDTO monhoc = new MonHocDTO(MonHocid, TenMonHoc);
+        MonHocDTO monhoc = new MonHocDTO(monhocID, TenMonHoc);
         mhBUS.addMH(monhoc);
-        Object[] rowData = { MonHocid, TenMonHoc };
+        Object[] rowData = { monhocID, TenMonHoc };
         tblmodel.addRow(rowData);
         clearTextFields();
     }
@@ -375,8 +378,8 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
     }
 
     public boolean checkEmpty() {
-        boolean isEmpty = tf[0].getText().isEmpty() ||
-        tf[1].getText().isEmpty();
+//        boolean isEmpty = tf[0].getText().isEmpty() ||
+    	 boolean isEmpty=tf[1].getText().isEmpty();
         return isEmpty ;
     }
 
@@ -389,8 +392,13 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
     }
 
     public void btnAdd_actionPerformed() {
+    	
+    	Integer countHS = +mhBUS.CountMH() + 1;
+    	String monhocID = "MH" + String.valueOf(countHS);
+//    	tf[0].setText(monhocID);
+    	
         if (checkEmpty()) {
-            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error",
+            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ tên môn học", "Error",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -409,6 +417,7 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
            // autoCreateAccount();
             addRow();
         }
+        
     }
 
     public void btnDelete_actionPerformed() {
