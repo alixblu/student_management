@@ -46,6 +46,10 @@ public class GiaoVienBUS {
         return false;
     }
 
+    public String getIdMon(String magv){
+        GiaoVienDAO gVienDAO = new GiaoVienDAO();
+        return gVienDAO.getMonHocId(magv);
+    }
     public GiaoVienDTO getGV(String magv) {
         for (GiaoVienDTO gv : dsgv) {
             if (gv.getMaGV().equals(magv)) {
