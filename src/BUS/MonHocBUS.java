@@ -3,6 +3,7 @@ package BUS;
 import java.util.ArrayList;
 
 import DATA.MonHocDAO;
+import DATA.QLHS_DAO;
 import DTO.MonHocDTO;
 
 public class MonHocBUS {
@@ -178,5 +179,11 @@ public class MonHocBUS {
         } else {
             System.out.println("Không tìm thấy môn học với tên: " + tenMonHocCanTim);
         }
+    }
+    
+    public Integer CountMH() {
+        MonHocDAO mh = new MonHocDAO();
+        Integer count = mh.CountMH();
+        return count;
     }
 }
