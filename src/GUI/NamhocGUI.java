@@ -351,6 +351,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         String NamHocid = NamBatDau + "" + NamKetThuc;
         NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc, "1", 1);
         nhBUS.addNH(namhoc);
+        GVQuanLyDiem.isSubmit = 0;
         Object[] rowData = { NamHocid, NamBatDau, NamKetThuc, 1 };
         tblmodel.addRow(rowData);
         clearTextFields();
