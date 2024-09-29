@@ -134,6 +134,7 @@ public class ChiTietDiemBUS {
         ChiTietDiemDAO dao = new ChiTietDiemDAO();
         dao.createChiTietDiem(hocsinhID, namhocID);
     }
+    
     public boolean isAnyDiemNull(String magv){
         ChiTietDiemDAO dao = new ChiTietDiemDAO();
         return dao.isAnyDiemNull(magv);

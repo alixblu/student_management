@@ -28,7 +28,6 @@ import BUS.KQ_HocSinhCaNamBUS;
 import BUS.LopBUS;
 import BUS.MonHocBUS;
 import BUS.NamHocBUS;
-import BUS.PhanCongBUS;
 import BUS.PhanLopBUS;
 import DTO.ChiTietDiemDTO;
 import DTO.DTB_HocKyDTO;
@@ -46,7 +45,7 @@ import DTO.PhanLopDTO;
  * @author PHUONG ANH
  */
 public class GVQuanLyDiem extends JPanel {
-    protected int isSubmit;
+    static protected int isSubmit = 0;
     String magiaovien;
     //private JFrame f;
     private JPanel topPanel, radioPanel, dropdownPanel, selectPanel, totalPanel, btnPanel, btnPanel2, contentPanel,
@@ -82,7 +81,6 @@ public class GVQuanLyDiem extends JPanel {
     HocKyBUS hkbus = new HocKyBUS(1);
     KQ_HocSinhCaNamBUS kqbus = new KQ_HocSinhCaNamBUS(1);
     NamHocBUS nhbus = new NamHocBUS(1);
-    PhanCongBUS pcbus = new PhanCongBUS(1);
     GiaoVienBUS gvbus = new GiaoVienBUS();
     int width, height;
 
@@ -167,7 +165,7 @@ public class GVQuanLyDiem extends JPanel {
 
         submitBtn = new JButton("Gửi lên hệ thống");
         submitBtn.setPreferredSize(new Dimension(160, 30));
-        submitBtn.setBackground(new Color(100, 100, 255)); // Customize the color as needed
+        submitBtn.setBackground(new Color(100, 100, 255)); 
         submitBtn.setForeground(Color.WHITE);
 
         detailPanel = new JPanel();
@@ -193,13 +191,12 @@ public class GVQuanLyDiem extends JPanel {
         gbcsubmitBtn.gridy = 2; // Set it to row 2, just below filterBtn (which is in row 1)
         gbcsubmitBtn.insets = new Insets(5, 0, 5, 10);
 
-        ///////////////
         main_detailPanel = new JPanel();
         main_detailPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
 
         JLabel a1 = new JLabel("Nhập thay đổi điểm:    ");
         outputDiem = new JTextField(5);
-a1.setPreferredSize(new Dimension(200, 30));
+        a1.setPreferredSize(new Dimension(200, 30));
         outputDiem.setPreferredSize(new Dimension(200, 30));
         Font font = a1.getFont();
         float fontSize = font.getSize() + 5; // Increase the font size by 5 points (adjust as needed)
@@ -252,7 +249,6 @@ a1.setPreferredSize(new Dimension(200, 30));
 
         checkSubmit();
         filterBtn.addActionListener(new FilterBtnListener());
-        
     }
 
     public void checkSubmit() {
@@ -395,6 +391,7 @@ a1.setPreferredSize(new Dimension(200, 30));
                 String idNamHoc = nh.getNamHocID();
                 String idhs = hs.getHocSinhID();
                 String idlop = plbus.get(idhs, idNamHoc) != null ? plbus.get(idhs, idNamHoc).getLopID() : "";
+                System.out.println(idNamHoc + idhs + idlop);
                 for(HocKyDTO hk: dshk){
 
                     for (int heso = 1; heso < 4; heso++) {
@@ -436,7 +433,7 @@ a1.setPreferredSize(new Dimension(200, 30));
         public void actionPerformed(ActionEvent e) {
             tblModel.setRowCount(0);
             String id_hs = inputID.getText().trim().toUpperCase();
-            String monhoc = mhbus.get(pcbus.get(magiaovien).getMonHocID()).getTenMonHoc();
+            String monhoc = gvbus.getIdMon(magiaovien);
             String tenlop = (String) optionLop.getSelectedItem();
 
             // không có table hệ số =))))
@@ -546,6 +543,12 @@ a1.setPreferredSize(new Dimension(200, 30));
         }
 
     }
+    private class CannotEditListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JOptionPane.showMessageDialog(null, "Chỉ có thể thay đổi điểm ở Học kỳ, Năm học hiện tại");
+        }
+    }
 
     private class EditBtnListener implements ActionListener {
         @Override
@@ -586,13 +589,7 @@ a1.setPreferredSize(new Dimension(200, 30));
             }
         }
     }
-    private class CannotEditListener implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(null, "Chỉ có thể thay đổi điểm ở Học kỳ, Năm học hiện tại");
-        }
-    }
-
+    
     public void updateData() {
         System.out.println("update ................");
         String idhk = hkbus.getByName(outputHK).getHocKyID();
