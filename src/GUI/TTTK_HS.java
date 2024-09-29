@@ -123,39 +123,46 @@ public class TTTK_HS extends JPanel {
         tf10.setEditable(false);
     }
     public void loaddatatoPanel() throws SQLException {
-        ArrayList<HocSinhDTO> dshs = hsbus.getList();
-        ArrayList<NamHocDTO> dsnh = nhbus.getList();
-        ArrayList<KQ_HocSinhCaNamDTO> dsKQ = kqbus.getList();
-        ArrayList<PhanLopDTO> dsPL = plbus.getList();
-        ArrayList<LopDTO> dsLop = Lopbus.getList();
+        ArrayList<HocSinhDTO> dshs = hsbus.getList();  // Lấy danh sách học sinh
+        ArrayList<PhanLopDTO> dsPL = plbus.getList();  // Lấy danh sách phân lớp
+        ArrayList<LopDTO> dsLop = Lopbus.getList();    // Lấy danh sách lớp
+        
+        // Tạo một đối tượng để lấy năm học hiện tại của học sinh
         diemHS dhs = new diemHS(username);
+    
         for (HocSinhDTO hs : dshs) {
-            if (username.equals(hs.getHocSinhID())) {  // Sử dụng username để lấy thông tin học sinh
-                String idhs = hs.getHocSinhID();
-                for (NamHocDTO nam : dsnh) {
-                    for (PhanLopDTO pl : dsPL) {
-                        for (LopDTO lop : dsLop) {
-                            if (pl.getNamHocID().equals(dhs.getNH())) {
-                                tf3.setText(idhs);
-                                tf4.setText(hs.getTenHocSinh());
-                                tf5.setText(hs.getGioiTinh());
-                                tf6.setText(hs.getNgaySinh());
-                                tf7.setText(lop.getTenLop());
-                                tf8.setText(hs.getDienThoai());
-                                tf10.setText(hs.getDiaChi());
-                            }
+            if (username.equals(hs.getHocSinhID())) {  // Kiểm tra xem username có trùng với mã học sinh không
+                // Hiển thị thông tin học sinh
+                tf3.setText(hs.getHocSinhID());
+                tf4.setText(hs.getTenHocSinh());
+                tf5.setText(hs.getGioiTinh());
+                tf6.setText(hs.getNgaySinh());
+                tf8.setText(hs.getDienThoai());
+                tf10.setText(hs.getDiaChi());
+    
+                // Lấy lớp học hiện tại của học sinh dựa vào bảng phân lớp
+                PhanLopBUS phanlop = new PhanLopBUS();
+            ArrayList<PhanLopDTO> dspl = phanlop.ds_phanlop();
+            for (PhanLopDTO phanLopDTO : dspl) {
+                if(hs.getHocSinhID().equals(phanLopDTO.getHocSinhID()))
+                {
+                    LopBUS lopbus = new LopBUS();
+                    ArrayList<LopDTO> dslop = lopbus.list_lop();
+                    for (LopDTO lop : dslop) {
+                        if(phanLopDTO.getLopID().equals(lop.getLopID()))
+                        {
+                            tf7.setText(lop.getTenLop());
+                            break;
                         }
                     }
+                    break;
                 }
             }
+                break;
+            }
         }
-        // for (KQ_HocSinhCaNamDTO kq : dsKQ){
-        //     if (kq.getHocSinhID().equals(username) && kq.getNamHocID().equals(dhs.getNH())) {
-        //         tf8.setText(String.valueOf(kq.getHocLuc()));
-        //         tf9.setText(String.valueOf(kq.getHanhKiem()));
-        //     }
-        // }
     }
+    
     
     public JPanel getPanel() {
         return this;
