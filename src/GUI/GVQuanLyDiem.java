@@ -436,7 +436,7 @@ a1.setPreferredSize(new Dimension(200, 30));
         public void actionPerformed(ActionEvent e) {
             tblModel.setRowCount(0);
             String id_hs = inputID.getText().trim().toUpperCase();
-            String monhoc = mhbus.get(pcbus.get(magiaovien).getMonHocID()).getTenMonHoc();
+            // String monhoc = mhbus.get(pcbus.get(magiaovien).getMonHocID()).getTenMonHoc();
             String tenlop = (String) optionLop.getSelectedItem();
 
             // không có table hệ số =))))
@@ -458,7 +458,7 @@ a1.setPreferredSize(new Dimension(200, 30));
             dsnh = nhbus.search(null, namhoc);
             dslop = lopbus.search(null, tenlop);
             dshk = hkbus.search(null, hocky);
-            dsmon = mhbus.search(null, monhoc);
+            // dsmon = mhbus.search(null, monhoc);
 
             for (HocSinhDTO hs : dshs) {
                 System.out.println("loc hs");

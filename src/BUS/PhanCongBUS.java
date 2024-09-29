@@ -76,7 +76,8 @@ public class PhanCongBUS {
             return this.get(idgv);
         }
         for (PhanCongDTO x : dspc) {
-            if ((x.getMonHocID().equals(idmh)) && (x.getGiaoVienID().equals(idgv))) {
+            // if ((x.getMonHocID().equals(idmh)) && (x.getGiaoVienID().equals(idgv))) {
+            if ((x.getGiaoVienID().equals(idgv))) {
                 return x;
             }
         }
@@ -99,8 +100,9 @@ public class PhanCongBUS {
         idmh = idmh == null ? idmh = "" : idmh;
         for (PhanCongDTO pc : dspc) {
             if (pc.getGiaoVienID().contains(id) &&
-                    pc.getLopID().contains(idlop) &&
-                    pc.getMonHocID().contains(idmh)) {
+                    pc.getLopID().contains(idlop)
+                    // pc.getMonHocID().contains(idmh)) {
+            ){
                 search.add(pc);
             }
         }
