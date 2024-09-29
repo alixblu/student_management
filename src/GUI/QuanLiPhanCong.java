@@ -540,8 +540,8 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
                 JOptionPane.QUESTION_MESSAGE);
     
         if (result == JOptionPane.YES_OPTION) {
-            // Thực hiện thêm phân công
-            pcBUS.add(pc);
+            // // Thực hiện thêm phân công
+            // pcBUS.add(pc);
     
             // Hiển thị thông báo thêm thành công
             JOptionPane.showMessageDialog(this,

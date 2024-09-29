@@ -455,7 +455,7 @@ public class GVQuanLyDiem extends JPanel {
             dsnh = nhbus.search(null, namhoc);
             dslop = lopbus.search(null, tenlop);
             dshk = hkbus.search(null, hocky);
-            dsmon = mhbus.search(null, monhoc);
+            // dsmon = mhbus.search(null, monhoc);
 
             for (HocSinhDTO hs : dshs) {
                 System.out.println("loc hs");

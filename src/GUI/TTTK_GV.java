@@ -60,13 +60,7 @@ public class TTTK_GV extends JPanel {
         jl12 = createLabel("Phân môn:", gbc, 0, 7);
         tf8 = createTextField(gbc, 1, 7);
 
-        // jl13 = createLabel("Lớp dạy:", gbc, 0, 8);
-        // tf9 = createTextField(gbc, 1, 8);
-
-        // jl14 = createLabel("Địa chỉ:", gbc, 0, 9);
-        // tf10 = createTextField(gbc, 1, 9);
-
-        // Khóa tất cả các trường văn bản để không cho chỉnh sửa
+      
         lockTextFields();
     }
     private JTextArea createTextArea(GridBagConstraints gbc, int x, int y) {
@@ -119,10 +113,7 @@ public class TTTK_GV extends JPanel {
 
     public void loaddatatoPanel() {
         ArrayList<GiaoVienDTO> dsgv = gvbus.getList();
-        ArrayList<MonHocDTO> dsmh = mhbus.getList();
-        ArrayList<PhanCongDTO> dspc = pcbus.getList();
-        ArrayList<LopDTO> dsLop = Lopbus.getList();
-
+        
         for (GiaoVienDTO gv : dsgv) {
             String idgv = gv.getMaGV();
             if (username.equals(idgv)) {
@@ -131,7 +122,7 @@ public class TTTK_GV extends JPanel {
                 tf6.setText(gv.getNamSinh());
                 tf5.setText(gv.getGioiTinh());
                 tf7.setText(gv.getDienThoai());
-                tf8.setText(mhbus.get(pcbus.get(username).getMonHocID()).getTenMonHoc());
+                tf8.setText(gv.getphanMon());
             }
         }
     }

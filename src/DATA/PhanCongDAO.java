@@ -31,9 +31,10 @@ public class PhanCongDAO {
             while(rs.next()){
                 String id= rs.getString("GiaoVienid");
                 String idlop=rs.getString("Lopid");
-                String idmh=rs.getString("MonHocid");
+                // String idmh=rs.getString("MonHocid");
 
-                PhanCongDTO pc=new PhanCongDTO(id,idlop,idmh);
+                // PhanCongDTO pc=new PhanCongDTO(id,idlop,idmh);
+                PhanCongDTO pc=new PhanCongDTO(id,idlop);
                 ds.add(pc);
             }
             rs.close();
@@ -49,7 +50,7 @@ public class PhanCongDAO {
             String sql = "UPDATE phancong SET ";
             sql += "GiaoVienid='"+pc.getGiaoVienID()+"', ";
             sql += "Lopid='"+pc.getLopID()+"', ";
-            sql += "MonHocid='"+pc.getMonHocID()+"', ";
+            // sql += "MonHocid='"+pc.getMonHocID()+"', ";
 
             sql += " WHERE GiaoVienid='"+pc.getGiaoVienID()+"'";
             System.out.println(sql);
@@ -62,7 +63,7 @@ public class PhanCongDAO {
          String sql = "INSERT INTO phancong VALUES (";
                 sql += "'"+pc.getGiaoVienID()+"',";
                 sql += "'"+pc.getLopID()+"',";
-                sql += "'"+pc.getMonHocID()+"')";
+                // sql += "'"+pc.getMonHocID()+"')";
 
          System.out.println(sql);
          mySQL.executeUpdate(sql);
