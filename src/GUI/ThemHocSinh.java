@@ -1,7 +1,9 @@
 package GUI;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
@@ -21,13 +23,16 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 import BUS.ChangeAcc_BUS;
 import BUS.HocSinhBUS;
 import java.util.Date;
+import java.io.*;
+import java.nio.file.*;
 
 public class ThemHocSinh extends JFrame {
 
@@ -49,6 +54,9 @@ public class ThemHocSinh extends JFrame {
     private ChangeAcc_BUS accBUS;
     private ImageIcon imageIcon;
     private String pathAnhdd;
+    String imagePath;
+    String destinationFolder;
+    String destinationPath;
 	/**
 	 * Launch the application.
 	 */
@@ -64,6 +72,7 @@ public class ThemHocSinh extends JFrame {
     {
         return hocSinh;
     }
+
 	public ThemHocSinh() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize( 945, 449);
@@ -159,7 +168,7 @@ public class ThemHocSinh extends JFrame {
         button_chon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-                chooseImage();
+               chooseImage();
             }
         });
 		
@@ -269,22 +278,19 @@ public class ThemHocSinh extends JFrame {
                         int nam = calendar.get(Calendar.YEAR);
                         int namke = nam+1;
                         String manh = nam+""+namke;
+                        String nienkhoa = nam+"-"+namke;
                         String idlop = new LopBUS().getIdByCondString(tenlop);
                         PhanLopDTO phanlop = new PhanLopDTO(hocSinh.getHocSinhID(), idlop, manh);
                         new PhanLopBUS().add(phanlop);
                         autoCreateAccount(hocSinh.getHocSinhID(), hocSinh.getDienThoai());
-                        Object[] rowData = { hocSinh.getHocSinhID(), hocSinh.getTenHocSinh(), hocSinh.getGioiTinh(), hocSinh.getNgaySinh(),hocSinh.getDiaChi() , hocSinh.getDienThoai(), hocSinh.getIMG() };
-                        QuanLiHocSinh.tblmodel.addRow(rowData);
-                        Image image = imageIcon.getImage().getScaledInstance(QuanLiHocSinh.lblimg.getWidth(), QuanLiHocSinh.lblimg.getHeight(), Image.SCALE_SMOOTH);
-                        ImageIcon scaledImageIcon = new ImageIcon(image);
-                        QuanLiHocSinh.lblimg.setIcon(scaledImageIcon);
+                        Object[] rowData = { hocSinh.getHocSinhID(), hocSinh.getTenHocSinh(), hocSinh.getGioiTinh(), hocSinh.getNgaySinh(),hocSinh.getDiaChi() , hocSinh.getDienThoai(), hocSinh.getIMG(),tenlop,nienkhoa  };
+            
                         JOptionPane.showMessageDialog(null,
                         "Thêm thành công",
                         "Chức năng thêm",
                         JOptionPane.INFORMATION_MESSAGE);
-                        String destinationDir = "src/image/Avatar/"; // Thư mục img trong project
-                        Path destinationPath = Paths.get(destinationDir + pathAnhdd);
-                        System.out.println(destinationPath.toString());
+                        QuanLiHocSinh.tblmodel.addRow(rowData);
+                        luuanhkhixacnhan();
                         dispose();
                     } 
                     else if (result == JOptionPane.NO_OPTION) 
@@ -404,27 +410,53 @@ public class ThemHocSinh extends JFrame {
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             // Lấy đường dẫn của tập tin hình ảnh được chọn
-            String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+            imagePath = fileChooser.getSelectedFile().getAbsolutePath();
             // Hiển thị đường dẫn trong JTextField
             String fileName = fileChooser.getSelectedFile().getName();
             pathAnhdd = fileName;
             textField_chonanh.setText(pathAnhdd);
+            
             // Tạo một ImageIcon từ đường dẫn hình ảnh
             imageIcon = new ImageIcon(imagePath);
-
+    
             // Chỉnh kích thước của hình ảnh để phù hợp với JLabel
             Image image = imageIcon.getImage().getScaledInstance(labelimg.getWidth(), labelimg.getHeight(),
                     Image.SCALE_SMOOTH);
                 
             // Tạo một ImageIcon mới từ hình ảnh đã được điều chỉnh kích thước
             ImageIcon scaledImageIcon = new ImageIcon(image);
-
+    
             // Hiển thị hình ảnh trên JLabel
             labelimg.setIcon(scaledImageIcon);
+    
+            // Lấy đường dẫn đến thư mục gốc của dự án
+            String projectRootPath = System.getProperty("user.dir");
+    
+            // Đường dẫn tương đối đến thư mục image/HocSinh
+            destinationFolder = projectRootPath + "\\src\\image\\HocSinh";
+            destinationPath = destinationFolder + "\\" + fileName;
+    
+            // Kiểm tra và tạo thư mục HocSinh nếu chưa tồn tại
+            File directory = new File(destinationFolder);
+            if (!directory.exists()) {
+                directory.mkdirs(); // Tạo thư mục nếu không tồn tại
+            }
+
+        }
+    }
+    
+    public void luuanhkhixacnhan()
+    {
+        // Copy file ảnh
+        try {
+            Files.copy(Paths.get(imagePath), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Copy thành công: " + destinationPath);
+        } catch (IOException e) {
+            System.out.println("Lỗi: " + e.getMessage());
         }
     }
 
-     public void autoCreateAccount(String username, String password) {
+    public void autoCreateAccount(String username, String password) { 
         accBUS = new ChangeAcc_BUS();
         Account_DTO acc = new Account_DTO(username, password);
         accBUS.Add(acc);

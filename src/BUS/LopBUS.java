@@ -19,7 +19,7 @@ public class LopBUS {
     
     public LopBUS()
     {
-        
+        list();
     }
     public LopDTO get(String id)
     {

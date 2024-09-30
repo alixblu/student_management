@@ -138,15 +138,14 @@ public class HocSinhBUS{
     
     public static void main(String[] args) {
         // Create an instance of HocSinhBUS
-        HocSinhBUS hocSinhBUS = new HocSinhBUS(1);
+        HocSinhBUS hocSinhBUS = new HocSinhBUS();
+        
+        // Get the list of all students
+        ArrayList<HocSinhDTO> listOfStudents = hocSinhBUS.getList();
     
-        // Call the search method with the specified parameters
-        String idToSearch = "HS1";
-        ArrayList<HocSinhDTO> searchResult = hocSinhBUS.search(idToSearch, null, null, null, null, null, null);
-    
-        // Print the search result
-        System.out.println("Search result for HocSinhID: " + idToSearch);
-        for (HocSinhDTO hs : searchResult) {
+        // Print every student's attributes
+        System.out.println("List of all Hoc Sinh:");
+        for (HocSinhDTO hs : listOfStudents) {
             System.out.println("HocSinhID: " + hs.getHocSinhID());
             System.out.println("HoVaTen: " + hs.getTenHocSinh());
             System.out.println("GioiTinh: " + hs.getGioiTinh());
