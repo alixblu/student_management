@@ -15,7 +15,7 @@ public class NamHocBUS {
     
     public NamHocBUS()
     {
-        
+        list();
     }
 
     public NamHocDTO get(String id)
@@ -134,6 +134,8 @@ public class NamHocBUS {
         dsnh = nhDATA.list();
     }
 
+    
+
     public boolean check(String id)
     {
         for(NamHocDTO nh : dsnh)
@@ -215,8 +217,21 @@ public class NamHocBUS {
         dao.updateHocKy(hocky);
     }
 
+
+    public NamHocDTO getNamHocByConditon(String id)
+    {
+        for (NamHocDTO namHocDTO : dsnh) {
+            if(namHocDTO.getNamHocID().equals(id))
+            {
+                return namHocDTO;
+            }
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
-        NamHocBUS bus = new NamHocBUS(1);
-        System.out.println(bus.isCurrentSem("2024-2025", "2"));
+        NamHocBUS namhocbus = new NamHocBUS();
+        NamHocDTO nh = namhocbus.getNamHocByConditon("20242025");
+        System.out.println(nh.getNamHocBatDau());
     }
 }

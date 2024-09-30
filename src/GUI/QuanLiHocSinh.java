@@ -65,6 +65,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
@@ -75,6 +76,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     private JLabel lblMahs, lblTenhs, lblGioitinh, lblDiachi;
     public static JLabel lblimg;
     private JButton btnThem, btnXoa, btnSua, btnFind, btnReset, btnExpExcel;
+    
     public static DefaultTableModel tblmodel;
     // private JTable tbl;
     private JScrollPane scrollpane;
@@ -272,12 +274,14 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         chooseImage();
+                        
                     }
                 });
                 buttons[i].setBounds(toadoXbutton, toadoYbutton, 120, 30);
                 buttons[i].setForeground(Color.RED);
                 buttons[i].setHorizontalAlignment(JButton.CENTER);
                 buttons[i].setName("btn" + i);
+                
                 Phocsinh.add(buttons[i]);
             } else {
                 buttons[i] = new JButton(arrHocsinh[i]);
@@ -344,24 +348,25 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
     public JScrollPane initTable() throws SQLException {
 
+        
         t = new JTable();
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 295));
         String[] header = { "Mã học sinh", "Họ và tên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại",
-                "Ảnh chân dung","Lớp" };
+                "Ảnh chân dung","Lớp","Năm học"};
 
         if (hsBUS.getList() == null)
             hsBUS.listHS();
         ArrayList<HocSinhDTO> hs = hsBUS.getList();
-        Object[][] rowData = new Object[hs.size()][8];
+        Object[][] rowData = new Object[hs.size()][9];
         if (nhBUS.getList() == null){
             nhBUS.listNH();}
         ArrayList<NamHocDTO> nh = nhBUS.getList();
         for (int i = 0; i < nh.size(); i++) {
             NamHocDTO namhoc = nh.get(i);
             soKhoa = namhoc.getNamHocBatDau() - 2000;
-            }
+        }
         for (int i = 0; i < hs.size(); i++) {
             HocSinhDTO student = hs.get(i);
             rowData[i][0] = student.getHocSinhID();
@@ -373,23 +378,33 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             rowData[i][6] = student.getIMG();
             PhanLopBUS phanlop = new PhanLopBUS();
             ArrayList<PhanLopDTO> dspl = phanlop.ds_phanlop();
+            
+            NamHocBUS nhbus = new NamHocBUS();
+            ArrayList<NamHocDTO> listNH = nhbus.getList();
             for (PhanLopDTO phanLopDTO : dspl) {
+
                 if(student.getHocSinhID().equals(phanLopDTO.getHocSinhID()))
                 {
+                    for (NamHocDTO namHocDTO : listNH) {
+                        if(phanLopDTO.getNamHocID().equals(namHocDTO.getNamHocID()))
+                        {
+                            rowData[i][8] = namHocDTO.getNamHocBatDau()+"-"+namHocDTO.getNamHocKetThuc();
+                        }
+                    }
                     LopBUS lopbus = new LopBUS();
                     ArrayList<LopDTO> dslop = lopbus.list_lop();
                     for (LopDTO lop : dslop) {
-                        if(phanLopDTO.getLopID().equals(lop.getLopID()))
-                        {
+                        if (phanLopDTO.getLopID().equals(lop.getLopID())) {
                             rowData[i][7] = lop.getTenLop();
                             break;
                         }
                     }
-                    break;
                 }
+                
             }
-        }
 
+        }
+    
         Font font = new Font("Arial", Font.BOLD, 12);
         Color title_color = new Color(31, 28, 77);
         t.getTableHeader().setBackground(title_color);
@@ -397,8 +412,12 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         t.getTableHeader().setFont(font);
         Color select = new Color(102, 178, 255);
         t.setSelectionBackground(select);
-
-        tblmodel = new DefaultTableModel(rowData, header);
+        tblmodel = new DefaultTableModel(rowData, header) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Disables editing
+            }
+        };
         t.setModel(tblmodel);
         t.addMouseListener(new MouseAdapter() {
             @Override
@@ -410,9 +429,10 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 }
             }
         });
-        
+    
         return scrollpane;
     }
+    
 
     public void chooseImage() {
         JFileChooser fileChooser = new JFileChooser();
@@ -518,33 +538,46 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         sodienthoai = (String.valueOf(t.getValueAt(row, 5)));
         img = (String.valueOf(t.getValueAt(row, 6)));
         tenlop = (String.valueOf(t.getValueAt(row, 7)));
+        
         tf[0].setText(mahs);
         tf[1].setText(hoten);
         genderComboBox.setSelectedItem(gioitinh);
+        
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = sdf.parse(namsinh);
         dateChooser.setDate(date);
+        
         tf[4].setText(diachi);
         tf[5].setText(sodienthoai);
         tf[6].setText(img);
         classComboBox.setSelectedItem(tenlop);
-
+    
+        // Kiểm tra xem trường img có trống không
         if (!img.isEmpty()) {
-            String path = "/image/Avatar/" + img;
-            java.net.URL imgHS = getClass().getResource(path);
-            ImageIcon orgIcon_HS = new ImageIcon(imgHS);
-            Image scaleImg_HS = orgIcon_HS.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(),
-                    Image.SCALE_SMOOTH);
-
-            ImageIcon scaledImage_HS = new ImageIcon(scaleImg_HS);
-
-            // Hiển thị hình ảnh trên JLabel
-            lblimg.setIcon(scaledImage_HS);
+            // Đường dẫn tương đối tới ảnh
+            String projectRootPath = System.getProperty("user.dir");
+            String path = projectRootPath + "\\src\\image\\HocSinh\\" + img;
+    
+            // Kiểm tra tệp ảnh có tồn tại không
+            File imgFile = new File(path);
+            if (imgFile.exists()) {
+                // Tạo ImageIcon từ file ảnh
+                ImageIcon orgIcon_HS = new ImageIcon(path);
+                Image scaleImg_HS = orgIcon_HS.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(),
+                        Image.SCALE_SMOOTH);
+                ImageIcon scaledImage_HS = new ImageIcon(scaleImg_HS);
+    
+                // Hiển thị hình ảnh trên JLabel
+                lblimg.setIcon(scaledImage_HS);
+            } else {
+                System.out.println("Ảnh không tồn tại: " + path);
+                lblimg.setIcon(null); // Xóa ảnh nếu không tìm thấy
+            }
         } else {
-            lblimg.setIcon(null);
+            lblimg.setIcon(null); // Xóa ảnh nếu không có ảnh nào
         }
-
     }
+    
 
     public void btnAdd_actionPerformed() {
         ThemHocSinh themHS = new ThemHocSinh();
@@ -573,10 +606,12 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            System.out.println("Ban chon đồn ý xóa");
             deleteRow();
+            JOptionPane.showMessageDialog(this, "Bạn đã xóa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
         } else if (result == JOptionPane.NO_OPTION) {
-            System.out.println("Bạn chọn không đồng ý xóa");
+            JOptionPane.showMessageDialog(this, "Xóa thất bại", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
     }
 
@@ -600,10 +635,11 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            System.out.println("Ban chọn đồng ý sửa");
+            
             updateRow();
+            JOptionPane.showMessageDialog(this, "Bạn đã sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } else if (result == JOptionPane.NO_OPTION) {
-            System.out.println("Bạn chọn không đồng ý sửa");
+            JOptionPane.showMessageDialog(this, "Bạn đã sửa thất bại", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -636,37 +672,56 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         chooser.setFileFilter(filter);
         chooser.setDialogTitle("Lưu tệp");
         chooser.setAcceptAllFileFilterUsed(false);
+        
         if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-            String path = chooser.getSelectedFile().toString().concat(".xls");
-
+            // Lấy đường dẫn file và thêm .xls nếu chưa có
+            String path = chooser.getSelectedFile().toString();
+            if (!path.endsWith(".xls")) {
+                path = path.concat(".xls");
+            }
+    
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
-            Row headerRow = sheet.createRow(0); // Header row at index 0
-            String[] headers = { "STT", "HocSinhID", "Tên học sinh", "Giới Tính", "Năm Sinh", "Địa chỉ", "SĐT" };
+            ArrayList<HocSinhDTO> ds_hs = new HocSinhBUS().getList();
+        
+            // Tạo hàng tiêu đề (Header row)
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("Mã học sinh");
+            headerRow.createCell(1).setCellValue("Họ tên");
+            headerRow.createCell(2).setCellValue("Giới tính");
+            headerRow.createCell(3).setCellValue("Năm sinh");
+            headerRow.createCell(4).setCellValue("Địa chỉ");
+            headerRow.createCell(5).setCellValue("Số điện thoại");
+            headerRow.createCell(6).setCellValue("Ảnh chân dung");
+            headerRow.createCell(7).setCellValue("Lớp");
+            headerRow.createCell(8).setCellValue("Năm học");
 
-            // Creating header cells
-            for (int i = 0; i < headers.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(headers[i]);
+            // Ghi dữ liệu từ danh sách cửa hàng vào các hàng tiếp theo
+            int rowNum = 1;
+            for (HocSinhDTO hocsinhdto: ds_hs) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(hocsinhdto.getHocSinhID());
+                row.createCell(1).setCellValue(hocsinhdto.getTenHocSinh());
+                row.createCell(2).setCellValue(hocsinhdto.getGioiTinh());
+                row.createCell(3).setCellValue(hocsinhdto.getNgaySinh());
+                row.createCell(4).setCellValue(hocsinhdto.getDiaChi());
+                row.createCell(5).setCellValue(hocsinhdto.getDienThoai());
+                row.createCell(6).setCellValue(hocsinhdto.getIMG());
+                PhanLopDTO pl = new PhanLopBUS().get(hocsinhdto.getHocSinhID());
+                ArrayList<LopDTO> dslop = new LopBUS().getList();
+                for (LopDTO lopDTO : dslop) {
+                    if(pl.getLopID().equals(lopDTO.getLopID()))
+                    {
+                        row.createCell(7).setCellValue(lopDTO.getTenLop());
+                        break;
+                    }else{
+                        break;
+                    }
+                }
+                NamHocDTO namhoc = new NamHocBUS().getNamHocByConditon(pl.getNamHocID());
+                row.createCell(8).setCellValue(namhoc.getNamHocBatDau()+"-"+namhoc.getNamHocKetThuc());
             }
-
-            ArrayList<HocSinhDTO> dshs = hsBUS.getList();
-            for (int i = 0; i < dshs.size(); i++) {
-                Row row = sheet.createRow(i + 1); // Data rows start from index 1
-
-                HocSinhDTO hocSinh = dshs.get(i);
-                System.out.println(hocSinh.getDiaChi());
-
-                row.createCell(0).setCellValue(i + 1);
-                row.createCell(1).setCellValue(hocSinh.getHocSinhID());
-                row.createCell(2).setCellValue(hocSinh.getTenHocSinh());
-                row.createCell(3).setCellValue(hocSinh.getGioiTinh());
-                row.createCell(4).setCellValue(hocSinh.getNgaySinh());
-                row.createCell(5).setCellValue(hocSinh.getDiaChi());
-                row.createCell(6).setCellValue(hocSinh.getDienThoai());
-            }
-
-            // String path = "D:/Coding/N2_HK2/DAJAVA/java_nhom_9/Excel/hsss.xlsx";
+            // Ghi file Excel
             File file = new File(path);
             if (file.exists()) {
                 file.delete();
@@ -676,18 +731,15 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             try {
                 FileOutputStream fos = new FileOutputStream(file);
                 workbook.write(fos);
-                // workbook.close();
-                // fos.close();
                 System.out.println("Excel file exported successfully to: " + path);
             } catch (IOException e) {
                 e.printStackTrace();
-                // Handle exception
             }
             JOptionPane.showMessageDialog(this, "IN THÀNH CÔNG");
             Desktop.getDesktop().open(file);
-
         }
     }
+    
 
 
     @Override
@@ -695,23 +747,16 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         if (e.getSource() == JsearchText) {
             clearTextFields();
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+ 
     }
 
     @Override
@@ -732,9 +777,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(Color.green);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     @Override
@@ -750,9 +793,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         } else if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(defaultColor);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+   
     }
 
     @Override
@@ -780,23 +821,11 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             try {
                 exportExcel();
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
     }
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(850, 670);
-        QuanLiHocSinh panel;
-        try {
-            panel = new QuanLiHocSinh(850, 670);
-            frame.add(panel);
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        frame.setVisible(true);
-    }
+
+    
+  
 }
