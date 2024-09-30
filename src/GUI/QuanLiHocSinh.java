@@ -348,20 +348,20 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 295));
-        String[] header = { "Mã học sinh", "Họ và tên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại",
-                "Ảnh chân dung","Lớp" };
-
+        String[] header = { "Mã học sinh", "Họ và tên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại", "Ảnh chân dung", "Lớp" };
+    
         if (hsBUS.getList() == null)
             hsBUS.listHS();
         ArrayList<HocSinhDTO> hs = hsBUS.getList();
         Object[][] rowData = new Object[hs.size()][8];
-        if (nhBUS.getList() == null){
-            nhBUS.listNH();}
+        if (nhBUS.getList() == null) {
+            nhBUS.listNH();
+        }
         ArrayList<NamHocDTO> nh = nhBUS.getList();
         for (int i = 0; i < nh.size(); i++) {
             NamHocDTO namhoc = nh.get(i);
             soKhoa = namhoc.getNamHocBatDau() - 2000;
-            }
+        }
         for (int i = 0; i < hs.size(); i++) {
             HocSinhDTO student = hs.get(i);
             rowData[i][0] = student.getHocSinhID();
@@ -374,13 +374,11 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             PhanLopBUS phanlop = new PhanLopBUS();
             ArrayList<PhanLopDTO> dspl = phanlop.ds_phanlop();
             for (PhanLopDTO phanLopDTO : dspl) {
-                if(student.getHocSinhID().equals(phanLopDTO.getHocSinhID()))
-                {
+                if (student.getHocSinhID().equals(phanLopDTO.getHocSinhID())) {
                     LopBUS lopbus = new LopBUS();
                     ArrayList<LopDTO> dslop = lopbus.list_lop();
                     for (LopDTO lop : dslop) {
-                        if(phanLopDTO.getLopID().equals(lop.getLopID()))
-                        {
+                        if (phanLopDTO.getLopID().equals(lop.getLopID())) {
                             rowData[i][7] = lop.getTenLop();
                             break;
                         }
@@ -389,7 +387,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 }
             }
         }
-
+    
         Font font = new Font("Arial", Font.BOLD, 12);
         Color title_color = new Color(31, 28, 77);
         t.getTableHeader().setBackground(title_color);
@@ -397,8 +395,13 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         t.getTableHeader().setFont(font);
         Color select = new Color(102, 178, 255);
         t.setSelectionBackground(select);
-
-        tblmodel = new DefaultTableModel(rowData, header);
+    
+        tblmodel = new DefaultTableModel(rowData, header) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Disables editing
+            }
+        };
         t.setModel(tblmodel);
         t.addMouseListener(new MouseAdapter() {
             @Override
@@ -410,9 +413,10 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 }
             }
         });
-        
+    
         return scrollpane;
     }
+    
 
     public void chooseImage() {
         JFileChooser fileChooser = new JFileChooser();
