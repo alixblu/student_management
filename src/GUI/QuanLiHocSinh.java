@@ -720,6 +720,8 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                     {
                         row.createCell(7).setCellValue(lopDTO.getTenLop());
                         break;
+                    }else{
+                        break;
                     }
                 }
                 NamHocDTO namhoc = new NamHocBUS().getNamHocByConditon(pl.getNamHocID());
@@ -735,12 +737,9 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             try {
                 FileOutputStream fos = new FileOutputStream(file);
                 workbook.write(fos);
-                // workbook.close();
-                // fos.close();
                 System.out.println("Excel file exported successfully to: " + path);
             } catch (IOException e) {
                 e.printStackTrace();
-                // Handle exception
             }
             JOptionPane.showMessageDialog(this, "IN THÀNH CÔNG");
             Desktop.getDesktop().open(file);
@@ -754,23 +753,16 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         if (e.getSource() == JsearchText) {
             clearTextFields();
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+ 
     }
 
     @Override
@@ -791,9 +783,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(Color.green);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     @Override
@@ -809,9 +799,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         } else if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(defaultColor);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+   
     }
 
     @Override
@@ -836,80 +824,13 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             t.setRowSorter(sorter);
             sorter.setRowFilter(RowFilter.regexFilter("", 0));
         } else if (e.getSource() == btnExpExcel) {
-            // createExcel();
             try {
                 exportExcel();
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
     }
-
-
-    // public void createExcel()
-    // {
-    //     JFileChooser fileChooser = new JFileChooser();
-	// 	fileChooser.setDialogTitle("Chọn vị trí lưu tệp Excel");
-	// 	fileChooser.setFileFilter(new FileNameExtensionFilter("Excel files", "xlsx"));
-
-	// 	int userSelection = fileChooser.showSaveDialog(null);
-    //     if (userSelection == JFileChooser.APPROVE_OPTION)
-    //     {
-    //         String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-	// 		if (!filePath.toLowerCase().endsWith(".xlsx")) {
-	// 			filePath += ".xlsx";
-	// 		}
-    //         try (Workbook workbook = WorkbookFactory.create(true)) {
-	// 			ArrayList<HocSinhDTO> ds_hs = new HocSinhBUS().getList();
-	// 			Sheet sheet = workbook.createSheet("CuaHangData");
-	// 			// Tạo hàng đầu tiên chứa tên cột
-	// 			Row headerRow = sheet.createRow(0);
-	// 			headerRow.createCell(0).setCellValue("Mã học sinh");
-	// 			headerRow.createCell(1).setCellValue("Họ tên");
-	// 			headerRow.createCell(2).setCellValue("Giới tính");
-	// 			headerRow.createCell(3).setCellValue("Năm sinh");
-    //             headerRow.createCell(4).setCellValue("Địa chỉ");
-    //             headerRow.createCell(5).setCellValue("Số điện thoại");
-    //             headerRow.createCell(6).setCellValue("Ảnh chân dung");
-    //             headerRow.createCell(7).setCellValue("Lớp");
-    //             headerRow.createCell(8).setCellValue("Năm học");
-
-	// 			// Ghi dữ liệu từ danh sách cửa hàng vào các hàng tiếp theo
-	// 			int rowNum = 1;
-	// 			for (HocSinhDTO hocsinhdto: ds_hs) {
-	// 				Row row = sheet.createRow(rowNum++);
-	// 				row.createCell(0).setCellValue(hocsinhdto.getHocSinhID());
-	// 				row.createCell(1).setCellValue(hocsinhdto.getTenHocSinh());
-	// 				row.createCell(2).setCellValue(hocsinhdto.getGioiTinh());
-	// 				row.createCell(3).setCellValue(hocsinhdto.getNgaySinh());
-    //                 row.createCell(4).setCellValue(hocsinhdto.getDiaChi());
-    //                 row.createCell(5).setCellValue(hocsinhdto.getDienThoai());
-    //                 row.createCell(6).setCellValue(hocsinhdto.getIMG());
-    //                 PhanLopDTO pl = new PhanLopBUS().get(hocsinhdto.getHocSinhID());
-    //                 ArrayList<LopDTO> dslop = new LopBUS().getList();
-    //                 for (LopDTO lopDTO : dslop) {
-    //                     if(pl.getLopID().equals(lopDTO.getLopID()))
-    //                     {
-    //                         row.createCell(7).setCellValue(lopDTO.getTenLop());
-    //                         break;
-    //                     }
-    //                 }
-    //                 NamHocDTO namhoc = new NamHocBUS().getNamHocByConditon(pl.getNamHocID());
-    //                 row.createCell(8).setCellValue(namhoc.getNamHocBatDau()+"-"+namhoc.getNamHocKetThuc());
-    //             }
-
-    //             try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-    //                 workbook.write(fileOut);
-    //                 JOptionPane.showMessageDialog(null, "Tệp Excel đã được xuất thành công!");
-    //             }
-            
-	// 		}catch (IOException e) {
-    //             e.printStackTrace();
-    //             JOptionPane.showMessageDialog(null, "Có lỗi xảy ra khi xuất tệp Excel.");
-    //         }
-    //     }
-    // }
 
     
   
