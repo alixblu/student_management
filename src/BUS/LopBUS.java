@@ -5,9 +5,10 @@
  */
 package BUS;
 
-import DATA.LopDAO;
 import DTO.LopDTO;
 import java.util.ArrayList;
+
+import DAO.LopDAO;
 
 
 public class LopBUS {
@@ -32,6 +33,18 @@ public class LopBUS {
         }
         return null;
     }
+    public LopDTO getByName(String tenlop)
+    {
+        for(LopDTO lop : dslop )
+        {
+            if(lop.getTenLop().equals(tenlop))
+            {
+                return lop;
+            }
+        }
+        return null;
+    }
+    
     public void list()
     {
         LopDAO lopDAO = new LopDAO();

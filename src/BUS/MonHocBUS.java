@@ -2,8 +2,7 @@ package BUS;
 
 import java.util.ArrayList;
 
-import DATA.MonHocDAO;
-import DATA.QLHS_DAO;
+import DAO.MonHocDAO;
 import DTO.MonHocDTO;
 
 public class MonHocBUS {

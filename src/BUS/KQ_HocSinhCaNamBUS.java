@@ -2,7 +2,7 @@ package BUS;
 
 import java.util.ArrayList;
 
-import DATA.KQ_HocSinhCaNamDAO;
+import DAO.KQ_HocSinhCaNamDAO;
 import DTO.KQ_HocSinhCaNamDTO;
 
 public class KQ_HocSinhCaNamBUS {

@@ -2,7 +2,7 @@ package BUS;
 
 import java.util.*;
 
-import DATA.MessageFromHsDAO;
+import DAO.MessageFromHsDAO;
 import DTO.MessageFromHsDTO;
 
 public class MessageFromHsBUS {

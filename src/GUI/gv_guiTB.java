@@ -155,7 +155,7 @@ public class gv_guiTB extends JPanel{
         JPanel panel = new JPanel(new BorderLayout());
 
         dspl = plbus.getList();
-        dspc = pcbus.search(magiaovien, null, null);
+        dspc = pcbus.search(magiaovien, null);
 
         JTable table = new JTable();
         DefaultTableModel tblModel = new DefaultTableModel();
@@ -181,7 +181,7 @@ public class gv_guiTB extends JPanel{
     private JPanel createHSTablePanel(String lopid) {
         JPanel panel = new JPanel(new BorderLayout());
 
-        dspc = pcbus.search(magiaovien, null, null);
+        dspc = pcbus.search(magiaovien, null);
         String idnam = nhbus.getByStartYear(namhientai).getNamHocID();
         
         JTable table = new JTable();

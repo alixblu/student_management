@@ -1,8 +1,9 @@
 package BUS;
 
-import DATA.PhanCongDAO;
 import DTO.PhanCongDTO;
 import java.util.ArrayList;
+
+import DAO.PhanCongDAO;
 
 public class PhanCongBUS {
     private ArrayList<PhanCongDTO> dspc;
@@ -93,11 +94,10 @@ public class PhanCongBUS {
         return false;
     }
 
-    public ArrayList<PhanCongDTO> search(String id, String idlop, String idmh) {
+    public ArrayList<PhanCongDTO> search(String id, String idlop) {
         ArrayList<PhanCongDTO> search = new ArrayList<>();
         id = id == null ? id = "" : id;
         idlop = idlop == null ? idlop = "" : idlop;
-        idmh = idmh == null ? idmh = "" : idmh;
         for (PhanCongDTO pc : dspc) {
             if (pc.getGiaoVienID().contains(id) &&
                     pc.getLopID().contains(idlop)
@@ -111,7 +111,7 @@ public class PhanCongBUS {
 
     public ArrayList<PhanCongDTO> search(String idlop) {
         ArrayList<PhanCongDTO> search = new ArrayList<>();
-        idlop = idlop.isEmpty() ? idlop = "" : idlop;
+        idlop = idlop==null ? idlop = "" : idlop;
         for (PhanCongDTO pc : dspc) {
             if (pc.getLopID().contains(idlop)) {
                 search.add(pc);
@@ -136,7 +136,7 @@ public class PhanCongBUS {
 
         // Display all PhanCongDTO
         
-        for (PhanCongDTO pc : phanCongBUS.search("GV3", null, null)) {
+        for (PhanCongDTO pc : phanCongBUS.search("GV1", null)) {
             System.out.println(pc.toString());
         }
     }

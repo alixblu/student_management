@@ -1,6 +1,6 @@
 package BUS;
 
-import DATA.DoiMK_DAO;
+import DAO.DoiMK_DAO;
 import DTO.DoiMK_DTO;
 
 public class DoiMK_BUS {

@@ -1,7 +1,8 @@
 package BUS;
 
 import java.util.ArrayList;
-import DATA.phanquyenDAO;
+
+import DAO.phanquyenDAO;
 import DTO.chitietquyenDTO;
 import DTO.chucnangDTO;
 import DTO.phanquyenDTO;

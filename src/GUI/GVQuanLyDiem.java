@@ -28,6 +28,7 @@ import BUS.KQ_HocSinhCaNamBUS;
 import BUS.LopBUS;
 import BUS.MonHocBUS;
 import BUS.NamHocBUS;
+import BUS.PhanCongBUS;
 import BUS.PhanLopBUS;
 import DTO.ChiTietDiemDTO;
 import DTO.DTB_HocKyDTO;
@@ -45,22 +46,20 @@ import DTO.PhanLopDTO;
  * @author PHUONG ANH
  */
 public class GVQuanLyDiem extends JPanel {
-    static protected int isSubmit = 0;
     String magiaovien;
-    //private JFrame f;
+    private JFrame f;
     private JPanel topPanel, radioPanel, dropdownPanel, selectPanel, totalPanel, btnPanel, btnPanel2, contentPanel,
             detailPanel, main_detailPanel;
-    private JLabel b1, b3, b4, b5, b6;
+            private JLabel b1, b3, b4, b5, b6;
     private JComboBox<String> optionLop, optionHe, optionHocky, optionNam;
-    private JTextField s, inputID, outputDiem;
+    private JTextField s, inputID, txtDiem1, txtDiem2, txtDiem3;
     private JLabel l1, l2;
     private JButton filterBtn, editBtn, delBtn, submitBtn;
-    private NonEditableTableModel tblModel;
+    private static NonEditableTableModel tblModel;
     private JScrollPane scrollPane;
     private JTable t;
-    private static String outputID, outputHeid, outputMon, outputHK, outputNam, outputDiemhk, outputDiemcanam,
-            outputTenHS, outputLop;
-
+    private static String outputID, outputMon, outputHK, outputNam;
+    
     ArrayList<HocSinhDTO> dshs;
     ArrayList<KQ_HocSinhCaNamDTO> dskq;
     ArrayList<MonHocDTO> dsmon;
@@ -72,6 +71,7 @@ public class GVQuanLyDiem extends JPanel {
     ArrayList<LopDTO> dslop;
     ArrayList<PhanCongDTO> dspc;
 
+    PhanCongBUS pcbus = new PhanCongBUS(1);
     PhanLopBUS plbus = new PhanLopBUS(1);
     LopBUS lopbus = new LopBUS(1);
     HocSinhBUS hsbus = new HocSinhBUS(1);
@@ -90,7 +90,7 @@ public class GVQuanLyDiem extends JPanel {
         this.magiaovien = magiaovien;
         this.width = width;
         this.height = height;
-        //f = new JFrame();
+        new JFrame();
         setLayout(new BorderLayout());
         setSize(850, 670);
 
@@ -192,17 +192,46 @@ public class GVQuanLyDiem extends JPanel {
         gbcsubmitBtn.insets = new Insets(5, 0, 5, 10);
 
         main_detailPanel = new JPanel();
-        main_detailPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
+        main_detailPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 50));  // Set layout with space between components
 
-        JLabel a1 = new JLabel("Nhập thay đổi điểm:    ");
-        outputDiem = new JTextField(5);
-        a1.setPreferredSize(new Dimension(200, 30));
-        outputDiem.setPreferredSize(new Dimension(200, 30));
-        Font font = a1.getFont();
-        float fontSize = font.getSize() + 5; // Increase the font size by 5 points (adjust as needed)
-        a1.setFont(font.deriveFont(fontSize));
-        main_detailPanel.add(a1);
-        main_detailPanel.add(outputDiem);
+        // Labels for the text fields
+        JLabel lblDiem1 = new JLabel("Điểm hệ 1: ");
+        JLabel lblDiem2 = new JLabel("Điểm hệ 2: ");
+        JLabel lblDiem3 = new JLabel("Điểm hệ 3: ");
+
+        // Text fields for entering scores
+        txtDiem1 = new JTextField(5);
+        txtDiem2 = new JTextField(5);
+        txtDiem3 = new JTextField(5);
+
+        // Set preferred sizes for labels and text fields
+        lblDiem1.setPreferredSize(new Dimension(100, 30));
+        txtDiem1.setPreferredSize(new Dimension(200, 30));
+
+        lblDiem2.setPreferredSize(new Dimension(100, 30));
+        txtDiem2.setPreferredSize(new Dimension(200, 30));
+
+        lblDiem3.setPreferredSize(new Dimension(100, 30));
+        txtDiem3.setPreferredSize(new Dimension(200, 30));
+
+        // Font settings for labels (optional, to increase the font size)
+        Font labelFont = lblDiem1.getFont().deriveFont(Font.PLAIN, 16);
+        lblDiem1.setFont(labelFont);
+        lblDiem2.setFont(labelFont);
+        lblDiem3.setFont(labelFont);
+
+        // Add components to the panel, keeping them aligned horizontally
+        main_detailPanel.add(lblDiem1);
+        main_detailPanel.add(txtDiem1);
+
+        main_detailPanel.add(lblDiem2);
+        main_detailPanel.add(txtDiem2);
+
+        main_detailPanel.add(lblDiem3);
+        main_detailPanel.add(txtDiem3);
+
+
+
         detailPanel.add(main_detailPanel);
 
         /////////
@@ -234,7 +263,7 @@ public class GVQuanLyDiem extends JPanel {
 
         add(topPanel, BorderLayout.NORTH);
 
-        btnPanel2.add(delBtn, gbcExportBtn);
+        //btnPanel2.add(delBtn, gbcExportBtn);
         btnPanel2.add(editBtn, gbcShowBtn);
 
         detailPanel.add(btnPanel2, BorderLayout.EAST);
@@ -248,15 +277,17 @@ public class GVQuanLyDiem extends JPanel {
         setVisible(true);
 
         checkSubmit();
-        filterBtn.addActionListener(new FilterBtnListener());
+        // filterBtn.addActionListener(new FilterBtnListener());
     }
 
     public void checkSubmit() {
         // Remove all existing listeners before adding new ones
         removeAllListeners();
         
-        if (isSubmit == 1) {  // isSubmit == 1, meaning points are already submitted
-            outputDiem.setEditable(false);  // Disable editing
+        if (gvbus.getSubmit(magiaovien) == 1) {  // isSubmit == 1, meaning points are already submitted
+            txtDiem1.setEditable(false);
+            txtDiem2.setEditable(false);
+            txtDiem3.setEditable(false);
             // Add the same listener for both edit and delete buttons
             ActionListener listener = new ActionListener() {
                 @Override
@@ -273,7 +304,7 @@ public class GVQuanLyDiem extends JPanel {
             
 
         } else {  // isSubmit != 1, meaning points are still editable
-            if(ctbus.isAnyDiemNull(magiaovien)){
+            if(checkEmptyGrade()){
                 ActionListener listener = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -283,8 +314,10 @@ public class GVQuanLyDiem extends JPanel {
                 submitBtn.addActionListener(listener);
             }
 
-            outputDiem.setEditable(true);  // Allow editing
-
+            txtDiem1.setEditable(true);  // Allow editing
+            txtDiem2.setEditable(true);
+            txtDiem3.setEditable(true);
+            
             removeAllListeners();
             // Add specific listeners for edit, delete, and send actions
             editBtn.addActionListener(new EditBtnListener());
@@ -302,9 +335,10 @@ public class GVQuanLyDiem extends JPanel {
                     );
 
                     if (result == JOptionPane.YES_OPTION) {
-                        isSubmit = 1;
+                        gvbus.setSubmit(magiaovien, 1); ;
                         checkSubmit();  // Re-check status after submission
                     }
+                    return;
                 }
             });
         }
@@ -323,29 +357,18 @@ public class GVQuanLyDiem extends JPanel {
         }
     }
 
-
     public JScrollPane initTable() {
         t = new JTable();
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollPane = new JScrollPane(t);
         scrollPane.setPreferredSize(new Dimension(0, 320));
 
-        String[] headers = { "ID", "Tên HS", "Lớp", "Môn Học", "Hệ Điểm", "Điểm", "Học Kỳ", "ĐiểmTB HK", "Năm Học",
-                "ĐiểmTB NH" };
+        String[] headers = {"ID", "Tên HS", "Lớp", "Môn Học", "Điểm hệ 1", "Điểm hệ 2", "Điểm hệ 3","Học Kỳ","ĐTB môn HK", "Năm Học"};
         int editableColumnIndex = 5; // Điểm column
         tblModel = new NonEditableTableModel(headers, 0, editableColumnIndex);
         t.setModel(tblModel);
 
-        // Thiết lập kích thước cột
-        t.getColumnModel().getColumn(0).setPreferredWidth(60);
-        t.getColumnModel().getColumn(1).setPreferredWidth(180);
-        t.getColumnModel().getColumn(2).setPreferredWidth(60);
-        t.getColumnModel().getColumn(3).setPreferredWidth(70);
-        t.getColumnModel().getColumn(4).setPreferredWidth(70);
-        t.getColumnModel().getColumn(5).setPreferredWidth(80);
-        t.getColumnModel().getColumn(6).setPreferredWidth(60);
-        t.getColumnModel().getColumn(7).setPreferredWidth(60);
-        t.getColumnModel().getColumn(8).setPreferredWidth(120);
+        
         t.setRowHeight(40);
         JTableHeader header = t.getTableHeader();
         header.setPreferredSize(new Dimension(header.getPreferredSize().width, 40));
@@ -374,164 +397,172 @@ public class GVQuanLyDiem extends JPanel {
         return scrollPane;
     }
 
+    //check neu co diem chua nhap
+    public static boolean checkEmptyGrade() {
+        int dtbMonColumnIndex = 8; // 9th column, 0-based index
+        for (int row = 0; row < tblModel.getRowCount(); row++) {
+            Object value = tblModel.getValueAt(row, dtbMonColumnIndex);
+            if (value instanceof Number && ((Number) value).doubleValue() == 0.0) {
+                return true; // Found a 0.0 value in the 9th column
+            }
+        }
+        return false; // No 0.0 value found
+    }
     public void loaddatatoTable() {
+        int sHS=0;
         tblModel.setRowCount(0);
 
-        dshs = hsbus.getList();
-        dskq = kqbus.getList();
-        dsmon = mhbus.getList();
-        dsct = ctbus.getList();
-        dsdtb = dtbbus.getList();
-        dshk = hkbus.getList();
-        dsnh = nhbus.getList();
+        dspc = pcbus.search(magiaovien, null);
+        if(dspc ==null) {
+            JOptionPane.showMessageDialog(null, "TK chưa dc tạo phân công để nhập điểm");
+            return;
+        }
+        String idnamhoc = nhbus.getCurrYearId();
+        String idhk = nhbus.get(idnamhoc).getHocKy();
+        if(idnamhoc == null){
+            JOptionPane.showMessageDialog(null, "Hệ thống chưa được tạo năm học");
+            return;
+        }
+        
         String idmon = gvbus.getIdMon(magiaovien);
-        System.out.println("id mon GV :" + idmon);
-        for (HocSinhDTO hs : dshs) {
-            for (NamHocDTO nh : dsnh) {
-                String idNamHoc = nh.getNamHocID();
-                String idhs = hs.getHocSinhID();
-                String idlop = plbus.get(idhs, idNamHoc) != null ? plbus.get(idhs, idNamHoc).getLopID() : "";
-                System.out.println(idNamHoc + idhs + idlop);
-                for(HocKyDTO hk: dshk){
-
-                    for (int heso = 1; heso < 4; heso++) {
-                        String idHocKy = hk.getHocKyID();
-                        String idDiemHocKy = ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso) != null
-                                ? String.valueOf(ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso).getDiem())
-                                : "";
-                        String idDiemTrungBinhHocKy = dtbbus.get(idhs, idNamHoc, idHocKy) != null
-                                ? String.valueOf(dtbbus.get(idhs, idNamHoc, idHocKy).getDiemTrungBinh())
-                                : "";
-                        String idDiemTrungBinhNam = kqbus.get(idhs, idNamHoc) != null
-                                ? String.valueOf(kqbus.get(idhs, idNamHoc).getDiemTrungBinhNam())
-                                : "";
-                        String tenl = lopbus.get(idlop) != null ? lopbus.get(idlop).getTenLop() : "";
-                        String[] rowData = new String[] {
-                                idhs,
-                                hsbus.get(idhs).getTenHocSinh(),
-                                tenl,
-                                mhbus.get(idmon).getTenMonHoc(),
-                                String.valueOf(heso),
-                                idDiemHocKy,
-                                hkbus.get(idHocKy).getTenHocKy(),
-                                idDiemTrungBinhHocKy,
-                                nhbus.get(idNamHoc).getNamHocBatDau() + "-" + nhbus.get(idNamHoc).getNamHocKetThuc(),
-                                idDiemTrungBinhNam
-                        };
-                        tblModel.addRow(rowData);
-                        
-                    }
+        for(PhanCongDTO pc: dspc){
+            String lopid = pc.getLopID();
+            dspl = plbus.search(null, lopid, idnamhoc);
+            for (PhanLopDTO pl: dspl){
+                String idhs = pl.getHocSinhID();
+//{"ID", "Tên HS", "Lớp", "Môn Học", "Điểm hệ 1", "Điểm hệ 2", "Điểm hệ 3","Học Kỳ","ĐTB môn HK", "Năm Học"};
+                
+                if(ctbus.get(idhs, idnamhoc, idhk, idmon) == null){
+                    ChiTietDiemDTO diemmonhoc = new ChiTietDiemDTO(idhs, idmon,idhk,  idnamhoc);
+                    System.out.println("add ctd");
+                    ctbus.add(diemmonhoc);
                 }
+                ChiTietDiemDTO diemmonhoc = ctbus.get(idhs, idnamhoc, idhk, idmon);
+                String[] rowData = new String[]{
+                    idhs,
+                    hsbus.get(idhs).getTenHocSinh(),
+                    lopbus.get(lopid).getTenLop(),
+                    mhbus.get(idmon).getTenMonHoc(),
+                    String.valueOf(diemmonhoc.getDiem1()),
+                    String.valueOf(diemmonhoc.getDiem2()),
+                    String.valueOf(diemmonhoc.getDiem3()),
+                    hkbus.get(idhk).getTenHocKy(),
+                    String.valueOf(diemmonhoc.getDtbMon()),
+                    nhbus.get(idnamhoc).getNamHocBatDau() + "-" + nhbus.get(idnamhoc).getNamHocKetThuc()
+                };
+                sHS++;
+                tblModel.addRow(rowData);
             }
         }
-        tblModel.fireTableDataChanged();
-        s.setText(String.valueOf(dshs.size()));
+        s.setText(String.valueOf(sHS));
     }
 
-    private class FilterBtnListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            tblModel.setRowCount(0);
-            String id_hs = inputID.getText().trim().toUpperCase();
-            String monhoc = gvbus.getIdMon(magiaovien);
-            String tenlop = (String) optionLop.getSelectedItem();
+    // private class FilterBtnListener implements ActionListener {
+    //     @Override
+    //     public void actionPerformed(ActionEvent e) {
+    //         tblModel.setRowCount(0);
+    //         String id_hs = inputID.getText().trim().toUpperCase();
+    //         String monhoc = gvbus.getIdMon(magiaovien);
+    //         String tenlop = (String) optionLop.getSelectedItem();
 
-            // không có table hệ số =))))
-            int hediem, i;
-            String selectedItem = (String) optionHe.getSelectedItem();
-            if (selectedItem.equals("Tất cả")) {
-                hediem = 4;
-                i = 1;
-            } else {
-                char secondChar = selectedItem.charAt(1);
-                i = Character.getNumericValue(secondChar);
-                hediem = i + 1;
-            }
+    //         // không có table hệ số =))))
+    //         int hediem, i;
+    //         String selectedItem = (String) optionHe.getSelectedItem();
+    //         if (selectedItem.equals("Tất cả")) {
+    //             hediem = 4;
+    //             i = 1;
+    //         } else {
+    //             char secondChar = selectedItem.charAt(1);
+    //             i = Character.getNumericValue(secondChar);
+    //             hediem = i + 1;
+    //         }
 
-            String hocky = (String) optionHocky.getSelectedItem();
-            String namhoc = (String) optionNam.getSelectedItem();
+    //         String hocky = (String) optionHocky.getSelectedItem();
+    //         String namhoc = (String) optionNam.getSelectedItem();
 
-            dshs = hsbus.search(id_hs, null, null, null, null, null, null);
-            dsnh = nhbus.search(null, namhoc);
-            dslop = lopbus.search(null, tenlop);
-            dshk = hkbus.search(null, hocky);
-            // dsmon = mhbus.search(null, monhoc);
+    //         dshs = hsbus.search(id_hs, null, null, null, null, null, null);
+    //         dsnh = nhbus.search(null, namhoc);
+    //         dslop = lopbus.search(null, tenlop);
+    //         dshk = hkbus.search(null, hocky);
+    //         // dsmon = mhbus.search(null, monhoc);
 
-            for (HocSinhDTO hs : dshs) {
-                System.out.println("loc hs");
+    //         for (HocSinhDTO hs : dshs) {
+    //             System.out.println("loc hs");
 
-                for (NamHocDTO nh : dsnh) {
+    //             for (NamHocDTO nh : dsnh) {
 
-                    for (LopDTO lop : dslop) {
+    //                 for (LopDTO lop : dslop) {
 
-                        String idnamhoc = nh.getNamHocID();
-                        String idhs = hs.getHocSinhID();
-                        String idlop = lop.getLopID();
-                        if (plbus.get(idhs, idnamhoc).getLopID().equals(idlop)) {
-                            for (HocKyDTO hk : dshk) {
+    //                     String idnamhoc = nh.getNamHocID();
+    //                     String idhs = hs.getHocSinhID();
+    //                     String idlop = lop.getLopID();
+    //                     if (plbus.get(idhs, idnamhoc).getLopID().equals(idlop)) {
+    //                         for (HocKyDTO hk : dshk) {
 
-                                String idhk = hk.getHocKyID();
-                                for (MonHocDTO mh : dsmon) {
-                                    String idmon = mh.getMonHocID();
-                                    for (int heso = i; heso < hediem; heso++) {
-                                        String Diem = ctbus.get(idhs, idnamhoc, idhk, idmon, heso) != null
-                                                ? String.valueOf(ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem())
-                                                : "";
-                                        String diemTrungBinhHocKy = dtbbus.get(idhs, idnamhoc, idhk) != null
-                                                ? String.valueOf(dtbbus.get(idhs, idnamhoc, idhk).getDiemTrungBinh())
-                                                : "";
-                                        String diemTrungBinhNam = kqbus.get(idhs, idnamhoc) != null
-                                                ? String.valueOf(kqbus.get(idhs, idnamhoc).getDiemTrungBinhNam())
-                                                : "";
-                                        System.out.println("IDHS: " + idhs);
+    //                             String idhk = hk.getHocKyID();
+    //                             for (MonHocDTO mh : dsmon) {
+    //                                 String idmon = mh.getMonHocID();
+    //                                 for (int heso = i; heso < hediem; heso++) {
+    //                                     String Diem = ctbus.get(idhs, idnamhoc, idhk, idmon, heso) != null
+    //                                             ? String.valueOf(ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem())
+    //                                             : "";
+    //                                     String diemTrungBinhHocKy = dtbbus.get(idhs, idnamhoc, idhk) != null
+    //                                             ? String.valueOf(dtbbus.get(idhs, idnamhoc, idhk).getDiemTrungBinh())
+    //                                             : "";
+    //                                     String diemTrungBinhNam = kqbus.get(idhs, idnamhoc) != null
+    //                                             ? String.valueOf(kqbus.get(idhs, idnamhoc).getDiemTrungBinhNam())
+    //                                             : "";
+    //                                     System.out.println("IDHS: " + idhs);
 
-                                        String[] rowData = new String[] {
-                                                idhs,
-                                                hsbus.get(idhs).getTenHocSinh(),
-                                                lopbus.get(idlop).getTenLop(),
-                                                mhbus.get(idmon).getTenMonHoc(),
-                                                String.valueOf(heso),
-                                                Diem,
-                                                hkbus.get(idhk).getTenHocKy(),
-                                                diemTrungBinhHocKy,
-                                                nhbus.get(idnamhoc).getNamHocBatDau() + "-"
-                                                        + nhbus.get(idnamhoc).getNamHocKetThuc(),
-                                                diemTrungBinhNam
-                                        };
-                                        tblModel.addRow(rowData);
-                                    }
-                                }
-                            }
-                        }
-                    }
+    //                                     String[] rowData = new String[] {
+    //                                             idhs,
+    //                                             hsbus.get(idhs).getTenHocSinh(),
+    //                                             lopbus.get(idlop).getTenLop(),
+    //                                             mhbus.get(idmon).getTenMonHoc(),
+    //                                             String.valueOf(heso),
+    //                                             Diem,
+    //                                             hkbus.get(idhk).getTenHocKy(),
+    //                                             diemTrungBinhHocKy,
+    //                                             nhbus.get(idnamhoc).getNamHocBatDau() + "-"
+    //                                                     + nhbus.get(idnamhoc).getNamHocKetThuc(),
+    //                                             diemTrungBinhNam
+    //                                     };
+    //                                     tblModel.addRow(rowData);
+    //                                 }
+    //                             }
+    //                         }
+    //                     }
+    //                 }
 
-                }
-            }
-            tblModel.fireTableDataChanged();
-            int count = countUniqueIDs(tblModel);
-            s.setText(String.valueOf(count));
-            if (tblModel.getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Không có dữ liệu ");
-            }
-        }
-    }
+    //             }
+    //         }
+    //         tblModel.fireTableDataChanged();
+    //         int count = countUniqueIDs(tblModel);
+    //         s.setText(String.valueOf(count));
+    //         if (tblModel.getRowCount() == 0) {
+    //             JOptionPane.showMessageDialog(null, "Không có dữ liệu ");
+    //         }
+    //     }
+    // }
 
     private void tableMouseClicked(java.awt.event.MouseEvent e) throws ParseException {
         checkSubmit();
 
-        outputDiem.setEditable(true);
+        txtDiem1.setEditable(true);
+        txtDiem2.setEditable(true);
+        txtDiem3.setEditable(true);
+            
         int row = t.getSelectedRow();
         outputID = (String) t.getValueAt(row, 0);
-        outputTenHS = (String) t.getValueAt(row, 1);
-        outputLop = (String) t.getValueAt(row, 2);
         outputMon = (String) t.getValueAt(row, 3);
-        outputHeid = (String) t.getValueAt(row, 4);
-        String diem = (String) t.getValueAt(row, 5);
-        outputHK = (String) t.getValueAt(row, 6);
-        outputDiemhk = (String) t.getValueAt(row, 7);
-        outputNam = (String) t.getValueAt(row, 8);
-        outputDiem.setText(diem);
-        outputDiemcanam = (String) t.getValueAt(row, 9);
+        String diem1 = (String) t.getValueAt(row, 4);
+        String diem2 = (String) t.getValueAt(row, 5);
+        String diem3 = (String) t.getValueAt(row, 6);
+        outputHK = (String) t.getValueAt(row, 7);
+        outputNam = (String) t.getValueAt(row, 9);
+        txtDiem1.setText(diem1);
+        txtDiem2.setText(diem2);
+        txtDiem3.setText(diem3);
 
         String hockyid = outputHK.substring(outputHK.length() - 1);
         //khi sua diem o hoc ky truoc
@@ -539,7 +570,7 @@ public class GVQuanLyDiem extends JPanel {
             removeAllListeners();
             editBtn.addActionListener(new CannotEditListener());
             delBtn.addActionListener(new CannotEditListener());
-            outputDiem.setEditable(false);
+            txtDiem1.setEditable(false);
         }
 
     }
@@ -558,19 +589,24 @@ public class GVQuanLyDiem extends JPanel {
                 return;
             }
 
-            String diem = outputDiem.getText();
-            if (diem.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng nhập điểm", "Error", JOptionPane.ERROR_MESSAGE);
+            String diem = txtDiem1.getText();
+            String diem2 = txtDiem2.getText();
+            String diem3 = txtDiem3.getText();
+            if (diem.isEmpty() && diem2.isEmpty() && diem3.isEmpty() ) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn HS để nhập điểm", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            if (!(diem.matches("^-?\\d+(\\.\\d+)?$"))) {
+            if (!(diem.matches("^-?\\d+(\\.\\d+)?$")) 
+                || !(diem2.matches("^-?\\d+(\\.\\d+)?$")) || !(diem3.matches("^-?\\d+(\\.\\d+)?$"))) {
                 JOptionPane.showMessageDialog(null, "Sai format điểm, vui lòng nhập lại", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            if (Float.parseFloat(diem) > 10.0 || Float.parseFloat(diem) < 0.0) {
+            if ( (Double.parseDouble(diem) > 10.0 || Double.parseDouble(diem) < 0.0)
+                || (Double.parseDouble(diem2) > 10.0 || Double.parseDouble(diem2) < 0.0)
+                || (Double.parseDouble(diem3) > 10.0 || Double.parseDouble(diem3) < 0.0) ) {
                 JOptionPane.showMessageDialog(null, "Quá số điểm tối đa hoặc số điểm âm, vui lòng nhập lại", "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -583,7 +619,7 @@ public class GVQuanLyDiem extends JPanel {
                     JOptionPane.QUESTION_MESSAGE);
 
             if (result == JOptionPane.YES_OPTION) {
-                updateData();
+                 updateData();
             } else {
                 return;
             }
@@ -591,86 +627,25 @@ public class GVQuanLyDiem extends JPanel {
     }
     
     public void updateData() {
-        System.out.println("update ................");
-        String idhk = hkbus.getByName(outputHK).getHocKyID();
-        System.out.println(idhk);
-
-        String idmon = mhbus.getByName(outputMon).getMonHocID();
-        System.out.println(idmon);
-
-        String idnamhoc = nhbus.getByName(outputNam).getNamHocID();
-        System.out.println(idnamhoc);
+        System.out.println("updateData()");
 
         String idhs = outputID;
-        System.out.println(idhs);
-        int idhe = Integer.parseInt(outputHeid);
-        System.out.println(idhe);
-        Float diemHK = (outputDiemhk == null || outputDiemhk.equals("")) ? -1 : Float.parseFloat(outputDiemhk);
-        System.out.println(diemHK);
-        Float diemCanam = (outputDiemcanam == null || outputDiemcanam.equals("")) ? -1
-                : Float.parseFloat(outputDiemcanam);
-        System.out.println(diemCanam);
-        Float diem = (outputDiem.getText() == null || outputDiem.getText().equals("")) ? -1
-                : Float.parseFloat(outputDiem.getText());
-        System.out.println(diem);
-        String tenhs = outputTenHS;
-        String lop = outputLop;
+        String idmon = mhbus.getByName(outputMon).getMonHocID();
+        double diem1 = Double.parseDouble(txtDiem1.getText());
+        double diem2 = Double.parseDouble(txtDiem2.getText());
+        double diem3 = Double.parseDouble(txtDiem3.getText());
+        String idhk = hkbus.getByName(outputHK).getHocKyID();
+        String idnamhoc = nhbus.getByName(outputNam).getNamHocID();
 
-        String hocluc = kqbus.get(idhs, idnamhoc) != null ? kqbus.get(idhs, idnamhoc).getHocLuc() : "";// checknull
-        String hanhkiem = kqbus.get(idhs, idnamhoc) != null ? kqbus.get(idhs, idnamhoc).getHanhKiem() : "Tốt";//
-        String ketqua = kqbus.get(idhs, idnamhoc) != null ? kqbus.get(idhs, idnamhoc).getKetQua() : "";//
+        ChiTietDiemDTO updatectd = ctbus.get(idhs, idnamhoc, idhk, idmon);
+        updatectd.setDiem1(diem1);
+        updatectd.setDiem2(diem2);
+        updatectd.setDiem3(diem3);
+        updatectd.calDtbMon();
+        ctbus.set(updatectd);
 
-        KQ_HocSinhCaNamDTO diemnamhoc = new KQ_HocSinhCaNamDTO(idhs, idnamhoc, hocluc, hanhkiem, diemCanam, ketqua);
-
-        ChiTietDiemDTO ctd = new ChiTietDiemDTO(idhs, idmon, idhk, idhe, idnamhoc, diem);
-        DTB_HocKyDTO dtb = new DTB_HocKyDTO(idhs, idhk, idnamhoc, diemHK);
-
-        if (tinhdiemHK(idhs, idhk, idnamhoc) > 0) {
-            dtb.setDiemTrungBinh(tinhdiemHK(idhs, idhk, idnamhoc));
-        }
-
-        if (tinhDiemCN(idhs, idnamhoc) > 0) {
-            diemnamhoc.setDiemTrungBinhNam(tinhDiemCN(idhs, idnamhoc));
-
-            // update hocluc
-
-            if (tinhDiemCN(idhs, idnamhoc) < 5) {
-                diemnamhoc.setHocLuc("Yếu");
-            } else if (tinhDiemCN(idhs, idnamhoc) < 8.5 && tinhDiemCN(idhs, idnamhoc) >= 7.0) {
-                diemnamhoc.setHocLuc("Khá");
-            } else if (tinhDiemCN(idhs, idnamhoc) >= 8.5) {
-                diemnamhoc.setHocLuc("Giỏi");
-            } else {
-                diemnamhoc.setHocLuc("Trung Bình");
-            }
-        }
-
-        // Check if any diem value is -1
-        boolean anyNegative = (diem == -1 || diemHK == -1 || diemCanam == -1);
-
-        // Convert diem values to empty string if any is -1
-        String diemString = (anyNegative && diem == -1) ? "" : String.valueOf(diem);
-        String diemHKString = (anyNegative && diemHK == -1) ? "" : String.valueOf(diemHK);
-        String diemCanamString = (anyNegative && diemCanam == -1) ? "" : String.valueOf(diemCanam);
-
-        // Create rowData with adjusted diem values
-        Object[] rowData = { idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, diemString,
-                hkbus.get(idhk).getTenHocKy(),
-                diemHKString, outputNam, diemCanamString };
-
-        int row = t.getSelectedRow();
-        tblModel.removeRow(row);
-        tblModel.addRow(rowData);
-        /// check lai update db;
-        System.out.println("check db------------");
-        ctbus.set(ctd);
-        System.out.println(ctd);
-        dtbbus.set(dtb);
-        System.out.println(dtb);
-        kqbus.set(diemnamhoc);
-        System.out.println(diemnamhoc);
-        outputDiem.setText("");
         JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+        loaddatatoTable();
         resetOutput();
     }
 
@@ -689,65 +664,12 @@ public class GVQuanLyDiem extends JPanel {
 
             if (i == JOptionPane.YES_OPTION) {
 
-                deleteData();
+                //deleteData();
                 resetOutput();
             } else {
                 return;
             }
         }
-    }
-
-    public void deleteData() {
-        outputDiemhk = null;
-        outputDiemcanam = null;
-        System.out.println("delete()");
-        String idhk = hkbus.getByName(outputHK).getHocKyID();
-        System.out.println(idhk);
-
-        String idmon = mhbus.getByName(outputMon).getMonHocID();
-        System.out.println(idmon);
-
-        String idnamhoc = nhbus.getByName(outputNam).getNamHocID();
-        System.out.println(idnamhoc);
-
-        String idhs = outputID;
-        System.out.println(idhs);
-        int idhe = Integer.parseInt(outputHeid);
-        System.out.println(idhe);
-        Float diemHK = (outputDiemhk == null || outputDiemhk.equals("")) ? -1 : Float.parseFloat(outputDiemhk);
-                                                                                                         
-        System.out.println(diemHK);
-        Float diemCanam = (outputDiemcanam == null || outputDiemcanam.equals("")) ? -1
-                : Float.parseFloat(outputDiemcanam);
-        System.out.println(diemCanam);
-        Float diem = (outputDiem.getText() == null || outputDiem.getText().equals("")) ? -1
-                : Float.parseFloat(outputDiem.getText());
-        System.out.println(diem);
-
-        String hocluc = kqbus.get(idhs, idnamhoc) != null ? kqbus.get(idhs, idnamhoc).getHocLuc() : "";// check null
-        String hanhkiem = kqbus.get(idhs, idnamhoc) != null ? kqbus.get(idhs, idnamhoc).getHanhKiem() : "Tốt";//
-        String ketqua = kqbus.get(idhs, idnamhoc) != null ? kqbus.get(idhs, idnamhoc).getKetQua() : "";//
-        KQ_HocSinhCaNamDTO diemnamhoc = new KQ_HocSinhCaNamDTO(idhs, idnamhoc, hocluc, hanhkiem, diemCanam, ketqua);
-
-        ChiTietDiemDTO ctd = new ChiTietDiemDTO(idhs, idmon, idhk, idhe, idnamhoc, diem);
-        DTB_HocKyDTO dtb = new DTB_HocKyDTO(idhs, idhk, idnamhoc, diemHK);
-
-        System.out.println("check db delete------------");
-        ctbus.delete(ctd);
-        System.out.println(ctd);
-        dtbbus.delete(dtb);
-        System.out.println(dtb);
-        kqbus.delete(diemnamhoc);
-        System.out.println(diemnamhoc);
-
-        Object[] rowData = { outputID, outputTenHS, outputLop, outputMon, outputHeid, "", outputHK, "", outputNam, "" };
-        int row = t.getSelectedRow();
-        tblModel.removeRow(row);
-        tblModel.addRow(rowData);
-
-        outputDiem.setText("");
-        JOptionPane.showMessageDialog(null, "Cập nhật thành công");
-        resetOutput();
     }
 
     private int countUniqueIDs(DefaultTableModel model) {
@@ -765,79 +687,16 @@ public class GVQuanLyDiem extends JPanel {
         return count;
     }
 
-    public Float tinhdiemHK(String idhs, String idhk, String idnamhoc) {
-        Float dhk = (float) 0.0;
-
-        hkbus.get(idhk);
-
-        nhbus.get(idnamhoc);
-        hsbus.get(idhs);
-
-        dshs = hsbus.getList();
-        dskq = kqbus.getList();
-        dsmon = mhbus.getList();
-        dsct = ctbus.getList();
-        dsdtb = dtbbus.getList();
-        dshk = hkbus.getList();
-        dsnh = nhbus.getList();
-
-        Float dtbmon = (float) 0.0;
-        Float tongmon = (float) 0.0;
-        for (MonHocDTO mon : dsmon) {
-            dtbmon = (float) 0.0;
-            for (int heso = 1; heso < 4; heso++) {
-                String idmon = mon.getMonHocID();
-                if (ctbus.get(idhs, idnamhoc, idhk, idmon, heso) == null)
-                    return (float) -1;
-                Float diem = (ctbus.get(idhs, idnamhoc, idhk, idmon, heso) != null) ||
-                        (ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem() < 0.0)
-                                ? ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem()
-                                : (float) -1;
-                if (String.valueOf(diem) != null &&
-                        diem >= (float) 0.0) {
-                    System.out.println(mhbus.get(idmon));
-
-                    System.out.println(" he so---" + heso);
-
-                    tongmon += diem * heso;
-                    System.out.println(tongmon);
-
-                }
-            }
-            dtbmon += tongmon / 6;
-            tongmon = (float) 0.0;
-            dhk += dtbmon;
-
-        }
-        dhk /= (dsmon.size());
-
-        if (dhk == 0.0)
-            return (float) -1;
-
-        return dhk;
-    }
-
-    public Float tinhDiemCN(String idhs, String idnh) {
-
-        if (tinhdiemHK(idhs, "1", idnh) > 0 && tinhdiemHK(idhs, "2", idnh) > 0) {
-            return (float) (tinhdiemHK(idhs, "1", idnh) + tinhdiemHK(idhs, "2", idnh)) / 2;
-        }
-        return (float) -1;
-    }
-    
     public void resetOutput() {
         outputID = null;
-        outputHeid = null;
         outputMon = null;
         outputHK = null;
         outputNam = null;
-        outputDiemhk = null;
-        outputDiemcanam = null;
-        outputTenHS = null;
-        outputLop = null;
     }
 
     // public static void main(String[] args) {
     //     new GVQuanLyDiem("GV1");
+    //     System.out.println(checkEmptyGrade());
     // }
+
 }

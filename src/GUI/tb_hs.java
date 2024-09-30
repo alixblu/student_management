@@ -45,7 +45,7 @@ import com.toedter.calendar.JDateChooser;
 import BUS.ChangeAcc_BUS;
 //------------------
 import BUS.ThongBaoBUS;
-import DATA.ThongBaoDAO;
+import DAO.ThongBaoDAO;
 import DTO.ThongBaoDTO;
 
 import java.text.ParseException;

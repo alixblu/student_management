@@ -3,7 +3,7 @@ package BUS;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import DATA.NamHocDAO;
+import DAO.NamHocDAO;
 import DTO.NamHocDTO;
 
 public class NamHocBUS {

@@ -2,7 +2,7 @@ package BUS;
 
 import java.util.ArrayList;
 
-import DATA.HocKyDAO;
+import DAO.HocKyDAO;
 import DTO.HocKyDTO;
 
 public class HocKyBUS {

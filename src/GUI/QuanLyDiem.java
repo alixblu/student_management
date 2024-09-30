@@ -311,7 +311,7 @@ public class QuanLyDiem extends JPanel{
                     for (int heso = 1; heso < 4; heso++) {
                         String idHocKy = hk.getHocKyID();
                         String idNamHoc = nh.getNamHocID();
-                        String idDiemHocKy = ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso) != null ? String.valueOf(ctbus.get(idhs, idNamHoc, idHocKy, idmon, heso).getDiem()) : "";
+                        //String idDiemHocKy = ctbus.get(idhs, idNamHoc, idHocKy, idmon) != null ? String.valueOf(ctbus.get(idhs, idNamHoc, idHocKy, idmon).getDiem()) : "";
                         String idDiemTrungBinhHocKy = dtbbus.get(idhs, idNamHoc, idHocKy) != null ? String.valueOf(dtbbus.get(idhs, idNamHoc, idHocKy).getDiemTrungBinh()) : "";
                         String idDiemTrungBinhNam = kqbus.get(idhs, idNamHoc) != null ? String.valueOf(kqbus.get(idhs, idNamHoc).getDiemTrungBinhNam()) : "";
                         String tenl = lopbus.get(idlop)!=null?lopbus.get(idlop).getTenLop():"";
@@ -321,7 +321,7 @@ public class QuanLyDiem extends JPanel{
                             tenl,
                             mhbus.get(idmon).getTenMonHoc(),
                             String.valueOf(heso),
-                            idDiemHocKy,
+                            //idDiemHocKy,
                             hkbus.get(idhk).getTenHocKy(),
                             idDiemTrungBinhHocKy,
                             nhbus.get(idnamhoc).getNamHocBatDau() + "-" + nhbus.get(idnamhoc).getNamHocKetThuc(),
@@ -385,7 +385,7 @@ public class QuanLyDiem extends JPanel{
                                 for (MonHocDTO mh : dsmon) {
                                     String idmon = mh.getMonHocID();
                                     for (int heso = i ; heso < hediem; heso++) {
-                                        String Diem = ctbus.get(idhs, idnamhoc, idhk, idmon, heso) != null ? String.valueOf(ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem()) : "";
+                                        //String Diem = ctbus.get(idhs, idnamhoc, idhk, idmon, heso) != null ? String.valueOf(ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem()) : "";
                                         String diemTrungBinhHocKy = dtbbus.get(idhs, idnamhoc, idhk) != null ? String.valueOf(dtbbus.get(idhs, idnamhoc, idhk).getDiemTrungBinh()) : "";
                                         String diemTrungBinhNam = kqbus.get(idhs, idnamhoc) != null ? String.valueOf(kqbus.get(idhs, idnamhoc).getDiemTrungBinhNam()) : "";
                                         System.out.println("IDHS: " + idhs);
@@ -396,7 +396,7 @@ public class QuanLyDiem extends JPanel{
                                             lopbus.get(idlop).getTenLop(),
                                             mhbus.get(idmon).getTenMonHoc(),
                                             String.valueOf(heso),
-                                            Diem,
+                                            //Diem,
                                             hkbus.get(idhk).getTenHocKy(),
                                             diemTrungBinhHocKy,
                                             nhbus.get(idnamhoc).getNamHocBatDau() + "-" + nhbus.get(idnamhoc).getNamHocKetThuc(),
@@ -507,7 +507,7 @@ public class QuanLyDiem extends JPanel{
         
         KQ_HocSinhCaNamDTO diemnamhoc = new KQ_HocSinhCaNamDTO(idhs, idnamhoc, hocluc, hanhkiem, diemCanam, ketqua);
 
-        ChiTietDiemDTO ctd = new ChiTietDiemDTO(idhs, idmon, idhk, idhe, idnamhoc, diem);
+        ChiTietDiemDTO ctd = new ChiTietDiemDTO(idhs, idmon, idhk, idnamhoc);
         DTB_HocKyDTO dtb = new DTB_HocKyDTO(idhs, idhk, idnamhoc, diemHK);
 
         if(tinhdiemHK(idhs, idhk, idnamhoc)>0) {
@@ -630,7 +630,7 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
         String ketqua = kqbus.get(idhs, idnamhoc)!=null?kqbus.get(idhs, idnamhoc).getKetQua():"";//
         KQ_HocSinhCaNamDTO diemnamhoc = new KQ_HocSinhCaNamDTO(idhs, idnamhoc, hocluc, hanhkiem, diemCanam, ketqua);
         
-        ChiTietDiemDTO ctd = new ChiTietDiemDTO(idhs, idmon, idhk, idhe, idnamhoc, diem);
+        ChiTietDiemDTO ctd = new ChiTietDiemDTO(idhs, idmon, idhk, idnamhoc);
         DTB_HocKyDTO dtb = new DTB_HocKyDTO(idhs, idhk, idnamhoc, diemHK);
         
         System.out.println("check db delete------------");
@@ -687,9 +687,9 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
                 dtbmon= (float) 0.0;
                 for( int heso =1;heso <4;heso++){
                     String idmon = mon.getMonHocID();
-                    if(ctbus.get(idhs, idnamhoc, idhk, idmon, heso)==null) return (float) -1;
-                    Float diem = (ctbus.get(idhs, idnamhoc, idhk, idmon, heso)!=null) || 
-                    (ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem()<0.0)?ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem():(float)-1;
+                    if(ctbus.get(idhs, idnamhoc, idhk, idmon)==null) return (float) -1;
+                    Float diem = (float) ((ctbus.get(idhs, idnamhoc, idhk, idmon)!=null) || 
+                    (ctbus.get(idhs, idnamhoc, idhk, idmon).getDiem1()<0.0)?ctbus.get(idhs, idnamhoc, idhk, idmon).getDiem1():(float)-1);
                     if(String.valueOf(diem)!=null &&
                     diem>=(float)0.0){
                         System.out.println(mhbus.get(idmon));

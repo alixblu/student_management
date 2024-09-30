@@ -1,10 +1,11 @@
 package BUS;
 
-import DATA.GiaoVienDAO;
 import DTO.GiaoVienDTO;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import DAO.GiaoVienDAO;
 
 public class GiaoVienBUS {
     private ArrayList<GiaoVienDTO> dsgv;
@@ -34,7 +35,14 @@ public class GiaoVienBUS {
             }
         }
     }
-
+    public void setSubmit(String magv, int isSubmit){
+        GiaoVienDAO dao = new GiaoVienDAO();
+        dao.setSubmit(magv, isSubmit);
+    }
+    public int getSubmit(String magv){
+        GiaoVienDAO dao = new GiaoVienDAO();
+        return dao.getSubmit(magv);
+    }
     public boolean checkMagv(String magv) {
         GiaoVienDAO gvDao = new GiaoVienDAO();
         dsgv = gvDao.checkMagv();

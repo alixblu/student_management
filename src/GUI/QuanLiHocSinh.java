@@ -42,7 +42,7 @@ import BUS.LopBUS;
 import BUS.NamHocBUS;
 import BUS.PhanLopBUS;
 import BUS.QLHS_BUS;
-import DATA.LopDAO;
+import DAO.LopDAO;
 import DTO.HocSinhDTO;
 import DTO.LopDTO;
 import DTO.NamHocDTO;
@@ -551,15 +551,9 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         Integer countHS = +hsBUS.CountHS() + 1;
         String hocSinhID = "HSK" + soKhoa + countHS;
         themHS.textField_mahs.setText(hocSinhID);
-        
-        System.out.println("Tao data chi tiet diem");
-        //tạo 1 loạt data trong ChiTietDiem table
-        NamHocBUS nhbus = new NamHocBUS(1);
-        ChiTietDiemBUS ctdbus = new ChiTietDiemBUS();
-        ctdbus.createChiTietDiem(hocSinhID, nhbus.getCurrYearId());
+
     }
 
-   
     public void btnDelete_actionPerformed() {
         String mahs = tf[0].getText();
         System.out.println(mahs);
