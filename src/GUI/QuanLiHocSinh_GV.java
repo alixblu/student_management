@@ -937,12 +937,7 @@ public final class QuanLiHocSinh_GV extends JPanel implements MouseListener, Act
         Integer countHS = +hsBUS.CountHS() + 1;
         String hocSinhID = "HSK" + soKhoa + countHS;
         themHS.textField_mahs.setText(hocSinhID);
-        
-        System.out.println("Tao data chi tiet diem");
-        //tạo 1 loạt data trong ChiTietDiem table
-        NamHocBUS nhbus = new NamHocBUS(1);
-        ChiTietDiemBUS ctdbus = new ChiTietDiemBUS();
-        ctdbus.createChiTietDiem(hocSinhID, nhbus.getCurrYearId());
+
     }
 
    
