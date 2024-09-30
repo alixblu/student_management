@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="Lib/poi-ooxml-full-5.2.3.jar"/>
 	<classpathentry kind="lib" path="Lib/poi-ooxml-lite-5.2.3.jar"/>
 	<classpathentry kind="lib" path="Lib/poi-scratchpad-5.2.3.jar"/>
+	<classpathentry kind="lib" path="Lib/commons-io-2.17.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
