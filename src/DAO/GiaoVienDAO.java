@@ -54,6 +54,7 @@ public class GiaoVienDAO {
         sql += "'"+gv.getDienThoai()+"',";
         sql += "'"+gv.getphanMon()+"',";
         sql += "'"+gv.getIMG()+"',";
+        sql += "'0',";
         sql += "'1')";
         System.out.println(sql);
         mySQL.executeUpdate(sql);
