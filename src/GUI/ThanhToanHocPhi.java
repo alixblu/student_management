@@ -7,8 +7,7 @@
 import BUS.HocSinhBUS;
 import BUS.LopBUS;
 import BUS.PhanLopBUS;
-import DATA.HocSinhDAO;
-
+import DAO.HocSinhDAO;
 import DTO.HocSinhDTO;
 import DTO.LopDTO;
 import DTO.PhanLopDTO;

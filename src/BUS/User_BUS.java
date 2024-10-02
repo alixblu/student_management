@@ -1,7 +1,8 @@
 package BUS;
-import DATA.User_DAO;
 import DTO.user;
 import java.util.ArrayList;
+
+import DAO.User_DAO;
 
 public class User_BUS {
     private ArrayList<user> dsu;

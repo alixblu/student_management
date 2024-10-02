@@ -1,8 +1,9 @@
 package BUS;
 
-import DATA.YKienDAO;
 import DTO.YKienDTO;
 import java.util.ArrayList;
+
+import DAO.YKienDAO;
 
 public class YKienBUS {
     private ArrayList<YKienDTO> dsYKien;

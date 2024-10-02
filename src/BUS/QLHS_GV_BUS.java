@@ -2,7 +2,7 @@ package BUS;
 
 import java.util.ArrayList;
 
-import DATA.QLHS_GV_DAO;
+import DAO.QLHS_GV_DAO;
 import DTO.HocSinhDTO;
 
 public class QLHS_GV_BUS {

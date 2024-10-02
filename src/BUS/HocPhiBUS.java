@@ -1,9 +1,10 @@
 package BUS;
 
-import DATA.HocPhiDAO;
 import DTO.HocPhiDTO;
 
 import java.util.ArrayList;
+
+import DAO.HocPhiDAO;
 
 public class HocPhiBUS {
     private ArrayList<HocPhiDTO> dsHocPhi;

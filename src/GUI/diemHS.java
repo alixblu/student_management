@@ -383,16 +383,16 @@ public class diemHS extends JPanel {
                         if (ct.getHocSinhID().equals(mahocsinh) && ct.getMonHocID().equals(mh.getMonHocID())
                                 && ct.getHocKyID().equals(hkbus.getHocKyIDFromTenHocKy(HKY))
                                 && ct.getNamHocID().equals(nhbus.getByAcademicYear(NH))) {
-                            if (ct.getHeSoID() == 1) {
-                                diem15 = ct.getDiem();
-                                heSo15 = ct.getHeSoID();
-                            } else if (ct.getHeSoID() == 2) {
-                                diem1Tiet = ct.getDiem();
-                                heSo1Tiet = ct.getHeSoID();
-                            } else if (ct.getHeSoID() == 3) {
-                                diemHocKy = ct.getDiem();
-                                heSoHocKy = ct.getHeSoID();
-                            }
+                            // if (ct.getHeSoID() == 1) {
+                            //     diem15 = ct.getDiem();
+                            //     heSo15 = ct.getHeSoID();
+                            // } else if (ct.getHeSoID() == 2) {
+                            //     diem1Tiet = ct.getDiem();
+                            //     heSo1Tiet = ct.getHeSoID();
+                            // } else if (ct.getHeSoID() == 3) {
+                            //     diemHocKy = ct.getDiem();
+                            //     heSoHocKy = ct.getHeSoID();
+                            // }
                         }
                     }
                 }

@@ -42,8 +42,11 @@ import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.ChangeAcc_BUS;
+import BUS.GiaoVienBUS;
+
 import java.time.LocalDate;
 import DTO.Account_DTO;
+import DTO.GiaoVienDTO;
 import DTO.HocSinhDTO;
 import DTO.NamHocDTO;
 import BUS.NamHocBUS;
@@ -351,13 +354,16 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         String NamHocid = NamBatDau + "" + NamKetThuc;
         NamHocDTO namhoc = new NamHocDTO(NamHocid, NamBatDau, NamKetThuc, "1", 1);
         nhBUS.addNH(namhoc);
-        GVQuanLyDiem.isSubmit = 0;
+        //reset submit status
+        GiaoVienBUS gvbus = new GiaoVienBUS();
+        ArrayList<GiaoVienDTO> dsgv = gvbus.getList();
+        for(GiaoVienDTO gv: dsgv){
+            gvbus.setSubmit(gv.getMaGV(), 0);
+        }
         Object[] rowData = { NamHocid, NamBatDau, NamKetThuc, 1 };
         tblmodel.addRow(rowData);
         clearTextFields();
     }
-
-   
 
     public void updateEnable(){
         nhBUS.updateEnable();

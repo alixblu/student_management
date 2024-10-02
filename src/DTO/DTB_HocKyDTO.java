@@ -4,9 +4,9 @@ public class DTB_HocKyDTO {
     private String HocSinhID;
     private String HocKyID;
     private String NamHocID;
-    private Float DiemTrungBinh;
+    private double DiemTrungBinh;
 
-    public DTB_HocKyDTO(String hocSinhID, String hocKyID,String namhocid, Float diemTrungBinh) {
+    public DTB_HocKyDTO(String hocSinhID, String hocKyID,String namhocid, double diemTrungBinh) {
         HocSinhID = hocSinhID;
         HocKyID = hocKyID;
         NamHocID = namhocid;
@@ -29,7 +29,7 @@ public class DTB_HocKyDTO {
         HocKyID = hocKyID;
     }
 
-    public Float getDiemTrungBinh() {
+    public double getDiemTrungBinh() {
         return DiemTrungBinh;
     }
 
@@ -44,6 +44,7 @@ public class DTB_HocKyDTO {
     public void setNamHocID(String namHocID) {
         NamHocID = namHocID;
     }
+
     public String toString() {
         return "DTB_HocKyDTO{" +
                 "HocSinhID='" + HocSinhID + '\'' +

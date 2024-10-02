@@ -47,7 +47,7 @@ import com.toedter.calendar.JDateChooser;
 import BUS.GiaoVienBUS;
 import BUS.MonHocBUS;
 import BUS.QLPhanCongBUS;
-import DATA.GiaoVienDAO;
+import DAO.GiaoVienDAO;
 import DTO.GiaoVienDTO;
 import DTO.HocSinhDTO;
 import DTO.MonHocDTO;

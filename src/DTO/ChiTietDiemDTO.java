@@ -4,49 +4,52 @@ public class ChiTietDiemDTO {
     private String HocSinhID;
     private String MonHocID;
     private String HocKyID;
-    private int HeSoID;
     private String NamHocID;
-    private Float Diem;
+    private Double Diem1;
+    private Double Diem2;
+    private Double Diem3;
+    private Double dtbMon;
 
-    public ChiTietDiemDTO(String hocSinhID, String monHocID, String hocKyID, int HeSoid,String namhocid,  Float diem) {
-        HocSinhID = hocSinhID;
-        HocKyID = hocKyID;
-        MonHocID = monHocID;
-        HeSoID = HeSoid;
-        NamHocID = namhocid;
-        Diem = diem;
+    
+    public ChiTietDiemDTO(String hocSinhID, String monHocID, String hocKyID, String namHocID) {
+        this.HocSinhID = hocSinhID;
+        this.MonHocID = monHocID;
+        this.HocKyID = hocKyID;
+        this.NamHocID = namHocID;
+        this.Diem1 = 0.0;
+        this.Diem2 = 0.0;
+        this.Diem3 = 0.0;
+        this.dtbMon = 0.0;
     }
- 
+
+
     public String getHocSinhID() {
         return HocSinhID;
     }
+
 
     public void setHocSinhID(String hocSinhID) {
         HocSinhID = hocSinhID;
     }
 
-    public String getHocKyID() {
-        return HocKyID;
-    }
-
-    public void setHocKyID(String hocKyID) {
-        HocKyID = hocKyID;
-    }
 
     public String getMonHocID() {
         return MonHocID;
     }
 
+
     public void setMonHocID(String monHocID) {
         MonHocID = monHocID;
     }
 
-    public Float getDiem() {
-        return Diem;
+
+    public String getHocKyID() {
+        return HocKyID;
     }
 
-    public void setDiem(Float diem) {
-        Diem = diem;
+
+    public void setHocKyID(String hocKyID) {
+        HocKyID = hocKyID;
     }
 
 
@@ -54,25 +57,53 @@ public class ChiTietDiemDTO {
         return NamHocID;
     }
 
+
     public void setNamHocID(String namHocID) {
         NamHocID = namHocID;
     }
 
-    public int getHeSoID() {
-        return HeSoID;
+
+    public Double getDiem1() {
+        return Diem1;
     }
 
-    public void setHeSoID(int heSoID) {
-        HeSoID = heSoID;
+
+    public void setDiem1(Double diem1) {
+        Diem1 = diem1;
     }
-    public String toString() {
-        return "ChiTietDiemDTO{" +
-                "HocSinhID='" + HocSinhID + '\'' +
-                ", MonHocID='" + MonHocID + '\'' +
-                ", HocKyID='" + HocKyID + '\'' +
-                ", HeSoID=" + HeSoID +
-                ", NamHocID='" + NamHocID + '\'' +
-                ", Diem=" + Diem +
-                '}';
+
+
+    public Double getDiem2() {
+        return Diem2;
     }
+
+
+    public void setDiem2(Double diem2) {
+        Diem2 = diem2;
+    }
+
+
+    public Double getDiem3() {
+        return Diem3;
+    }
+
+
+    public void setDiem3(Double diem3) {
+        Diem3 = diem3;
+    }
+
+
+    public Double getDtbMon() {
+        return dtbMon;
+    }
+    
+    
+    public void setDtbMon(Double dtbMon) {
+        this.dtbMon = dtbMon;
+    }
+
+    public void calDtbMon() {
+        this.dtbMon = (this.Diem1*1 + this.Diem2*2 + this.Diem3*3) / 6;
+    }
+
 }

@@ -1,8 +1,9 @@
 package BUS;
 
-import DATA.ThongBaoDAO;
 import DTO.ThongBaoDTO;
 import java.util.ArrayList;
+
+import DAO.ThongBaoDAO;
 
 public class ThongBaoBUS {
     private ArrayList<ThongBaoDTO> dsThongBao;

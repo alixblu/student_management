@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2024 at 03:35 PM
+-- Generation Time: Sep 30, 2024 at 06:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -33,10 +33,12 @@ CREATE TABLE IF NOT EXISTS `chitietdiem` (
   `HocSinhid` varchar(10) NOT NULL,
   `MonHocid` varchar(11) NOT NULL,
   `HocKyid` int(11) NOT NULL,
-  `HeSoid` int(11) NOT NULL,
   `NamHocid` varchar(20) NOT NULL DEFAULT '',
-  `Diem` float DEFAULT NULL,
-  PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`,`HeSoid`) USING BTREE
+  `Diem1` double(10,2) NOT NULL DEFAULT 0.00,
+  `Diem2` double(10,2) NOT NULL DEFAULT 0.00,
+  `Diem3` double(10,2) NOT NULL DEFAULT 0.00,
+  `dtbMon` double(10,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -130,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `diemtbhocky` (
   `HocSinhid` varchar(10) NOT NULL,
   `HocKyid` int(11) NOT NULL,
   `NamHocid` varchar(20) NOT NULL,
-  `DiemTrungBinh` float DEFAULT NULL,
+  `DiemTrungBinh` double DEFAULT NULL,
   PRIMARY KEY (`HocSinhid`,`HocKyid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -149,6 +151,7 @@ CREATE TABLE IF NOT EXISTS `giaovien` (
   `DienThoai` varchar(11) NOT NULL DEFAULT '',
   `PhanMon` varchar(50) NOT NULL,
   `IMG` text DEFAULT NULL,
+  `isSubmit` tinyint(1) NOT NULL DEFAULT 0,
   `enable` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`GiaoVienid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -216,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `kqhocsinhcanam` (
   `NamHocid` varchar(50) NOT NULL,
   `HocLuc` varchar(50) DEFAULT NULL,
   `HanhKiem` varchar(10) DEFAULT 'Tốt',
-  `Diemtb` float DEFAULT NULL,
+  `Diemtb` double DEFAULT NULL,
   `KetQua` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`HocSinhid`,`NamHocid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

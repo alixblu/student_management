@@ -2,7 +2,7 @@ package BUS;
 
 import java.util.ArrayList;
 
-import DATA.*;
+import DAO.*;
 import DTO.HocSinhDTO;
 
 public class QLHS_BUS {

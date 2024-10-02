@@ -1,10 +1,9 @@
 package BUS;
 
-import DTO.HocSinhDTO;
 import DTO.QLPhanCongDTO;
 import java.util.*;
 
-import DATA.QLPhanCongDAO;
+import DAO.QLPhanCongDAO;
 
 public class QLPhanCongBUS {
 

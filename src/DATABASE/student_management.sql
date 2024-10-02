@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2024 at 05:24 PM
+-- Generation Time: Sep 30, 2024 at 05:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -33,10 +33,12 @@ CREATE TABLE IF NOT EXISTS `chitietdiem` (
   `HocSinhid` varchar(10) NOT NULL,
   `MonHocid` varchar(11) NOT NULL,
   `HocKyid` int(11) NOT NULL,
-  `HeSoid` int(11) NOT NULL,
   `NamHocid` varchar(20) NOT NULL DEFAULT '',
-  `Diem` float DEFAULT NULL,
-  PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`,`HeSoid`) USING BTREE
+  `Diem1` double(10,2) NOT NULL DEFAULT 0.00,
+  `Diem2` double(10,2) NOT NULL DEFAULT 0.00,
+  `Diem3` double(10,2) NOT NULL DEFAULT 0.00,
+  `dtbMon` double(10,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -130,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `diemtbhocky` (
   `HocSinhid` varchar(10) NOT NULL,
   `HocKyid` int(11) NOT NULL,
   `NamHocid` varchar(20) NOT NULL,
-  `DiemTrungBinh` float DEFAULT NULL,
+  `DiemTrungBinh` double DEFAULT NULL,
   PRIMARY KEY (`HocSinhid`,`HocKyid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -149,16 +151,10 @@ CREATE TABLE IF NOT EXISTS `giaovien` (
   `DienThoai` varchar(11) NOT NULL DEFAULT '',
   `PhanMon` varchar(50) NOT NULL,
   `IMG` text DEFAULT NULL,
+  `isSubmit` tinyint(1) NOT NULL DEFAULT 0,
   `enable` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`GiaoVienid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `giaovien`
---
-
-INSERT INTO `giaovien` (`GiaoVienid`, `TenGiaoVien`, `GioiTinh`, `NamSinh`, `DiaChi`, `DienThoai`, `PhanMon`, `IMG`, `enable`) VALUES
-('GV1', 'GV test 1', 'Nam', '22/09/1999', 'ưvetbvt', '3698745602', 'Văn', '', 1);
 
 -- --------------------------------------------------------
 
@@ -212,13 +208,6 @@ CREATE TABLE IF NOT EXISTS `hocsinh` (
   PRIMARY KEY (`HocSinhid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `hocsinh`
---
-
-INSERT INTO `hocsinh` (`HocSinhid`, `HoVaTen`, `GioiTinh`, `NgaySinh`, `DienThoai`, `DiaChi`, `HocPhi`, `IMG`, `enable`) VALUES
-('HSK01', 'HS test 1', 'Nam', '25/09/2008', '02365987456', 'efvbe', 'Chưa thanh toán', '', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -230,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `kqhocsinhcanam` (
   `NamHocid` varchar(50) NOT NULL,
   `HocLuc` varchar(50) DEFAULT NULL,
   `HanhKiem` varchar(10) DEFAULT 'Tốt',
-  `Diemtb` float DEFAULT NULL,
+  `Diemtb` double DEFAULT NULL,
   `KetQua` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`HocSinhid`,`NamHocid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -271,14 +260,6 @@ CREATE TABLE IF NOT EXISTS `monhoc` (
   PRIMARY KEY (`MonHocid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `monhoc`
---
-
-INSERT INTO `monhoc` (`MonHocid`, `TenMonHoc`) VALUES
-('MH1', 'Toán'),
-('MH2', 'Văn');
-
 -- --------------------------------------------------------
 
 --
@@ -306,14 +287,6 @@ CREATE TABLE IF NOT EXISTS `phancong` (
   `enable` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `phancong`
---
-
-INSERT INTO `phancong` (`GiaoVienid`, `Lopid`, `enable`) VALUES
-('GV1', 101, 1),
-('GV1', 101, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -326,13 +299,6 @@ CREATE TABLE IF NOT EXISTS `phanlop` (
   `NamHocid` varchar(20) NOT NULL,
   PRIMARY KEY (`HocSinhid`,`Lopid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `phanlop`
---
-
-INSERT INTO `phanlop` (`HocSinhid`, `Lopid`, `NamHocid`) VALUES
-('HSK01', 101, '20242025');
 
 -- --------------------------------------------------------
 
@@ -387,9 +353,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `role`, `enable`) VALUES
-('admin', 'admin', 'admin', 1),
-('HSK01', '02365987456', 'HS', 1),
-('GV1', '123', 'GV', 1);
+('admin', 'admin', 'admin', 1);
 
 -- --------------------------------------------------------
 

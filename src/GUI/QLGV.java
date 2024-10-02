@@ -34,8 +34,10 @@ import com.toedter.calendar.JDateChooser;
 import BUS.ChangeAcc_BUS;
 import BUS.MonHocBUS;
 import DTO.MonHocDTO;
+import DTO.user;
 import BUS.GiaoVienBUS;
 import BUS.QLPhanCongBUS;
+import BUS.User_BUS;
 import DTO.Account_DTO;
 import DTO.GiaoVienDTO;
 import java.text.ParseException;
@@ -333,6 +335,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                 toadoYTextfield = toadoYTextfield + 35;
                 Phocsinh.add(tf[i]);
             }
+            tf[0].setEditable(false);
             y = y + 35;
         }
         x = x + 180;
@@ -453,7 +456,9 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         
         // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
-    
+        user gvuser = new user(giaovienID, soDienThoai, "GV", "1");
+        User_BUS bus = new User_BUS(1);
+        bus.add(gvuser);
         // Thêm dữ liệu vào bảng
         Object[] rowData = { giaovienID, tenGV, gioiTinh, ngaySinh, diaChi, soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
@@ -644,7 +649,6 @@ public void clearTextFields() {
                     JOptionPane.INFORMATION_MESSAGE);
             System.out.println("Ban chon them");
             tf[0].requestFocus();
-            autoCreateAccount();
             addRow();
         }
     }
@@ -783,9 +787,9 @@ public void clearTextFields() {
         }
     }
 
-    public void autoCreateAccount() {
+    public void autoCreateAccount(String magv) {
         accBUS = new ChangeAcc_BUS();
-        String username = tf[0].getText();
+        String username = magv;
         String password = tf[5].getText();
         Account_DTO acc = new Account_DTO(username, password);
         accBUS.Add(acc);

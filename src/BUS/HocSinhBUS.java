@@ -5,9 +5,10 @@
  */
 package BUS;
 
-import DATA.HocSinhDAO;
 import DTO.HocSinhDTO;
 import java.util.ArrayList;
+
+import DAO.HocSinhDAO;
 
 
 public class HocSinhBUS{
