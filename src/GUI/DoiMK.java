@@ -9,8 +9,8 @@ import BUS.DoiMK_BUS;
 import DTO.DoiMK_DTO;
 
 public class DoiMK extends JPanel {
-    private JTextField tfUsername, tfOldPassword;
-    private JPasswordField tfNewPassword, tfConfirmPassword;
+    private JTextField tfUsername;
+    private JPasswordField tfNewPassword, tfConfirmPassword, tfOldPassword;
     private JPanel mainP;
     private JLabel jlUsername, jlOldPassword, jlNewPassword, jlConfirmPassword;
     private JButton okButton;
@@ -43,7 +43,7 @@ public class DoiMK extends JPanel {
         tfUsername.setText(username);
         tfUsername.setEditable(false);
         jlOldPassword = createLabel("Nhập mật khẩu cũ:", gbc, 0, 3);
-        tfOldPassword = createTextField(gbc, 1, 3);
+        tfOldPassword = createPasswordField(gbc, 1, 3);
     
         jlNewPassword = createLabel("Nhập mật khẩu mới:", gbc, 0, 4);
         tfNewPassword = createPasswordField(gbc, 1, 4);
@@ -76,7 +76,7 @@ public class DoiMK extends JPanel {
         JLabel label = new JLabel(text);
         label.setPreferredSize(new Dimension(250, 40));
         label.setFont(label.getFont().deriveFont(Font.BOLD, 18));
-        label.setHorizontalAlignment(JLabel.CENTER);
+label.setHorizontalAlignment(JLabel.CENTER);
         label.setVerticalAlignment(JLabel.CENTER);
         gbc.gridx = x;
         gbc.gridy = y;
@@ -114,14 +114,51 @@ public class DoiMK extends JPanel {
         String username = tfUsername.getText();
         String oldPassword = tfOldPassword.getText();
         String newPassword = tfNewPassword.getText();
-    
-        // Kiểm tra xem mật khẩu mới và mật khẩu nhập lại có khớp nhau không
-        if (!newPassword.equals(confirmPassword)) {
-            JOptionPane.showMessageDialog(this, "Mật khẩu mới và mật khẩu nhập lại không khớp.");
+        if (oldPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu cũ không được để trống!");
             return;
         }
-    
-        System.out.println("Đổi mật khẩu change cho user: " + username);
+        // Kiểm tra xem trường mật khẩu mới và mật khẩu nhập lại có bị trống không
+        if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu mới và mật khẩu nhập lại không được để trống!");
+            return;
+        }
+        if (newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu mới không được để trống!");
+            return;
+        }
+        
+        if (confirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không được để trống!");
+            return;
+        }
+            // Kiểm tra xem mật khẩu mới có chứa khoảng trắng không
+        if (newPassword.contains(" ")) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được chứa khoảng trắng.");
+            return;
+        }
+        if (confirmPassword.contains(" ")) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu nhập lại không được chứa khoảng trắng.");
+            return;
+        }
+            // Kiểm tra xem mật khẩu mới và mật khẩu nhập lại có khớp nhau không
+        if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu mới và mật khẩu nhập lại không khớp!");
+            return;
+        }
+        if (newPassword.equals(oldPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu mới và mật khẩu cũ không được trùng!");
+            return;
+        }
+        if (newPassword.length() < 5) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu mới phải có ít nhất 5 ký tự!");
+            tfUsername.setText(username);
+            // tfOldPassword.setText("");
+            tfNewPassword.setText("");
+            tfConfirmPassword.setText("");
+            return;
+        }
+        System.out.println("Đổi mật khẩu cho user: " + username);
     
         DoiMK_DTO doiMK_DTO = new DoiMK_DTO(username, oldPassword, newPassword);
         boolean isPasswordChanged = doiMK_BUS.changePassword(doiMK_DTO);
@@ -129,7 +166,11 @@ public class DoiMK extends JPanel {
         if (isPasswordChanged) {
             JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công!");
         } else {
-            JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại. Vui lòng kiểm tra lại thông tin.");
+            JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại. Vui lòng kiểm tra lại thông tin!");
+            tfUsername.setText(username);
+            // tfOldPassword.setText("");
+            tfNewPassword.setText("");
+            tfConfirmPassword.setText("");
             return;
         }
     
@@ -139,6 +180,7 @@ public class DoiMK extends JPanel {
         tfNewPassword.setText("");
         tfConfirmPassword.setText("");
     }
+    
     public static void main(String[] args) {
         // Tạo cửa sổ JFrame và thiết lập các thuộc tính cơ bản
         JFrame frame = new JFrame("Đổi Mật Khẩu");
@@ -147,7 +189,7 @@ public class DoiMK extends JPanel {
         frame.setLocationRelativeTo(null); // Đặt vị trí ở giữa màn hình
 
         // Tạo một đối tượng của DoiMK và thêm nó vào JFrame
-        DoiMK doiMKPanel = new DoiMK(850, 670, "HS3");
+        DoiMK doiMKPanel = new DoiMK(850, 670, "HSK241");
         frame.add(doiMKPanel);
 
         // Hiển thị JFrame
