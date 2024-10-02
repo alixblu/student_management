@@ -139,7 +139,7 @@ public class TestDN extends JFrame {
         k3.setBackground(my_color_west);
         k3.setPreferredSize(new Dimension(0, 250));
 
-        jbxacnhan = new JButton("Xác nhận");
+        jbxacnhan = new JButton("Xác nhận");    
         // actionlistner
         jbxacnhan.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
