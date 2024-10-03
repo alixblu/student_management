@@ -355,72 +355,78 @@ public class diemHS extends JPanel {
     }
 
     public void loaddatatoTable() {
-        tblModel.setRowCount(0); // Clear existing data
-
+        tblModel.setRowCount(0); // Xóa dữ liệu hiện có
+    
         dshs = hsbus.getList();
-        dskq = kqbus.getList();
         dsmon = mhbus.getList();
-        dsct = ctbus.getList();
-        dsdtb = dtbbus.getList();
+        dsct = ctbus.getList(); // dsctd được sử dụng trong phương thức get()
         dshk = hkbus.getList();
-        dsnh = nhbus.getList();
-        dspl = plbus.getList();
-
+        boolean hasData = false; // Cờ kiểm tra xem có dữ liệu hay không
+    
         int stt = 1;
-        String HKY = (String) c2.getSelectedItem(); // họcky1
-        String NH = (String) c3.getSelectedItem(); // 2024-2025
-
+        String HKY = (String) c2.getSelectedItem(); // học kỳ
+        String NH = (String) c3.getSelectedItem();  // năm học
+        String mahs = mahocsinh;  // Bạn cần định nghĩa hoặc lấy mã học sinh từ đâu đó trước
+        NamHocBUS nhbus = new NamHocBUS(1);
+        String namhocid = nhbus.getCurrYearId(); // Lấy ID năm học hiện tại
+        HocKyBUS hkbus = new HocKyBUS(1);
+        String hockyid = hkbus.getHocKyIDFromTenHocKy(HKY);
+        System.out.println("Học kỳ: " + HKY);
+        System.out.println("Năm học: " + NH);
+        System.out.println("Mã học sinh: " + mahs);
+        System.out.println("Năm học ID: " + namhocid);
+    
+        // Lặp qua danh sách các môn học
         for (MonHocDTO mh : dsmon) {
             double diem15 = 0, diem1Tiet = 0, diemHocKy = 0;
-            int heSo15 = 0, heSo1Tiet = 0, heSoHocKy = 0;
-            for (NamHocDTO nh : dsnh) {
-                if (nhbus.getByAcademicYear(NH) == null)
-                    continue;
-                for (HocKyDTO hk : dshk) {
-                    if (hkbus.getHocKyIDFromTenHocKy(HKY) == null)
-                        continue;
-                    for (ChiTietDiemDTO ct : dsct) {
-                        if (ct.getHocSinhID().equals(mahocsinh) && ct.getMonHocID().equals(mh.getMonHocID())
-                                && ct.getHocKyID().equals(hkbus.getHocKyIDFromTenHocKy(HKY))
-                                && ct.getNamHocID().equals(nhbus.getByAcademicYear(NH))) {
-                            // if (ct.getHeSoID() == 1) {
-                            //     diem15 = ct.getDiem();
-                            //     heSo15 = ct.getHeSoID();
-                            // } else if (ct.getHeSoID() == 2) {
-                            //     diem1Tiet = ct.getDiem();
-                            //     heSo1Tiet = ct.getHeSoID();
-                            // } else if (ct.getHeSoID() == 3) {
-                            //     diemHocKy = ct.getDiem();
-                            //     heSoHocKy = ct.getHeSoID();
-                            // }
-                        }
-                    }
-                }
+    
+            String monhocid = mh.getMonHocID();
+            System.out.println("Đang xử lý môn học id: " + mh.getMonHocID());
+    
+            // Sử dụng phương thức get() để lấy ChiTietDiemDTO
+            ChiTietDiemDTO chiTietDiem = ctbus.get(mahocsinh, namhocid, hockyid, monhocid);
+            if (chiTietDiem != null) {
+                diem15 = chiTietDiem.getDiem1();
+                diem1Tiet = chiTietDiem.getDiem2();
+                diemHocKy = chiTietDiem.getDiem3();
+    
+                System.out.println("Điểm 15 phút: " + diem15);
+                System.out.println("Điểm 1 tiết: " + diem1Tiet);
+                System.out.println("Điểm học kỳ: " + diemHocKy);
+            } else {
+                System.out.println("Không tìm thấy chi tiết điểm cho môn học: " + mh.getTenMonHoc());
             }
-
+    
+            // Nếu có bất kỳ điểm nào khác 0, thêm vào bảng
             if (diem15 != 0 || diem1Tiet != 0 || diemHocKy != 0) {
-                double tbm = (diem15 * heSo15 + diem1Tiet * heSo1Tiet + diemHocKy * heSoHocKy)
-                        / (heSo15 + heSo1Tiet + heSoHocKy);
-                String formattedTBM = String.format("%.1f", tbm);
+                double tbm = chiTietDiem.getDtbMon(); // Tính điểm trung bình môn
+                String formattedTBM = String.format("%.1f", tbm); // Định dạng lại TBM
+                System.out.println("Điểm trung bình môn: " + formattedTBM);
+    
+                // Thêm dòng vào bảng
                 String[] rowData = new String[] {
-                        String.valueOf(stt),
-                        mh.getTenMonHoc(),
-                        String.valueOf(diem15),
-                        String.valueOf(diem1Tiet),
-                        String.valueOf(diemHocKy),
-                        formattedTBM
+                    String.valueOf(stt),
+                    mh.getTenMonHoc(),
+                    String.valueOf(diem15),
+                    String.valueOf(diem1Tiet),
+                    String.valueOf(diemHocKy),
+                    formattedTBM
                 };
                 tblModel.addRow(rowData);
-                stt++; // Increment serial number
-                hasData = true; // Mark that data was added
+                stt++;  // Tăng số thứ tự
+                hasData = true;  // Đánh dấu đã có dữ liệu
             }
         }
-
+    
+        // Nếu không có dữ liệu, hiển thị thông báo
         if (!hasData) {
             tblModel.setRowCount(0);
-            JOptionPane.showMessageDialog(null, "Không có dữ liệu!");
+            JOptionPane.showMessageDialog(null, "Không có dữ liệu!");
+            System.out.println("Không có dữ liệu nào được thêm vào bảng.");
         }
     }
+    
+    
 
     private class PrintListener implements ActionListener {
         @Override
@@ -521,19 +527,19 @@ public class diemHS extends JPanel {
         repaint(); // Vẽ lại giao diện
     }
 
-    // public static void main(String[] args) {
-    // JFrame frame = new JFrame("Điểm Học Sinh");
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // frame.setSize(900, 700);
-    // frame.setLocationRelativeTo(null);
+    public static void main(String[] args) {
+    JFrame frame = new JFrame("Điểm Học Sinh");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setSize(900, 700);
+    frame.setLocationRelativeTo(null);
 
-    // try {
-    // diemHS testdiemPanel = new diemHS("HS1");
-    // frame.add(testdiemPanel);
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // }
+    try {
+    diemHS testdiemPanel = new diemHS("HSK241");
+    frame.add(testdiemPanel);
+    } catch (SQLException e) {
+    e.printStackTrace();
+    }
 
-    // frame.setVisible(true);
-    // }
+    frame.setVisible(true);
+    }
 }
