@@ -35,6 +35,10 @@ public class GiaoVienBUS {
             }
         }
     }
+    public void resetSubmit(){
+        GiaoVienDAO dao = new GiaoVienDAO();
+        dao.resetSubmit();
+    }
     public void setSubmit(String magv, int isSubmit){
         GiaoVienDAO dao = new GiaoVienDAO();
         dao.setSubmit(magv, isSubmit);

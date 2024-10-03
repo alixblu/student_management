@@ -426,6 +426,9 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
                     JOptionPane.INFORMATION_MESSAGE);
             System.out.println("Bạn chọn thêm");
             tf[0].requestFocus();
+            //reset submit GV 
+            GiaoVienBUS gvbus = new GiaoVienBUS();
+            gvbus.resetSubmit();
             updateEnable();
             addRow();
         }
@@ -533,19 +536,15 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         if (result == JOptionPane.YES_OPTION) {
             int NamBatDau = LocalDate.now().getYear();
             int NamKetThuc = NamBatDau + 1;
-            // String NamHocid = NamBatDau + "" + NamKetThuc + "02";
             String namhocid = tf[0].getText();
-            // NamHocDTO namhoc = new NamHocDTO(manamhoc, NamBatDau, NamKetThuc, "2", 1);
-            // nhBUS.addNH(namhoc);
             Object[] rowData = { namhocid, NamBatDau, NamKetThuc, 2 };
-            // tblmodel.addRow(rowData);
-
-            
             int row = t.getSelectedRow();
             tblmodel.removeRow(row);
             tblmodel.addRow(rowData);
             nhBUS.updateHocKy(namhocid);
-
+            //reset submit GV
+            GiaoVienBUS gvbus = new GiaoVienBUS();
+            gvbus.resetSubmit();
             clearTextFields();
             btnHK2.setEnabled(false);
         } else if (result == JOptionPane.NO_OPTION) {
