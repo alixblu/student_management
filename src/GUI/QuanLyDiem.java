@@ -362,78 +362,7 @@ main_detailPanel.add(txtDiem3);
     private class FilterBtnListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            tblModel.setRowCount(0);
-            String id_hs = inputID.getText().trim().toUpperCase();
-            String monhoc = (String) optionMon.getSelectedItem();
-            String tenlop = (String) optionLop.getSelectedItem();
-
-            //không có table hệ số =))))
-            int hediem, i;
-            String selectedItem = (String) optionHe.getSelectedItem();
-            if (selectedItem.equals("Tất cả")) {
-                hediem = 4;
-                i = 1;
-            } else {
-                char secondChar = selectedItem.charAt(1);
-                i = Character.getNumericValue(secondChar);
-                hediem = i+1;
-            } 
             
-            String hocky = (String) optionHocky.getSelectedItem();
-            String namhoc = (String) optionNam.getSelectedItem();
-            
-            
-            dshs = hsbus.search(id_hs, null, null, null, null, null, null);
-            dsnh = nhbus.search(null, namhoc);
-            dslop = lopbus.search(null, tenlop);
-            dshk = hkbus.search(null, hocky);
-            dsmon = mhbus.search(null, monhoc);
-
-            for (HocSinhDTO hs : dshs){
-                System.out.println("loc hs");
-                
-                for (NamHocDTO nh : dsnh) {
-
-                    for(LopDTO lop : dslop){
-                        
-                        String idnamhoc = nh.getNamHocID();
-                        String idhs = hs.getHocSinhID();
-                        String idlop = lop.getLopID();
-                        
-                        if((plbus.get(idhs, idnamhoc)!=null) && plbus.get(idhs, idnamhoc).getLopID().equals(idlop)){
-                            for(HocKyDTO hk : dshk){
-    
-                                String idhk = hk.getHocKyID();
-                                for (MonHocDTO mh : dsmon) {
-                                    String idmon = mh.getMonHocID();
-                                    for (int heso = i ; heso < hediem; heso++) {
-                                        //String Diem = ctbus.get(idhs, idnamhoc, idhk, idmon, heso) != null ? String.valueOf(ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem()) : "";
-                                        String diemTrungBinhHocKy = dtbbus.get(idhs, idnamhoc, idhk) != null ? String.valueOf(dtbbus.get(idhs, idnamhoc, idhk).getDiemTrungBinh()) : "";
-                                        String diemTrungBinhNam = kqbus.get(idhs, idnamhoc) != null ? String.valueOf(kqbus.get(idhs, idnamhoc).getDiemTrungBinhNam()) : "";
-                                        System.out.println("IDHS: " + idhs);
-    
-                                        String[] rowData = new String[]{
-                                            idhs,
-                                            hsbus.get(idhs).getTenHocSinh(),
-                                            lopbus.get(idlop).getTenLop(),
-                                            mhbus.get(idmon).getTenMonHoc(),
-                                            String.valueOf(heso),
-                                            //Diem,
-                                            hkbus.get(idhk).getTenHocKy(),
-                                            diemTrungBinhHocKy,
-                                            nhbus.get(idnamhoc).getNamHocBatDau() + "-" + nhbus.get(idnamhoc).getNamHocKetThuc(),
-                                            diemTrungBinhNam
-                                        };
-                                        tblModel.addRow(rowData);
-                                    }
-                                }
-    
-                            }
-                        }
-                    }
-
-                }
-            }
             tblModel.fireTableDataChanged();
             int count = countUniqueIDs(tblModel);
             s.setText(String.valueOf(count));
