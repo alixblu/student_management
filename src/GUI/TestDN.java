@@ -32,7 +32,7 @@ public class TestDN extends JFrame {
     private JTextField jtf1;
     private JButton jbxacnhan;
     private JPasswordField jtf2;
-
+    private String userName;
     private MySQLConnect mysql = new MySQLConnect();
 
     public TestDN() {
@@ -161,9 +161,9 @@ public class TestDN extends JFrame {
                         ResultSet rs = ps.executeQuery();
                         if (rs.next()) {
                             System.out.println("Yes");
-                            String username = jtf1.getText();
+                            userName = jtf1.getText();
                             // System.out.println(username);
-                            Text mf = new Text(username);
+                            Text mf = new Text(userName);
                             // Calculator mf=new Calculator();
                             mf.setVisible(true);
                             // mf.pack();
@@ -175,7 +175,6 @@ public class TestDN extends JFrame {
                             JOptionPane.showMessageDialog(jpright, "Tài khoản không chính xác");
                         }
                     } catch (SQLException e1) {
-                        // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
                 }

@@ -41,6 +41,17 @@ public class PhanLopBUS {
         }
         return pl;
     }
+    public boolean KtraTB(String id, String username)
+    {
+        for(PhanLopDTO x : dspl)
+        {
+            if( x.getLopID().equals(id) && x.getHocSinhID().equals(username)){
+                System.out.println("thanh cong");
+                return true;
+            }
+        }
+        return false;
+    }
     public PhanLopDTO getByNamhocid(String id)
     {
         PhanLopDTO pl = null;

@@ -697,6 +697,11 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     }
 
     public void exportExcel() throws IOException {
+        ArrayList<HocSinhDTO> ds_hs = new HocSinhBUS().getList();
+        if (ds_hs == null || ds_hs.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Danh sách học sinh rỗng.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
         chooser.setFileFilter(filter);
@@ -712,8 +717,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
-            ArrayList<HocSinhDTO> ds_hs = new HocSinhBUS().getList();
-        
+            
             // Tạo hàng tiêu đề (Header row)
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("Mã học sinh");
