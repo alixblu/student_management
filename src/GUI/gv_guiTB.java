@@ -85,24 +85,6 @@ public class gv_guiTB extends JPanel{
         checkBoxHS.setFont(new Font("Arial", Font.BOLD, 14));
         checkBoxHS.setEnabled(false);  // Initially disabled
     
-        // radioButtonLop = new JRadioButton("Lớp:");
-        // radioButtonLop.setOpaque(false);
-        // radioButtonLop.setBounds(270, 50, 150, 30); // Adjusted x coordinate
-        // radioButtonLop.setFont(new Font("Arial", Font.BOLD, 14));
-    
-        // radioButtonHS = new JRadioButton("Học Sinh:");
-        // radioButtonHS.setOpaque(false);
-        // radioButtonHS.setBounds(520, 50, 150, 30); // Adjusted x coordinate
-        // radioButtonHS.setFont(new Font("Arial", Font.BOLD, 14));
-        // radioButtonHS.setEnabled(false);
-    
-        // Group the radio buttons
-        ButtonGroup buttonGroup = new ButtonGroup();
-        // buttonGroup.add(radioButtonHS);
-        // buttonGroup.add(radioButtonLop);
-        // buttonGroup.add(checkBoxHS);
-        // buttonGroup.add(checkBoxLop);
-    
         txtHeader = new JTextField();
         txtHeader.setBounds(250, 100, 300, 30); // Adjusted x coordinate
         txtHeader.setFont(new Font("Arial", Font.BOLD, 14));
@@ -149,11 +131,25 @@ public class gv_guiTB extends JPanel{
     }
     
     
+    private boolean checkEmpty() {
+        if (txtHeader.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tiêu đề không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        if (txtContent.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Nội dung thông báo không được để trống.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        if (!checkBoxLop.isSelected() && !checkBoxHS.isSelected()) {
+            JOptionPane.showMessageDialog(null, "Bạn chưa chọn đối tượng muốn gửi thông báo (Lớp hoặc Học sinh).", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        return false;  // Mọi điều kiện đều thỏa mãn
+    }
+    
 
-    // Method to create a panel containing a table
     private JPanel createLopTablePanel() {
         JPanel panel = new JPanel(new BorderLayout());
-
         dspl = plbus.getList();
         dspc = pcbus.search(magiaovien, null);
 
@@ -163,6 +159,7 @@ public class gv_guiTB extends JPanel{
         JScrollPane scrollPane = new JScrollPane(table);
 
         for (PhanCongDTO pc : dspc){
+            System.out.println(pc.getLopID());
             String idlop = pc.getLopID();
             String tenlop = lopbus.get(idlop).getTenLop();
 
@@ -176,9 +173,10 @@ public class gv_guiTB extends JPanel{
 
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
-        }
+    }
 
     private JPanel createHSTablePanel(String lopid) {
+        System.out.println(lopid);
         JPanel panel = new JPanel(new BorderLayout());
 
         dspc = pcbus.search(magiaovien, null);
@@ -189,78 +187,104 @@ public class gv_guiTB extends JPanel{
         table.setModel(tblModel);
         JScrollPane scrollPane = new JScrollPane(table);
         
-        // for (PhanCongDTO pc : dspc){
-        //     String idlop = pc.getLopID();
-            dspl = plbus.search(null,lopid,idnam );
-            for (PhanLopDTO pl : dspl){
-                String idhs = pl.getHocSinhID();
-                String tenhs = hsbus.get(idhs).getTenHocSinh();
+        dspl = plbus.search(null,lopid,idnam );
+        for (PhanLopDTO pl : dspl){
+            System.out.println(pl.getHocSinhID());
+            String idhs = pl.getHocSinhID();
+            String tenhs = hsbus.get(idhs).getTenHocSinh();
 
-                String[] columnNames = {"ID HS", "Tên HS"};
-                String[] rowData = new String[]{
-                    idhs, tenhs
-                };
-                tblModel.setColumnIdentifiers(columnNames);
-                tblModel.addRow(rowData);
-            }
-        // }
+            String[] columnNames = {"ID HS", "Tên HS"};
+            String[] rowData = new String[]{
+                idhs, tenhs
+            };
+            tblModel.setColumnIdentifiers(columnNames);
+            tblModel.addRow(rowData);
+        }
 
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
-        }
+    }
 
-        private class CheckBoxLopListener implements ActionListener{
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (checkBoxLop.isSelected()) {
-                    // Create a custom panel with a table
-                    JPanel panel = createLopTablePanel();
-                    // Show the panel in JOptionPane
-                    int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Lớp", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                    if (result == JOptionPane.OK_OPTION) {
-                        JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
-                        int selectedRow = table.getSelectedRow();
-                        if (selectedRow != -1) { 
-                            Object selectedID = table.getValueAt(selectedRow, 0);
-                            Object selectedName = table.getValueAt(selectedRow, 1);
-        
-                            idlop = String.valueOf(selectedID);
-                            txtLop.setText(String.valueOf(selectedName));
-                            checkBoxHS.setEnabled(true);  // Enable checkBoxHS after selecting the class
-                        }
+    private class CheckBoxLopListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (checkBoxLop.isSelected()) {
+                JPanel panel = createLopTablePanel();
+                int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Lớp", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    
+                if (result == JOptionPane.OK_OPTION) {
+                    JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
+                    int rowCount = table.getRowCount(); // Lấy số hàng trong bảng
+    
+                    if (rowCount == 0) {
+                        JOptionPane.showMessageDialog(null, "Danh sách lớp trống, không có lớp nào để chọn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        checkBoxLop.setSelected(false); // Bỏ chọn checkbox lớp
+                        return; 
+                    }
+                    int selectedRow = table.getSelectedRow();
+                    if (selectedRow != -1) { 
+                        Object selectedID = table.getValueAt(selectedRow, 0);
+                        Object selectedName = table.getValueAt(selectedRow, 1);
+    
+                        idlop = String.valueOf(selectedID);
+                        System.out.println("id lop la : " + idlop);
+                        txtLop.setText(String.valueOf(selectedName));
+                        checkBoxHS.setEnabled(true);  // Cho phép chọn học sinh sau khi chọn lớp
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Bạn chưa chọn lớp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        checkBoxLop.setSelected(false); 
                     }
                 } else {
-                    checkBoxHS.setEnabled(false);  // Disable checkBoxHS if no class selected
-                    txtLop.setText("");
-                    txtHS.setText("");
-                    checkBoxHS.setSelected(false);;
+                    checkBoxLop.setSelected(false);
                 }
+            } else {
+                checkBoxHS.setEnabled(false);  
+                txtLop.setText("");
+                txtHS.setText("");
+                checkBoxHS.setSelected(false);
             }
         }
+    }
+    
+    
         
-        private class CheckBoxHSListener implements ActionListener{
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (checkBoxHS.isSelected()) {
-                    JPanel panel = createHSTablePanel(idlop);
-                    int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Học sinh", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                    if (result == JOptionPane.OK_OPTION) {
-                        JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
-                        int selectedRow = table.getSelectedRow();
-                        if (selectedRow != -1) {
-                            Object selectedID = table.getValueAt(selectedRow, 0);
-                            Object selectedName = table.getValueAt(selectedRow, 1);
-        
-                            idhs = String.valueOf(selectedID);
-                            txtHS.setText(String.valueOf(selectedName));
-                        }
+    private class CheckBoxHSListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (checkBoxHS.isSelected()) {
+                JPanel panel = createHSTablePanel(idlop);
+                int result = JOptionPane.showConfirmDialog(null, panel, "Chọn Học sinh", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    
+                if (result == JOptionPane.OK_OPTION) {
+                    JTable table = (JTable) ((JScrollPane) panel.getComponent(0)).getViewport().getView();
+                    int rowCount = table.getRowCount(); // Kiểm tra số hàng trong bảng học sinh
+    
+                    if (rowCount == 0) {
+                        JOptionPane.showMessageDialog(null, "Danh sách học sinh trống, không có học sinh nào để chọn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        checkBoxHS.setSelected(false); // Bỏ chọn checkbox học sinh
+                        return;
                     }
+    
+                    int selectedRow = table.getSelectedRow();
+                    if (selectedRow != -1) { 
+                        Object selectedID = table.getValueAt(selectedRow, 0);
+                        Object selectedName = table.getValueAt(selectedRow, 1);
+    
+                        idhs = String.valueOf(selectedID);
+                        txtHS.setText(String.valueOf(selectedName));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Bạn chưa chọn học sinh!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        checkBoxHS.setSelected(false); // Bỏ chọn checkbox học sinh
+                    }
+                } else {
+                    checkBoxHS.setSelected(false); // Nếu nhấn Cancel, bỏ chọn checkbox học sinh
                 }
-                else{
-                    txtHS.setText("");
-                }
+            } else {
+                txtHS.setText(""); // Nếu checkbox bị bỏ chọn, xóa nội dung học sinh
             }
         }
+    }
+    
         
     private class SendNotiBtnListener implements ActionListener{
         @Override
@@ -270,12 +294,9 @@ public class gv_guiTB extends JPanel{
                 loaitb = idhs;
             } else if( checkBoxLop.isSelected()) {
                 loaitb = idlop;
-            } else {
-                JOptionPane.showMessageDialog(null, "Bạn chưa chọn đối tượng muốn gửi thông báo");
-                return;
-            }
-            if (txtContent.getText().equals("") && txtHeader.getText().equals("")){
-                JOptionPane.showMessageDialog(null, "Thông báo không thể bỏ trống cả tiêu đề và nội dung");
+                System.out.println("Loại thông báo" + loaitb);
+            } 
+            if(checkEmpty() == true){
                 return;
             }
             ThongBaoDTO tb = new ThongBaoDTO(magiaovien, txtHeader.getText(), txtContent.getText(), String.valueOf(currDate.getdate()),loaitb);
@@ -296,12 +317,12 @@ public class gv_guiTB extends JPanel{
 
         }
     }
-    // public static void main(String[] args){
-    //     JFrame frame = new JFrame();
-    //     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    //     frame.setSize(850, 670);
-    //     gv_guiTB panel = new gv_guiTB(850, 670,"GV3");
-    //     frame.add(panel);
-    //     frame.setVisible(true);
-    // }
+    public static void main(String[] args){
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(850, 670);
+        gv_guiTB panel = new gv_guiTB(850, 670,"GV3");
+        frame.add(panel);
+        frame.setVisible(true);
+    }
 }

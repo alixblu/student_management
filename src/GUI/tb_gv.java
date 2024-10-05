@@ -186,14 +186,7 @@ public final class tb_gv extends JPanel implements MouseListener, ActionListener
                 toadoYTextfield = toadoYTextfield + 35;
                 Phocsinh.add(tf[i]);
             } 
-            // else if(i==2){
-            //     JTextArea area = new JTextArea();
-            //     area.setBounds(toadoXTextfield, toadoYTextfield, 320, 40);
-            //     Phocsinh.add(area);
-                
-            //      toadoYTextfield = toadoYTextfield + 45;
-
-            // }
+           
             else {
                 tf[i] = new JTextField();
                 tf[i].setBounds(toadoXTextfield, toadoYTextfield, 320, 30);

@@ -401,7 +401,8 @@ public class Text extends JFrame implements MouseListener, ActionListener {
             case "CN22":// HS nhận thông báo
             main.removeAll();
             try {
-                main.add(new tb_hs(850,670,userName));
+                System.out.println("THông báo học sinh"  + userName);
+                main.add(new tb_hs( 850, 670, userName));
             } catch (SQLException e) {
                 e.printStackTrace();
             }

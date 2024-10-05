@@ -83,6 +83,12 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     NamHocBUS nhBUS = new NamHocBUS();
     ChangeAcc_BUS accBUS = new ChangeAcc_BUS();
 
+    private ImageIcon imageIcon;
+    private String pathAnhdd_1;
+    String imagePath;
+    String destinationFolder;
+    String destinationPath;
+
     public QuanLiHocSinh(int width, int height) throws SQLException {
         this.width = width;
         this.height = height;
@@ -256,7 +262,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 buttons[i].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        chooseImage();
+                        chooseImage_1();
                         
                     }
                 });
@@ -639,7 +645,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            
+            luuanhkhixacnhan();
             updateRow();
             JOptionPane.showMessageDialog(this, "Bạn đã sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } else if (result == JOptionPane.NO_OPTION) {
@@ -671,6 +677,11 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     }
 
     public void exportExcel() throws IOException {
+        ArrayList<HocSinhDTO> ds_hs = new HocSinhBUS().getList();
+        if (ds_hs == null || ds_hs.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Danh sách học sinh rỗng.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
         chooser.setFileFilter(filter);
@@ -686,8 +697,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
-            ArrayList<HocSinhDTO> ds_hs = new HocSinhBUS().getList();
-        
+            
             // Tạo hàng tiêu đề (Header row)
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("Mã học sinh");
@@ -831,5 +841,65 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
     }
 
     
-  
+    public void chooseImage_1() {
+        JFileChooser fileChooser = new JFileChooser();
+        // Thiết lập chế độ chỉ cho phép chọn file
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        // Hiển thị hộp thoại chọn file
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // Lấy đường dẫn của tập tin hình ảnh được chọn
+            imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+            // Hiển thị đường dẫn trong JTextField
+            String fileName = fileChooser.getSelectedFile().getName();
+            pathAnhdd_1 = fileName;
+            tf[6].setText(pathAnhdd_1);
+            
+            // Tạo một ImageIcon từ đường dẫn hình ảnh
+            imageIcon = new ImageIcon(imagePath);
+    
+            // Chỉnh kích thước của hình ảnh để phù hợp với JLabel
+            /*Image image = imageIcon.getImage().getScaledInstance(labelimg.getWidth(), labelimg.getHeight(),
+                    Image.SCALE_SMOOTH);
+                
+            // Tạo một ImageIcon mới từ hình ảnh đã được điều chỉnh kích thước
+            ImageIcon scaledImageIcon = new ImageIcon(image);
+    
+            // Hiển thị hình ảnh trên JLabel
+            labelimg.setIcon(scaledImageIcon);*/
+            Image image = imageIcon.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(),
+                    Image.SCALE_SMOOTH);
+
+            // Tạo một ImageIcon mới từ hình ảnh đã được điều chỉnh kích thước
+            ImageIcon scaledImageIcon = new ImageIcon(image);
+
+            // Hiển thị hình ảnh trên JLabel
+            lblimg.setIcon(scaledImageIcon);
+    
+            // Lấy đường dẫn đến thư mục gốc của dự án
+            String projectRootPath = System.getProperty("user.dir");
+    
+            // Đường dẫn tương đối đến thư mục image/HocSinh
+            destinationFolder = projectRootPath + "\\src\\image\\HocSinh";
+            destinationPath = destinationFolder + "\\" + fileName;
+    
+            // Kiểm tra và tạo thư mục HocSinh nếu chưa tồn tại
+            File directory = new File(destinationFolder);
+            if (!directory.exists()) {
+                directory.mkdirs(); // Tạo thư mục nếu không tồn tại
+            }
+
+        }
+    }
+    
+    public void luuanhkhixacnhan()
+    {
+        // Copy file ảnh
+        try {
+            Files.copy(Paths.get(imagePath), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Copy thành công: " + destinationPath);
+        } catch (IOException e) {
+            System.out.println("Lỗi: " + e.getMessage());
+        }
+    }
 }

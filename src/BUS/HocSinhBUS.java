@@ -26,8 +26,10 @@ public class HocSinhBUS{
     {
         for(HocSinhDTO hs : dshs )
         {
+            
             if(hs.getHocSinhID().equals(id))
             {
+                
                 return hs;
             }
         }

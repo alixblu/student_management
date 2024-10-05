@@ -2,14 +2,10 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.HeadlessException;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -17,35 +13,23 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
 import javax.swing.border.Border;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.ChangeAcc_BUS;
+import BUS.PhanLopBUS;
 //------------------
 import BUS.ThongBaoBUS;
-import DAO.ThongBaoDAO;
 import DTO.ThongBaoDTO;
 
 import java.text.ParseException;
@@ -54,17 +38,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  *
@@ -72,7 +45,6 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public final class tb_hs extends JPanel implements MouseListener, ActionListener {
     private String idnguoigui, tieudetb, noidungtb, thoigiantb, loaitb;
-    private JButton btnThem, btnXoa, btnSua, btnFind, btnReset, btnExpExcel;
     private DefaultTableModel tblmodel;
     private String username;
     private JScrollPane scrollpane;
@@ -80,27 +52,25 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
     JButton[] buttons;
     JTable t;
     int width, height;
-    private JComboBox<String> searchselectBox;
-    private final Border raisedBevel = BorderFactory.createRaisedBevelBorder();
     Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
-    private Color defaultColor;
-    private String searchText;
     private JTextField JsearchText;
-    private String ma;
     DefaultTableModel model;
     TableRowSorter<DefaultTableModel> sorter;
     JDateChooser dateChooser;
     JComboBox<String> genderComboBox;
    
     ThongBaoBUS tbBUS=new ThongBaoBUS();
-    private static String pathAnhdd = "";
     ChangeAcc_BUS accBUS = new ChangeAcc_BUS();
+
+
+    PhanLopBUS plBus = new PhanLopBUS(1);
+    ArrayList<ThongBaoDTO> filteredList;
 
     public tb_hs(int width, int height,String username) throws SQLException {
         this.width = width;
         this.height = height;
-        this.username=username;
-        System.out.println("dy chinh la "+username);
+        this.username = username;
+        System.out.println("day chinh la " + username);
         init();
         
     }
@@ -214,21 +184,31 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 500));
-        //"ID người gửi ", "tiêu đề TB", "Nội dung TB", "thời gian TB", "loại thông báo", "",
-              
-         String[] header = { "ID người gửi", "tiêu đề TB", "Nội dung TB", "thời gian TB" };
+            
+        String[] header = { "ID người gửi", "tiêu đề TB", "Nội dung TB", "thời gian TB" };
 
-         if (tbBUS.getList() == null) {
+        if (tbBUS.getList() == null) {
             tbBUS.list();
         }
         ArrayList<ThongBaoDTO> hs = tbBUS.getList();
-        ArrayList<ThongBaoDTO> filteredList = new ArrayList<>();
+
+        System.out.println("Danh sách thông báo: " + hs.size());
+
+        filteredList = new ArrayList<>();
         
+        // plBus = new PhanLopBUS();
         for (ThongBaoDTO thongbao : hs) {
-            if (thongbao.getLoaitb().equals(username) || thongbao.getLoaitb().equals("HS")) { // Kiểm tra nếu loại thông báo khớp với username hoặc "HS"
+            System.out.println(thongbao.getLoaitb()); // In ra loaitb để kiểm tra
+            if (thongbao.getLoaitb().equals(username) || thongbao.getLoaitb().equals("HS")) {
+                filteredList.add(thongbao);
+            } 
+            loaitb = thongbao.getLoaitb();
+            if (plBus.KtraTB(loaitb, username) == true) {
                 filteredList.add(thongbao);
             }
         }
+        
+        
         
         // Chuyển filteredList thành mảng hai chiều rowData
         Object[][] rowData = new Object[filteredList.size()][4];
@@ -270,44 +250,8 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
 
 
 
-    public void addRow() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = dateChooser.getDate();
-        String dateString = sdf.format(date); // Convert Date to String
 
-        String idnguoigui = tf[0].getText();
-        String tieudetb = tf[1].getText();
-        String noidungtb = tf[2].getText();
-        String thoigiantb = dateString;
-       
-
-        ThongBaoDTO thongbao = new ThongBaoDTO(idnguoigui, tieudetb, noidungtb, thoigiantb, thoigiantb);
-
-        tbBUS.add(thongbao);
-
-        Object[] rowData = { idnguoigui, tieudetb, noidungtb, thoigiantb };
-        tblmodel.addRow(rowData);
-        clearTextFields();
-    }
-
-    public void deleteRow() {
-        int row = t.getSelectedRow();
-        if (row != -1) {
-            tblmodel.removeRow(row);
-        }
-        String hocSinhID = tf[0].getText();
-        tbBUS.delete(hocSinhID);
-        clearTextFields();
-    }
-
-
-
-    public void clearTextFields() {
-        tf[0].setText("");
-        tf[1].setText("");
-        tf[2].setText("");
-        tf[3].setText("");
-    }
+    
 
 
     private void tableMouseClicked(java.awt.event.MouseEvent evt) throws ParseException {
@@ -324,35 +268,26 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
         tf[2].setText(noidungtb);
         tf[3].setText(thoigiantb);
        
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = sdf.parse(thoigiantb);
-        dateChooser.setDate(date);
+        // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        // Date date = sdf.parse(thoigiantb);
+        // dateChooser.setDate(date);
 
     }
 
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getSource() == JsearchText) {
-            clearTextFields();
-        }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+   
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -369,13 +304,12 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
     public void actionPerformed(ActionEvent e) {
 
     }
-    // public static void main(String[] args) {
-    //     try {
-    //        // new tb_hs(850, 760);
-    //        new tb_hs(850, 760, "HS27");
-    //     } catch (SQLException e) {
-    //         // TODO Auto-generated catch block
-    //         e.printStackTrace();
-    //     }
-    // }
+    public static void main(String[] args) throws SQLException {
+       JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(850, 670);
+        tb_hs panel = new tb_hs(850, 670, "HSK242");
+        frame.add(panel);
+        frame.setVisible(true);
+    }
 }
