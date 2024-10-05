@@ -239,6 +239,11 @@ public class ThemHocSinh extends JFrame {
                         JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin", "Thông báo",  JOptionPane.ERROR_MESSAGE);
                         return ;
                     }
+                    else if(checkTenHS(textField_tenhs.getText())==false)
+                    {
+                        JOptionPane.showMessageDialog(null, "Tên không hợp lệ", "Thông báo",  JOptionPane.ERROR_MESSAGE);
+                        return ;
+                    }
                     else if(checkSDT(textField_sdt.getText())==false)
                     {
                         JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ!", "Thông báo",  JOptionPane.ERROR_MESSAGE);
@@ -247,6 +252,11 @@ public class ThemHocSinh extends JFrame {
                     else if(qlhsBUS.checkSDT(textField_sdt.getText())==false)
                     {
                         JOptionPane.showMessageDialog(null, "Số điện thoại đã tồn tại!", "Thông báo",  JOptionPane.ERROR_MESSAGE);
+                        return ;
+                    }
+                    else if(checkDiaChi(textField_diachi.getText())==false)
+                    {
+                        JOptionPane.showMessageDialog(null, "Địa chỉ không hợp lệ", "Thông báo",  JOptionPane.ERROR_MESSAGE);
                         return ;
                     }
                     int result = JOptionPane.showConfirmDialog(null, 
@@ -395,12 +405,30 @@ public class ThemHocSinh extends JFrame {
 
    
     public boolean checkSDT(String sdt) {
-        // Biểu thức chính quy để kiểm tra số điện thoại, ví dụ: 10-11 chữ số.
-        String regex = "^[0-9]{10,11}$";
+        // Biểu thức chính quy để kiểm tra số điện thoại: bắt đầu bằng số 0 và có đúng 10 chữ số.
+        String regex = "^0[0-9]{9}$";
         
         // Kiểm tra xem sdt có khớp với biểu thức chính quy hay không
         return sdt.matches(regex);
     }
+    
+    public boolean checkTenHS(String ten) {
+        // Biểu thức chính quy để kiểm tra tên học sinh: chỉ chứa chữ cái và khoảng trắng.
+        String regex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s]+$";
+        
+        // Kiểm tra xem tên có khớp với biểu thức chính quy hay không
+        return ten.matches(regex);
+    }
+    
+    public boolean checkDiaChi(String tenDC) {
+        // Biểu thức chính quy để kiểm tra địa chỉ: thêm ký tự gạch chéo (/)
+        String regex = "^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+$";
+        
+        // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
+        return tenDC.matches(regex);
+    }
+    
+    
     
     public void chooseImage() {
         JFileChooser fileChooser = new JFileChooser();
