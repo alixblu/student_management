@@ -31,7 +31,11 @@ public class KQ_HocSinhCaNamDAO {
                 double diemtb = rs.getDouble(5);
                 String kq = rs.getString(6);
 
-                KQ_HocSinhCaNamDTO k = new KQ_HocSinhCaNamDTO(id, namhocid, hocluc, hanhkiem, diemtb, kq);
+                KQ_HocSinhCaNamDTO k = new KQ_HocSinhCaNamDTO(id, namhocid);
+                k.setHocLuc(hocluc);
+                k.setHanhKiem(hanhkiem);
+                k.setKetQua(kq);
+                k.setDiemTrungBinhNam(0.0);
                 ds.add(k);
             }
             rs.close();
@@ -64,15 +68,14 @@ public class KQ_HocSinhCaNamDAO {
     
 
     public void add(KQ_HocSinhCaNamDTO kqHS) {
-      
-    
+
         MySQLConnect mySQL = new MySQLConnect();
         String sql = "INSERT INTO kqhocsinhcanam (HocSinhID, NamHocID, HocLuc, HanhKiem, Diemtb, KetQua) VALUES (";
         sql += "'" + kqHS.getHocSinhID() + "',";
         sql += "'" + kqHS.getNamHocID() + "',";
         sql += "'" + kqHS.getHocLuc() + "',";
         sql += "'" + kqHS.getHanhKiem() + "',";
-
+        sql += "'" + kqHS.getDiemTrungBinhNam() + "',";
         sql += "'" + kqHS.getKetQua() + "')";
     
         System.out.println(sql);

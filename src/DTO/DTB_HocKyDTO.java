@@ -33,7 +33,7 @@ public class DTB_HocKyDTO {
         return DiemTrungBinh;
     }
 
-    public void setDiemTrungBinh(Float diemTrungBinh) {
+    public void setDiemTrungBinh(double diemTrungBinh) {
         DiemTrungBinh = diemTrungBinh;
     }
 

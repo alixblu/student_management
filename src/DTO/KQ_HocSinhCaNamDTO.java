@@ -8,13 +8,13 @@ public class KQ_HocSinhCaNamDTO {
     private double DiemTrungBinhNam;
     private String KetQua;
     
-    public KQ_HocSinhCaNamDTO(String hocSinhID, String namHocID, String hocLuc, String HKiem, double diemTrungBinhNam, String ketQua) {
-        HocSinhID = hocSinhID;
-        NamHocID = namHocID;
-        HocLuc = hocLuc;
-        DiemTrungBinhNam = diemTrungBinhNam;
-        KetQua = ketQua;
-        HanhKiem = HKiem;
+    public KQ_HocSinhCaNamDTO(String hocSinhID, String namHocID) {
+        this.HocSinhID = hocSinhID;
+        this.NamHocID = namHocID;
+        this.HocLuc = "";
+        this.DiemTrungBinhNam = 0.0;
+        this.KetQua = "";
+        this.HanhKiem = "Tốt";
     }
 
     public String getHocSinhID() {
@@ -53,7 +53,7 @@ public class KQ_HocSinhCaNamDTO {
         return DiemTrungBinhNam;
     }
 
-    public void setDiemTrungBinhNam(Float diemTrungBinhNam) {
+    public void setDiemTrungBinhNam(double diemTrungBinhNam) {
         DiemTrungBinhNam = diemTrungBinhNam;
     }
 

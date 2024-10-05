@@ -54,16 +54,20 @@ public class PhanLopBUS {
     }
     //overloading
     public PhanLopDTO get(String idhs, String idnam){
-        if(idhs==null){
-            return this.getByNamhocid(idnam);
-        }
-        if(idnam==null){
-            return this.get(idhs);
-        }
-        //idhs!=null && idnam!=null
+
         for(PhanLopDTO x : dspl)
         {
             if( (x.getNamHocID().equals(idnam)) && (x.getHocSinhID().equals(idhs))){
+                return x;
+            }
+        }
+        return null;
+    }
+    public PhanLopDTO get(String idhs, String idnam, String idlop){
+
+        for(PhanLopDTO x : dspl)
+        {
+            if( (x.getNamHocID().equals(idnam)) && (x.getHocSinhID().equals(idhs)) && (x.getLopID().equals(idlop))){
                 return x;
             }
         }

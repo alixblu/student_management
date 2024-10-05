@@ -61,7 +61,7 @@ public class DTB_HocKyDAO {
         sql += "'" + ctd.getHocSinhID() + "',";
         sql += "'" + ctd.getHocKyID() + "',";
         sql += "'" + ctd.getNamHocID() + "',";
-        sql +=  "'" + ctd.getDiemTrungBinh() +")";
+        sql += + ctd.getDiemTrungBinh() +")";
         
         System.out.println(sql);
         mySQL.executeUpdate(sql);

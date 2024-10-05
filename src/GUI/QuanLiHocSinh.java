@@ -12,22 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -42,12 +27,10 @@ import BUS.LopBUS;
 import BUS.NamHocBUS;
 import BUS.PhanLopBUS;
 import BUS.QLHS_BUS;
-import DAO.LopDAO;
 import DTO.HocSinhDTO;
 import DTO.LopDTO;
 import DTO.NamHocDTO;
 import DTO.PhanLopDTO;
-import DTO.Account_DTO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,13 +42,10 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -246,10 +226,10 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
         Pchucnang.setBackground(myColor);
         defaultColor = btnThem.getBackground();
+        Pchucnang.add(btnFind);
         Pchucnang.add(btnThem);
         Pchucnang.add(btnXoa);
         Pchucnang.add(btnSua);
-        Pchucnang.add(btnFind);
         Pchucnang.add(btnExpExcel);
         return Pchucnang;
     }
@@ -608,7 +588,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         Integer countHS = +hsBUS.CountHS() + 1;
         String hocSinhID = "HSK" + soKhoa + countHS;
         themHS.textField_mahs.setText(hocSinhID);
-
+        
     }
 
     public void btnDelete_actionPerformed() {

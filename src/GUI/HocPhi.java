@@ -9,12 +9,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableRowSorter;
 
 import BUS.ChiTietDiemBUS;
 import BUS.DTB_HocKyBUS;
@@ -43,9 +44,11 @@ public class HocPhi extends JPanel{
     JPanel topPanel, btPanel, mainTop, midPanel, mainMid, btnMid;
     JLabel l1, labelLop, l2, l3;
     JComboBox<String> option1, optionLop, optionHP;
-    JTextField txtIdName, txthoten, txtlop, txtngaysinh, txtdienthoai, txtStatus, txtFee;
+    JTextField searchID, txthoten, txtlop, txtngaysinh, txtdienthoai, txtStatus, txtFee;
     JButton filterBtn, settingBtn, detailBtn, confirmBtn;
     private DefaultTableModel tblModel;
+    TableRowSorter<DefaultTableModel> sorter;
+
     private JScrollPane scrollPane;
     private JTable t;
     private int height, width;
@@ -103,7 +106,7 @@ public class HocPhi extends JPanel{
             String tenlop = lop.getTenLop();
             optionLop.addItem(tenlop); // Use addItem() method instead of add()
         }
-        txtIdName = new JTextField();
+        searchID = new JTextField();
 
         l3 = new JLabel("Tình trạng học phí:");
 
@@ -114,7 +117,7 @@ public class HocPhi extends JPanel{
 
         l1.setBounds(20, 45, 250, 30);
         option1.setBounds(170 + xOffset, 20, 120, 30);
-        txtIdName.setBounds(170 + xOffset, 60, 120, 30);
+        searchID.setBounds(170 + xOffset, 60, 120, 30);
         labelLop.setBounds(370 + xOffset, 20, 150, 30);
         optionLop.setBounds(330 + xOffset, 60, 120, 30);
         l3.setBounds(490 + xOffset, 20, 120, 30);
@@ -127,7 +130,7 @@ public class HocPhi extends JPanel{
 
         topPanel.add(l1);
         topPanel.add(option1);
-        topPanel.add(txtIdName);
+        topPanel.add(searchID);
         topPanel.add(labelLop);
         topPanel.add(optionLop);
         topPanel.add(l3);
@@ -350,16 +353,12 @@ public class HocPhi extends JPanel{
                 System.out.println("up data to hoc phi");
     
                 JOptionPane.showMessageDialog(null, "Thanh toán thành công", "Success", JOptionPane.INFORMATION_MESSAGE);
-                Object[] rowData = {outputID, outputTenHS, outputLop, outputNgaySinh, outputSDT, "1.850.000", "Đã thanh toán",outputTime};
-                int row = t.getSelectedRow();
-                tblModel.removeRow(row);
-                tblModel.addRow(rowData);
+                loaddatatoTable();
 
             }else{
                 return;
             }
             resetOutput();
-            
         }
     }
     
@@ -438,73 +437,29 @@ public class HocPhi extends JPanel{
             String timkiem = (String) option1.getSelectedItem(); 
             String tenlop = (String) optionLop.getSelectedItem(); 
             String hocphi = (String) optionHP.getSelectedItem(); 
-            /////
-            System.out.println("timkiem: " + timkiem); 
-            System.out.println("tenlop: " + tenlop); 
-            System.out.println("hocphi: " + hocphi);
-            String idnam = null;
-            for (NamHocDTO nh : dsnh){
-                if(nh.getNamHocBatDau()==namhientai){
-                    System.out.println("so sanh nam");
-                    idnam = nh.getNamHocID();
-                    System.out.println("id nam "+idnam);
-                    break;
-                }
+            
+            String searchid = searchID.getText();
+
+            tblModel = (NonEditableTableModel) t.getModel();
+            sorter = new TableRowSorter<>(tblModel);
+            t.setRowSorter(sorter);
+
+            List<RowFilter<Object, Object>> filters = new ArrayList<>();
+
+            if(!searchid.isEmpty()){
+                filters.add(RowFilter.regexFilter(searchid, 0));
+            }
+            if (!tenlop.equals("Tất cả")) {
+                filters.add(RowFilter.regexFilter(tenlop, 2));
+            }
+            if (!hocphi.equals("Tất cả")) {
+                filters.add(RowFilter.regexFilter(hocphi, 3));
             }
 
-            if(txtIdName.getText().isEmpty()){
-                dshs = hsbus.search(null, null, null, null, null, null,hocphi);
-            }
 
-            String matimkiem = txtIdName.getText();
-            System.out.println("txt="+matimkiem);
-
-            dslop = lopbus.search(null, tenlop);
-
-            if(timkiem.equals("Mã HS")){
-                System.err.println("chon ma");
-                dshs = hsbus.search(matimkiem, null, null, null, null, null,hocphi);
-            }
-            if(timkiem.equals("Tên HS")){
-                System.out.println("chon ten");
-                dshs = hsbus.search(null, matimkiem, null, null, null, null,hocphi);
-            }
-
-            for (HocSinhDTO hs :dshs){
-                String idhs =  hs.getHocSinhID();
-                String time = hpbus.get(idhs, idnam)!=null?hpbus.get(idhs, idnam).getThoigian():"";
-                System.out.println("idhs ="+idhs);
-                System.err.println("time="+time);
-                for(LopDTO lop : dslop){
-                    String idlop = lop.getLopID();
-                    System.out.println("idlop="+idlop);
-                    if((plbus.get(idhs, idnam)!=null) && plbus.get(idhs, idnam).getLopID().equals(idlop)){
-                        System.out.println("da loc dc idlop = "+idlop);
-                        System.out.println("ID Học Sinh: " + hs.getHocSinhID());
-                        System.out.println("Tên Học Sinh: " + hs.getTenHocSinh());
-                        System.out.println("Tên Lớp: " + lop.getTenLop());
-                        System.out.println("Ngày Sinh: " + hs.getNgaySinh());
-                        System.out.println("Điện Thoại: " + hs.getDienThoai());
-                        System.out.println("Học Phí: " + hs.getHocPhi());
-                        System.out.println("Thời Gian: " + time);
-
-                        String[] rowData = new String[]{
-                            idhs,
-                            hs.getTenHocSinh(),
-                            lop.getTenLop(),
-                            hs.getNgaySinh(),
-                            hs.getDienThoai(),
-                            "1.850.000",
-                            hs.getHocPhi(),
-                            time
-                        };
-                        tblModel.addRow(rowData);
-                    }
-                }
-            }
-            tblModel.fireTableDataChanged();
-            if (tblModel.getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Không có dữ liệu ");
+            // Apply combined filters
+            if (!filters.isEmpty()) {
+                sorter.setRowFilter(RowFilter.andFilter(filters));
             }
 
         }

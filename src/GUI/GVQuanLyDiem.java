@@ -5,39 +5,18 @@
 package GUI;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
+import java.awt.event.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableRowSorter;
+import javax.swing.table.*;
 
-import BUS.ChiTietDiemBUS;
-import BUS.DTB_HocKyBUS;
-import BUS.GiaoVienBUS;
-import BUS.HocKyBUS;
-import BUS.HocSinhBUS;
-import BUS.KQ_HocSinhCaNamBUS;
-import BUS.LopBUS;
-import BUS.MonHocBUS;
-import BUS.NamHocBUS;
-import BUS.PhanCongBUS;
-import BUS.PhanLopBUS;
+import BUS.*;
 import DTO.ChiTietDiemDTO;
-import DTO.DTB_HocKyDTO;
-import DTO.HocKyDTO;
-import DTO.HocSinhDTO;
-import DTO.KQ_HocSinhCaNamDTO;
-import DTO.LopDTO;
-import DTO.MonHocDTO;
-import DTO.NamHocDTO;
 import DTO.PhanCongDTO;
 import DTO.PhanLopDTO;
 
@@ -60,15 +39,8 @@ public class GVQuanLyDiem extends JPanel {
     private JTable t;
     private static String outputID, outputMon, outputHK, outputNam;
     
-    ArrayList<HocSinhDTO> dshs;
-    ArrayList<KQ_HocSinhCaNamDTO> dskq;
-    ArrayList<MonHocDTO> dsmon;
     ArrayList<ChiTietDiemDTO> dsct;
-    ArrayList<HocKyDTO> dshk;
-    ArrayList<DTB_HocKyDTO> dsdtb;
-    ArrayList<NamHocDTO> dsnh;
     ArrayList<PhanLopDTO> dspl;
-    ArrayList<LopDTO> dslop;
     ArrayList<PhanCongDTO> dspc;
 
     PhanCongBUS pcbus = new PhanCongBUS(1);
@@ -77,9 +49,7 @@ public class GVQuanLyDiem extends JPanel {
     HocSinhBUS hsbus = new HocSinhBUS(1);
     MonHocBUS mhbus = new MonHocBUS(1);
     ChiTietDiemBUS ctbus = new ChiTietDiemBUS(1);
-    DTB_HocKyBUS dtbbus = new DTB_HocKyBUS(1);
     HocKyBUS hkbus = new HocKyBUS(1);
-    KQ_HocSinhCaNamBUS kqbus = new KQ_HocSinhCaNamBUS(1);
     NamHocBUS nhbus = new NamHocBUS(1);
     GiaoVienBUS gvbus = new GiaoVienBUS();
     int width, height;
@@ -278,7 +248,6 @@ public class GVQuanLyDiem extends JPanel {
             // Add listener to edit and delete buttons
             editBtn.addActionListener(listener);
             submitBtn.setEnabled(false);
-            
 
         } else {  // isSubmit != 1, meaning points are still editable
             if(checkEmptyGrade()){
@@ -402,14 +371,17 @@ public class GVQuanLyDiem extends JPanel {
             dspl = plbus.search(null, lopid, idnamhoc);
             for (PhanLopDTO pl: dspl){
                 String idhs = pl.getHocSinhID();
-//{"ID", "Tên HS", "Lớp", "Môn Học", "Điểm hệ 1", "Điểm hệ 2", "Điểm hệ 3","Học Kỳ","ĐTB môn HK", "Năm Học"};
-                
+                if(idhs == null){
+                    JOptionPane.showMessageDialog(null, "Không có HS trong lớp được phân công");
+                    return;
+                }
                 if(ctbus.get(idhs, idnamhoc, idhk, idmon) == null){
-                    ChiTietDiemDTO diemmonhoc = new ChiTietDiemDTO(idhs, idmon,idhk,  idnamhoc);
-                    System.out.println("add ctd");
-                    ctbus.add(diemmonhoc);
+                    ChiTietDiemDTO diemmonhoc = new ChiTietDiemDTO(idhs, idmon,idhk,idnamhoc);
+                    ctbus.set(diemmonhoc);
                 }
                 ChiTietDiemDTO diemmonhoc = ctbus.get(idhs, idnamhoc, idhk, idmon);
+                //{"ID", "Tên HS", "Lớp", "Môn Học", "Điểm hệ 1", "Điểm hệ 2", "Điểm hệ 3","Học Kỳ","ĐTB môn HK", "Năm Học"};
+                                
                 String[] rowData = new String[]{
                     idhs,
                     hsbus.get(idhs).getTenHocSinh(),
@@ -446,10 +418,30 @@ public class GVQuanLyDiem extends JPanel {
                 sorter.setRowFilter(RowFilter.regexFilter(lopSelected, 2));
             }
 
+            int count = countUniqueIDs(tblModel);
+            s.setText(String.valueOf(count));
+            if (count == 0) {
+                JOptionPane.showMessageDialog(null, "Không có dữ liệu ");
+            }
         }
     
     }
-
+    private int countUniqueIDs(DefaultTableModel model) {
+        int count = 0;
+        HashSet<String> uniqueIDs = new HashSet<>();
+    
+        // Iterate over visible (filtered) rows
+        for (int i = 0; i < sorter.getViewRowCount(); i++) {
+            int modelRow = sorter.convertRowIndexToModel(i); // Get actual row in the model
+            String id = (String) model.getValueAt(modelRow, 0); // Assuming ID is in the first column
+    
+            if (!uniqueIDs.contains(id)) {
+                uniqueIDs.add(id);
+                count++;
+            }
+        }
+        return count;
+    }
     private void tableMouseClicked(java.awt.event.MouseEvent e) throws ParseException {
         checkSubmit();
 
@@ -475,6 +467,8 @@ public class GVQuanLyDiem extends JPanel {
             removeAllListeners();
             editBtn.addActionListener(new CannotEditListener());
             txtDiem1.setEditable(false);
+            txtDiem2.setEditable(false);
+            txtDiem3.setEditable(false);
         }
 
     }

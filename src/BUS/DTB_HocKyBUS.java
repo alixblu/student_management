@@ -53,15 +53,13 @@ public class DTB_HocKyBUS {
     //overloading
     public DTB_HocKyDTO get(String idhs, String idnam, String idhk){
         
-        if(idhk!=null && idhs!=null && idnam!=null){
-            for(DTB_HocKyDTO x : dsdtb)
-            {
-                if( (x.getNamHocID().equals(idnam)) && (x.getHocSinhID().equals(idhs)) && (x.getHocKyID().equals(idhk))){
-                    return x;
-                }
+        for(DTB_HocKyDTO x : dsdtb)
+        {
+            if( (x.getNamHocID().equals(idnam)) && (x.getHocSinhID().equals(idhs)) && (x.getHocKyID().equals(idhk))){
+                return x;
             }
         }
-        
+
         return null;
     }
         
@@ -149,5 +147,9 @@ public class DTB_HocKyBUS {
 
     public ArrayList<DTB_HocKyDTO> getList() {
         return dsdtb;
+    }
+    public static void main(String[] args) {
+        DTB_HocKyBUS bus = new DTB_HocKyBUS();
+        bus.get("HSK242", "20242025", "1");
     }
 }

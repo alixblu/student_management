@@ -1,5 +1,7 @@
 package DTO;
 
+import java.text.DecimalFormat;
+
 public class ChiTietDiemDTO {
     private String HocSinhID;
     private String MonHocID;
@@ -9,7 +11,7 @@ public class ChiTietDiemDTO {
     private Double Diem2;
     private Double Diem3;
     private Double dtbMon;
-
+private static final DecimalFormat df = new DecimalFormat("0.00");
     
     public ChiTietDiemDTO(String hocSinhID, String monHocID, String hocKyID, String namHocID) {
         this.HocSinhID = hocSinhID;
@@ -103,7 +105,7 @@ public class ChiTietDiemDTO {
     }
 
     public void calDtbMon() {
-        this.dtbMon = (this.Diem1*1 + this.Diem2*2 + this.Diem3*3) / 6;
+        this.dtbMon = Double.parseDouble(df.format((this.Diem1*1 + this.Diem2*2 + this.Diem3*3) / 6));
     }
 
 }
