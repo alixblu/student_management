@@ -48,14 +48,14 @@ public class QuanLyDiem extends JPanel{
     private JPanel topPanel, radioPanel, dropdownPanel, selectPanel, totalPanel, btnPanel, btnPanel2, contentPanel, detailPanel, main_detailPanel;
     private JLabel b1, b2, b3, b4, b5, b6;
     private JComboBox<String> optionLop, optionMon, optionHe, optionHocky, optionNam;
-    private JTextField s, inputID, outputDiem;
+    private JTextField s, inputID, txtDiem1, txtDiem2, txtDiem3;
     private JLabel l1, l2;
     private JButton filterBtn, editBtn, delBtn;
     private NonEditableTableModel tblModel;
     private JScrollPane scrollPane;
     private JTable t;
     private int width, height;
-    private static String outputID, outputHeid, outputMon, outputHK, outputNam, outputDiemhk, outputDiemcanam, outputTenHS, outputLop;
+    private static String outputID, outputHeid, outputMon, outputHK, outputNam, outputDTBmon, outputCN, outputTenHS, outputLop;
 
     ArrayList <HocSinhDTO> dshs;
     ArrayList <KQ_HocSinhCaNamDTO> dskq;
@@ -177,19 +177,41 @@ public class QuanLyDiem extends JPanel{
         main_detailPanel = new JPanel();
         main_detailPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 50));
 
+// Labels for the text fields
+JLabel lblDiem1 = new JLabel("Điểm hệ 1: ");
+JLabel lblDiem2 = new JLabel("Điểm hệ 2: ");
+JLabel lblDiem3 = new JLabel("Điểm hệ 3: ");
 
-        
-        JLabel a1=new JLabel("Nhập thay đổi điểm:    ");
-        outputDiem = new JTextField(5);
-        a1.setPreferredSize(new Dimension(200, 30));
-        outputDiem.setPreferredSize(new Dimension(200, 30));
-        Font font = a1.getFont();
-        float fontSize = font.getSize() + 5; // Increase the font size by 5 points (adjust as needed)
-        a1.setFont(font.deriveFont(fontSize));
-        main_detailPanel.add(a1);
-        main_detailPanel.add(outputDiem);
-        detailPanel.add(main_detailPanel);
+// Text fields for entering scores
+txtDiem1 = new JTextField(5);
+txtDiem2 = new JTextField(5);
+txtDiem3 = new JTextField(5);
 
+// Set preferred sizes for labels and text fields
+lblDiem1.setPreferredSize(new Dimension(100, 30));
+txtDiem1.setPreferredSize(new Dimension(200, 30));
+
+lblDiem2.setPreferredSize(new Dimension(100, 30));
+txtDiem2.setPreferredSize(new Dimension(200, 30));
+
+lblDiem3.setPreferredSize(new Dimension(100, 30));
+txtDiem3.setPreferredSize(new Dimension(200, 30));
+
+// Font settings for labels (optional, to increase the font size)
+Font labelFont = lblDiem1.getFont().deriveFont(Font.PLAIN, 16);
+lblDiem1.setFont(labelFont);
+lblDiem2.setFont(labelFont);
+lblDiem3.setFont(labelFont);
+
+// Add components to the panel, keeping them aligned horizontally
+main_detailPanel.add(lblDiem1);
+main_detailPanel.add(txtDiem1);
+
+main_detailPanel.add(lblDiem2);
+main_detailPanel.add(txtDiem2);
+
+main_detailPanel.add(lblDiem3);
+main_detailPanel.add(txtDiem3);
 /////////
         btnPanel.add(filterBtn,gbcExportBtn);
 
@@ -288,7 +310,7 @@ public class QuanLyDiem extends JPanel{
     }
     
     public void loaddatatoTable(){
-        tblModel.setRowCount(0);
+    tblModel.setRowCount(0);
 
     dshs = hsbus.getList();
     dskq = kqbus.getList();
@@ -340,78 +362,7 @@ public class QuanLyDiem extends JPanel{
     private class FilterBtnListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
-            tblModel.setRowCount(0);
-            String id_hs = inputID.getText().trim().toUpperCase();
-            String monhoc = (String) optionMon.getSelectedItem();
-            String tenlop = (String) optionLop.getSelectedItem();
-
-            //không có table hệ số =))))
-            int hediem, i;
-            String selectedItem = (String) optionHe.getSelectedItem();
-            if (selectedItem.equals("Tất cả")) {
-                hediem = 4;
-                i = 1;
-            } else {
-                char secondChar = selectedItem.charAt(1);
-                i = Character.getNumericValue(secondChar);
-                hediem = i+1;
-            } 
             
-            String hocky = (String) optionHocky.getSelectedItem();
-            String namhoc = (String) optionNam.getSelectedItem();
-            
-            
-            dshs = hsbus.search(id_hs, null, null, null, null, null, null);
-            dsnh = nhbus.search(null, namhoc);
-            dslop = lopbus.search(null, tenlop);
-            dshk = hkbus.search(null, hocky);
-            dsmon = mhbus.search(null, monhoc);
-
-            for (HocSinhDTO hs : dshs){
-                System.out.println("loc hs");
-                
-                for (NamHocDTO nh : dsnh) {
-
-                    for(LopDTO lop : dslop){
-                        
-                        String idnamhoc = nh.getNamHocID();
-                        String idhs = hs.getHocSinhID();
-                        String idlop = lop.getLopID();
-                        
-                        if((plbus.get(idhs, idnamhoc)!=null) && plbus.get(idhs, idnamhoc).getLopID().equals(idlop)){
-                            for(HocKyDTO hk : dshk){
-    
-                                String idhk = hk.getHocKyID();
-                                for (MonHocDTO mh : dsmon) {
-                                    String idmon = mh.getMonHocID();
-                                    for (int heso = i ; heso < hediem; heso++) {
-                                        //String Diem = ctbus.get(idhs, idnamhoc, idhk, idmon, heso) != null ? String.valueOf(ctbus.get(idhs, idnamhoc, idhk, idmon, heso).getDiem()) : "";
-                                        String diemTrungBinhHocKy = dtbbus.get(idhs, idnamhoc, idhk) != null ? String.valueOf(dtbbus.get(idhs, idnamhoc, idhk).getDiemTrungBinh()) : "";
-                                        String diemTrungBinhNam = kqbus.get(idhs, idnamhoc) != null ? String.valueOf(kqbus.get(idhs, idnamhoc).getDiemTrungBinhNam()) : "";
-                                        System.out.println("IDHS: " + idhs);
-    
-                                        String[] rowData = new String[]{
-                                            idhs,
-                                            hsbus.get(idhs).getTenHocSinh(),
-                                            lopbus.get(idlop).getTenLop(),
-                                            mhbus.get(idmon).getTenMonHoc(),
-                                            String.valueOf(heso),
-                                            //Diem,
-                                            hkbus.get(idhk).getTenHocKy(),
-                                            diemTrungBinhHocKy,
-                                            nhbus.get(idnamhoc).getNamHocBatDau() + "-" + nhbus.get(idnamhoc).getNamHocKetThuc(),
-                                            diemTrungBinhNam
-                                        };
-                                        tblModel.addRow(rowData);
-                                    }
-                                }
-    
-                            }
-                        }
-                    }
-
-                }
-            }
             tblModel.fireTableDataChanged();
             int count = countUniqueIDs(tblModel);
             s.setText(String.valueOf(count));
@@ -430,10 +381,10 @@ public class QuanLyDiem extends JPanel{
         outputHeid = (String) t.getValueAt(row, 4);
         String diem = (String) t.getValueAt(row, 5);
         outputHK = (String) t.getValueAt(row,6);
-        outputDiemhk = (String) t.getValueAt(row, 7);
+        outputDTBmon = (String) t.getValueAt(row, 7);
         outputNam = (String) t.getValueAt(row,8);
-        outputDiem.setText(diem);
-        outputDiemcanam = (String) t.getValueAt(row, 9);
+        txtDiem1.setText(diem);
+        outputCN = (String) t.getValueAt(row, 9);
     }
 
     private class EditBtnListener implements ActionListener{
@@ -444,7 +395,7 @@ public class QuanLyDiem extends JPanel{
                 JOptionPane.showMessageDialog(null, "Chưa chọn thông tin", "Error", JOptionPane.ERROR_MESSAGE);
             return;
             }
-            String diem = outputDiem.getText();
+            String diem = txtDiem1.getText();
             if (diem.isEmpty()){
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập điểm", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -492,11 +443,11 @@ public class QuanLyDiem extends JPanel{
         System.out.println(idhs);
         int idhe = Integer.parseInt(outputHeid);
         System.out.println(idhe);
-        Float diemHK = (outputDiemhk==null ||outputDiemhk.equals(""))?-1:Float.parseFloat(outputDiemhk);//sử lý hàm set với -1
+        Float diemHK = (outputDTBmon==null ||outputDTBmon.equals(""))?-1:Float.parseFloat(outputDTBmon);//sử lý hàm set với -1
         System.out.println(diemHK);
-        Float diemCanam = (outputDiemcanam==null ||outputDiemcanam.equals(""))?-1:Float.parseFloat(outputDiemcanam);
+        Float diemCanam = (outputCN==null ||outputCN.equals(""))?-1:Float.parseFloat(outputCN);
         System.out.println(diemCanam);
-        Float diem = (outputDiem.getText()==null ||outputDiem.getText().equals(""))?-1:Float.parseFloat(outputDiem.getText());
+        Float diem = (txtDiem1.getText()==null ||txtDiem1.getText().equals(""))?-1:Float.parseFloat(txtDiem1.getText());
         System.out.println(diem);
         String tenhs = outputTenHS;
         String lop = outputLop;
@@ -558,7 +509,7 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
             System.out.println(dtb);
             kqbus.set(diemnamhoc);
             System.out.println(diemnamhoc);
-        outputDiem.setText("");
+        txtDiem1.setText("");
         JOptionPane.showMessageDialog(null, "Cập nhật thành công");
     //thay doi diem khi nhap du 
     //ham tinh diem
@@ -572,8 +523,8 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
         outputMon = null;
         outputHK = null;
         outputNam = null;
-        outputDiemhk = null;
-        outputDiemcanam = null;
+        outputDTBmon = null;
+        outputCN = null;
         outputTenHS = null;
         outputLop = null;
     }
@@ -602,8 +553,8 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
         }
     }
     public void deleteData(){
-        outputDiemhk=null;
-        outputDiemcanam=null;
+        outputDTBmon=null;
+        outputCN=null;
         System.out.println("delete()");
         String idhk= hkbus.getByName(outputHK).getHocKyID();
         System.out.println(idhk);
@@ -618,11 +569,11 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
         System.out.println(idhs);
         int idhe = Integer.parseInt(outputHeid);
         System.out.println(idhe);
-        Float diemHK = (outputDiemhk==null ||outputDiemhk.equals(""))?-1:Float.parseFloat(outputDiemhk);//sử lý hàm set với -1
+        Float diemHK = (outputDTBmon==null ||outputDTBmon.equals(""))?-1:Float.parseFloat(outputDTBmon);//sử lý hàm set với -1
         System.out.println(diemHK);
-        Float diemCanam = (outputDiemcanam==null ||outputDiemcanam.equals(""))?-1:Float.parseFloat(outputDiemcanam);
+        Float diemCanam = (outputCN==null ||outputCN.equals(""))?-1:Float.parseFloat(outputCN);
         System.out.println(diemCanam);
-        Float diem = (outputDiem.getText()==null ||outputDiem.getText().equals(""))?-1:Float.parseFloat(outputDiem.getText());
+        Float diem = (txtDiem1.getText()==null ||txtDiem1.getText().equals(""))?-1:Float.parseFloat(txtDiem1.getText());
         System.out.println(diem);
 
         String hocluc = kqbus.get(idhs, idnamhoc)!=null?kqbus.get(idhs, idnamhoc).getHocLuc():"";//check null
@@ -646,7 +597,7 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
         tblModel.removeRow(row);
         tblModel.addRow(rowData);
 
-        outputDiem.setText("");
+        txtDiem1.setText("");
         JOptionPane.showMessageDialog(null, "Cập nhật thành công");
         resetOutput();
     }
@@ -714,10 +665,10 @@ Object[] rowData = {idhs, tenhs, lop, mhbus.get(idmon).getTenMonHoc(), idhe, die
         }
     public Float tinhDiemCN(String idhs, String idnh){
 
-            if(tinhdiemHK(idhs, "1", idnh) > 0 && tinhdiemHK(idhs, "2", idnh)>0){
-                return (float) (tinhdiemHK(idhs, "1", idnh) + tinhdiemHK(idhs, "2", idnh))/2;
-            }
-            return (float) -1;
+        if(tinhdiemHK(idhs, "1", idnh) > 0 && tinhdiemHK(idhs, "2", idnh)>0){
+            return (float) (tinhdiemHK(idhs, "1", idnh) + tinhdiemHK(idhs, "2", idnh))/2;
+        }
+        return (float) -1;
     }
     public static void main(String[] args) {
         JFrame frame = new JFrame();

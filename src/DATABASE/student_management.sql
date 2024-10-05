@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 30, 2024 at 05:59 PM
+-- Generation Time: Oct 02, 2024 at 09:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -29,7 +29,8 @@ USE `student_management`;
 -- Table structure for table `chitietdiem`
 --
 
-CREATE TABLE IF NOT EXISTS `chitietdiem` (
+DROP TABLE IF EXISTS `chitietdiem`;
+CREATE TABLE `chitietdiem` (
   `HocSinhid` varchar(10) NOT NULL,
   `MonHocid` varchar(11) NOT NULL,
   `HocKyid` int(11) NOT NULL,
@@ -37,9 +38,15 @@ CREATE TABLE IF NOT EXISTS `chitietdiem` (
   `Diem1` double(10,2) NOT NULL DEFAULT 0.00,
   `Diem2` double(10,2) NOT NULL DEFAULT 0.00,
   `Diem3` double(10,2) NOT NULL DEFAULT 0.00,
-  `dtbMon` double(10,2) NOT NULL DEFAULT 0.00,
-  PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`) USING BTREE
+  `dtbMon` double(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chitietdiem`
+--
+
+INSERT INTO `chitietdiem` (`HocSinhid`, `MonHocid`, `HocKyid`, `NamHocid`, `Diem1`, `Diem2`, `Diem3`, `dtbMon`) VALUES
+('HSK241', 'MH1', 1, '20242025', 5.26, 0.00, 0.00, 0.88);
 
 -- --------------------------------------------------------
 
@@ -47,7 +54,8 @@ CREATE TABLE IF NOT EXISTS `chitietdiem` (
 -- Table structure for table `chitietquyen`
 --
 
-CREATE TABLE IF NOT EXISTS `chitietquyen` (
+DROP TABLE IF EXISTS `chitietquyen`;
+CREATE TABLE `chitietquyen` (
   `maquyen` varchar(50) NOT NULL,
   `machucnang` varchar(50) NOT NULL,
   `enable` varchar(1) NOT NULL DEFAULT '1'
@@ -80,7 +88,10 @@ INSERT INTO `chitietquyen` (`maquyen`, `machucnang`, `enable`) VALUES
 ('HS', 'CN18', '1'),
 ('HS', 'CN19', '1'),
 ('HS', 'CN20', '1'),
-('admin', 'CN21', '1');
+('admin', 'CN21', '1'),
+('DD', 'CN1', '0'),
+('DD', 'CN2', '0'),
+('DD', 'CN3', '0');
 
 -- --------------------------------------------------------
 
@@ -88,7 +99,8 @@ INSERT INTO `chitietquyen` (`maquyen`, `machucnang`, `enable`) VALUES
 -- Table structure for table `chucnang`
 --
 
-CREATE TABLE IF NOT EXISTS `chucnang` (
+DROP TABLE IF EXISTS `chucnang`;
+CREATE TABLE `chucnang` (
   `machucnang` varchar(50) NOT NULL,
   `tenchucnang` varchar(50) NOT NULL,
   `img` varchar(100) NOT NULL
@@ -128,12 +140,12 @@ INSERT INTO `chucnang` (`machucnang`, `tenchucnang`, `img`) VALUES
 -- Table structure for table `diemtbhocky`
 --
 
-CREATE TABLE IF NOT EXISTS `diemtbhocky` (
+DROP TABLE IF EXISTS `diemtbhocky`;
+CREATE TABLE `diemtbhocky` (
   `HocSinhid` varchar(10) NOT NULL,
   `HocKyid` int(11) NOT NULL,
   `NamHocid` varchar(20) NOT NULL,
-  `DiemTrungBinh` double DEFAULT NULL,
-  PRIMARY KEY (`HocSinhid`,`HocKyid`)
+  `DiemTrungBinh` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -142,7 +154,8 @@ CREATE TABLE IF NOT EXISTS `diemtbhocky` (
 -- Table structure for table `giaovien`
 --
 
-CREATE TABLE IF NOT EXISTS `giaovien` (
+DROP TABLE IF EXISTS `giaovien`;
+CREATE TABLE `giaovien` (
   `GiaoVienid` varchar(5) NOT NULL DEFAULT 'GV',
   `TenGiaoVien` varchar(50) NOT NULL,
   `GioiTinh` varchar(5) NOT NULL,
@@ -152,9 +165,15 @@ CREATE TABLE IF NOT EXISTS `giaovien` (
   `PhanMon` varchar(50) NOT NULL,
   `IMG` text DEFAULT NULL,
   `isSubmit` tinyint(1) NOT NULL DEFAULT 0,
-  `enable` tinyint(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`GiaoVienid`)
+  `enable` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `giaovien`
+--
+
+INSERT INTO `giaovien` (`GiaoVienid`, `TenGiaoVien`, `GioiTinh`, `NamSinh`, `DiaChi`, `DienThoai`, `PhanMon`, `IMG`, `isSubmit`, `enable`) VALUES
+('GV1', 'GV test1 toán', 'Nam', '22/10/2024', 'ffefef', '0789654123', 'Toán', '', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -162,10 +181,10 @@ CREATE TABLE IF NOT EXISTS `giaovien` (
 -- Table structure for table `hocky`
 --
 
-CREATE TABLE IF NOT EXISTS `hocky` (
+DROP TABLE IF EXISTS `hocky`;
+CREATE TABLE `hocky` (
   `HocKyid` int(11) NOT NULL,
-  `TenHocKy` varchar(50) NOT NULL,
-  PRIMARY KEY (`HocKyid`)
+  `TenHocKy` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -182,7 +201,8 @@ INSERT INTO `hocky` (`HocKyid`, `TenHocKy`) VALUES
 -- Table structure for table `hocphi`
 --
 
-CREATE TABLE IF NOT EXISTS `hocphi` (
+DROP TABLE IF EXISTS `hocphi`;
+CREATE TABLE `hocphi` (
   `idhs` varchar(10) NOT NULL,
   `idnh` varchar(22) NOT NULL,
   `thoigian` varchar(50) NOT NULL,
@@ -195,7 +215,8 @@ CREATE TABLE IF NOT EXISTS `hocphi` (
 -- Table structure for table `hocsinh`
 --
 
-CREATE TABLE IF NOT EXISTS `hocsinh` (
+DROP TABLE IF EXISTS `hocsinh`;
+CREATE TABLE `hocsinh` (
   `HocSinhid` varchar(10) NOT NULL DEFAULT 'HS',
   `HoVaTen` varchar(50) NOT NULL,
   `GioiTinh` varchar(50) NOT NULL,
@@ -204,9 +225,16 @@ CREATE TABLE IF NOT EXISTS `hocsinh` (
   `DiaChi` text NOT NULL,
   `HocPhi` varchar(20) NOT NULL DEFAULT 'Chưa thanh toán',
   `IMG` text DEFAULT NULL,
-  `enable` tinyint(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`HocSinhid`)
+  `enable` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `hocsinh`
+--
+
+INSERT INTO `hocsinh` (`HocSinhid`, `HoVaTen`, `GioiTinh`, `NgaySinh`, `DienThoai`, `DiaChi`, `HocPhi`, `IMG`, `enable`) VALUES
+('HSK241', 'HS Test 1', 'Nam', '25/10/2002', '0323656326', 'stntmjtj', 'Chưa thanh toán', '', 1),
+('HSK242', 'd@', 'Nam', '10/10/1996', '0123456789', '@d', 'Chưa thanh toán', 'Screenshot 2024-10-01 120343.png', 1);
 
 -- --------------------------------------------------------
 
@@ -214,14 +242,14 @@ CREATE TABLE IF NOT EXISTS `hocsinh` (
 -- Table structure for table `kqhocsinhcanam`
 --
 
-CREATE TABLE IF NOT EXISTS `kqhocsinhcanam` (
+DROP TABLE IF EXISTS `kqhocsinhcanam`;
+CREATE TABLE `kqhocsinhcanam` (
   `HocSinhid` varchar(10) NOT NULL,
   `NamHocid` varchar(50) NOT NULL,
   `HocLuc` varchar(50) DEFAULT NULL,
   `HanhKiem` varchar(10) DEFAULT 'Tốt',
   `Diemtb` double DEFAULT NULL,
-  `KetQua` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`HocSinhid`,`NamHocid`)
+  `KetQua` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -230,10 +258,10 @@ CREATE TABLE IF NOT EXISTS `kqhocsinhcanam` (
 -- Table structure for table `lop`
 --
 
-CREATE TABLE IF NOT EXISTS `lop` (
+DROP TABLE IF EXISTS `lop`;
+CREATE TABLE `lop` (
   `Lopid` int(11) NOT NULL,
-  `TenLop` varchar(50) NOT NULL,
-  PRIMARY KEY (`Lopid`)
+  `TenLop` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -254,11 +282,19 @@ INSERT INTO `lop` (`Lopid`, `TenLop`) VALUES
 -- Table structure for table `monhoc`
 --
 
-CREATE TABLE IF NOT EXISTS `monhoc` (
+DROP TABLE IF EXISTS `monhoc`;
+CREATE TABLE `monhoc` (
   `MonHocid` varchar(11) NOT NULL,
-  `TenMonHoc` varchar(50) NOT NULL,
-  PRIMARY KEY (`MonHocid`)
+  `TenMonHoc` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `monhoc`
+--
+
+INSERT INTO `monhoc` (`MonHocid`, `TenMonHoc`) VALUES
+('MH1', 'Toán'),
+('MH2', 'Văn');
 
 -- --------------------------------------------------------
 
@@ -266,14 +302,21 @@ CREATE TABLE IF NOT EXISTS `monhoc` (
 -- Table structure for table `namhoc`
 --
 
-CREATE TABLE IF NOT EXISTS `namhoc` (
+DROP TABLE IF EXISTS `namhoc`;
+CREATE TABLE `namhoc` (
   `NamHocid` varchar(50) NOT NULL,
   `NamBatDau` int(5) NOT NULL,
   `NamKetThuc` int(5) NOT NULL,
   `HocKy` varchar(1) NOT NULL,
-  `enable` int(1) NOT NULL,
-  PRIMARY KEY (`NamHocid`)
+  `enable` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `namhoc`
+--
+
+INSERT INTO `namhoc` (`NamHocid`, `NamBatDau`, `NamKetThuc`, `HocKy`, `enable`) VALUES
+('20242025', 2024, 2025, '1', 1);
 
 -- --------------------------------------------------------
 
@@ -281,11 +324,19 @@ CREATE TABLE IF NOT EXISTS `namhoc` (
 -- Table structure for table `phancong`
 --
 
-CREATE TABLE IF NOT EXISTS `phancong` (
+DROP TABLE IF EXISTS `phancong`;
+CREATE TABLE `phancong` (
   `GiaoVienid` varchar(5) NOT NULL DEFAULT 'GV',
   `Lopid` int(11) NOT NULL,
   `enable` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `phancong`
+--
+
+INSERT INTO `phancong` (`GiaoVienid`, `Lopid`, `enable`) VALUES
+('GV1', 122, 1);
 
 -- --------------------------------------------------------
 
@@ -293,12 +344,20 @@ CREATE TABLE IF NOT EXISTS `phancong` (
 -- Table structure for table `phanlop`
 --
 
-CREATE TABLE IF NOT EXISTS `phanlop` (
+DROP TABLE IF EXISTS `phanlop`;
+CREATE TABLE `phanlop` (
   `HocSinhid` varchar(10) NOT NULL,
   `Lopid` int(11) NOT NULL,
-  `NamHocid` varchar(20) NOT NULL,
-  PRIMARY KEY (`HocSinhid`,`Lopid`)
+  `NamHocid` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `phanlop`
+--
+
+INSERT INTO `phanlop` (`HocSinhid`, `Lopid`, `NamHocid`) VALUES
+('HSK241', 122, '20242025'),
+('HSK242', 101, '20242025');
 
 -- --------------------------------------------------------
 
@@ -306,7 +365,8 @@ CREATE TABLE IF NOT EXISTS `phanlop` (
 -- Table structure for table `quyen`
 --
 
-CREATE TABLE IF NOT EXISTS `quyen` (
+DROP TABLE IF EXISTS `quyen`;
+CREATE TABLE `quyen` (
   `tenquyen` varchar(50) NOT NULL,
   `maquyen` varchar(50) NOT NULL,
   `enable` int(50) NOT NULL
@@ -319,7 +379,8 @@ CREATE TABLE IF NOT EXISTS `quyen` (
 INSERT INTO `quyen` (`tenquyen`, `maquyen`, `enable`) VALUES
 ('admin', 'admin', 1),
 ('Giáo Viên', 'GV', 1),
-('Học Sinh', 'HS', 1);
+('Học Sinh', 'HS', 1),
+('Học Sinh', 'DD', 0);
 
 -- --------------------------------------------------------
 
@@ -327,7 +388,8 @@ INSERT INTO `quyen` (`tenquyen`, `maquyen`, `enable`) VALUES
 -- Table structure for table `thongbao`
 --
 
-CREATE TABLE IF NOT EXISTS `thongbao` (
+DROP TABLE IF EXISTS `thongbao`;
+CREATE TABLE `thongbao` (
   `idnguoigui` varchar(11) NOT NULL,
   `tieudetb` text DEFAULT NULL,
   `noidungtb` text DEFAULT NULL,
@@ -335,13 +397,30 @@ CREATE TABLE IF NOT EXISTS `thongbao` (
   `loaitb` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `thongbao`
+--
+
+INSERT INTO `thongbao` (`idnguoigui`, `tieudetb`, `noidungtb`, `thoigiantb`, `loaitb`) VALUES
+('admin', '', '', '2024-10-02', 'HS'),
+('admin', '', '', '2024-10-02', 'HS'),
+('admin', '', '', '2024-10-02', 'GV'),
+('admin', '', 'nbhnbhb', '2024-10-02', 'HS'),
+('admin', '', 'nbhnbhb', '2024-10-02', 'GV'),
+('GV1', 'h', '', '2024-10-02', '122'),
+('admin', 'nghi thu 2', '', '2024-10-02', 'HS'),
+('admin', 'nghi t3', '', '2024-10-02', 'GV'),
+('admin', 'nghi t4', '', '2024-10-02', 'HS'),
+('admin', 'nghi t4', '', '2024-10-02', 'GV');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `user`
 --
 
-CREATE TABLE IF NOT EXISTS `user` (
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `role` varchar(50) NOT NULL,
@@ -353,7 +432,10 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`username`, `password`, `role`, `enable`) VALUES
-('admin', 'admin', 'admin', 1);
+('admin', 'admin', 'admin', 1),
+('HSK241', '0323656326', 'HS', 1),
+('GV1', '0789654123', 'GV', 1),
+('HSK242', '0123456789', 'HS', 1);
 
 -- --------------------------------------------------------
 
@@ -361,7 +443,8 @@ INSERT INTO `user` (`username`, `password`, `role`, `enable`) VALUES
 -- Table structure for table `ykien`
 --
 
-CREATE TABLE IF NOT EXISTS `ykien` (
+DROP TABLE IF EXISTS `ykien`;
+CREATE TABLE `ykien` (
   `idnguoigui` varchar(10) NOT NULL,
   `tieudeyk` text DEFAULT NULL,
   `noidungyk` text DEFAULT NULL,
@@ -369,6 +452,77 @@ CREATE TABLE IF NOT EXISTS `ykien` (
   `tenhs` varchar(50) DEFAULT NULL,
   `trangthai` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ykien`
+--
+
+INSERT INTO `ykien` (`idnguoigui`, `tieudeyk`, `noidungyk`, `thoigianyk`, `tenhs`, `trangthai`) VALUES
+('HSK241', '', 'ghn', '2024-10-02', 'HS Test 1', 'Chưa xem');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `chitietdiem`
+--
+ALTER TABLE `chitietdiem`
+  ADD PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`) USING BTREE;
+
+--
+-- Indexes for table `diemtbhocky`
+--
+ALTER TABLE `diemtbhocky`
+  ADD PRIMARY KEY (`HocSinhid`,`HocKyid`);
+
+--
+-- Indexes for table `giaovien`
+--
+ALTER TABLE `giaovien`
+  ADD PRIMARY KEY (`GiaoVienid`);
+
+--
+-- Indexes for table `hocky`
+--
+ALTER TABLE `hocky`
+  ADD PRIMARY KEY (`HocKyid`);
+
+--
+-- Indexes for table `hocsinh`
+--
+ALTER TABLE `hocsinh`
+  ADD PRIMARY KEY (`HocSinhid`);
+
+--
+-- Indexes for table `kqhocsinhcanam`
+--
+ALTER TABLE `kqhocsinhcanam`
+  ADD PRIMARY KEY (`HocSinhid`,`NamHocid`);
+
+--
+-- Indexes for table `lop`
+--
+ALTER TABLE `lop`
+  ADD PRIMARY KEY (`Lopid`);
+
+--
+-- Indexes for table `monhoc`
+--
+ALTER TABLE `monhoc`
+  ADD PRIMARY KEY (`MonHocid`);
+
+--
+-- Indexes for table `namhoc`
+--
+ALTER TABLE `namhoc`
+  ADD PRIMARY KEY (`NamHocid`);
+
+--
+-- Indexes for table `phanlop`
+--
+ALTER TABLE `phanlop`
+  ADD PRIMARY KEY (`HocSinhid`,`Lopid`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

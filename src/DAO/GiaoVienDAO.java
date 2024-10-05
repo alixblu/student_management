@@ -219,6 +219,22 @@ public class GiaoVienDAO {
             }
         }
     }
+    public void resetSubmit() {
+        String sql = "UPDATE giaovien SET isSubmit = 0";
+        try (java.sql.Connection con = new MySQLConnect().getConnection();
+             java.sql.PreparedStatement ps = con != null ? con.prepareStatement(sql) : null) {
+    
+            if (ps != null && ps.executeUpdate() > 0) {
+                System.out.println("Cập nhật thành công isSubmit");
+            } else {
+                System.out.println("Không tìm thấy giáo viên hoặc không thể kết nối đến cơ sở dữ liệu.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi cập nhật giáo viên: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
     public Integer getSubmit(String magv) {
         String sql = "SELECT isSubmit FROM giaovien WHERE GiaoVienid = ?";
         java.sql.Connection con = null;

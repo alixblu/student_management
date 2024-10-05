@@ -124,16 +124,14 @@ public class TTTK_HS extends JPanel {
     }
     public void loaddatatoPanel() throws SQLException {
         ArrayList<HocSinhDTO> dshs = hsbus.getList();  // Lấy danh sách học sinh
-        ArrayList<PhanLopDTO> dsPL = plbus.getList();  // Lấy danh sách phân lớp
-        ArrayList<LopDTO> dsLop = Lopbus.getList();    // Lấy danh sách lớp
         
-        // Tạo một đối tượng để lấy năm học hiện tại của học sinh
-        diemHS dhs = new diemHS(username);
-    
+        
         for (HocSinhDTO hs : dshs) {
             if (username.equals(hs.getHocSinhID())) {  // Kiểm tra xem username có trùng với mã học sinh không
                 // Hiển thị thông tin học sinh
+
                 tf3.setText(hs.getHocSinhID());
+                System.out.println(hs.getHocSinhID());
                 tf4.setText(hs.getTenHocSinh());
                 tf5.setText(hs.getGioiTinh());
                 tf6.setText(hs.getNgaySinh());
@@ -142,22 +140,13 @@ public class TTTK_HS extends JPanel {
     
                 // Lấy lớp học hiện tại của học sinh dựa vào bảng phân lớp
                 PhanLopBUS phanlop = new PhanLopBUS();
-            ArrayList<PhanLopDTO> dspl = phanlop.ds_phanlop();
-            for (PhanLopDTO phanLopDTO : dspl) {
-                if(hs.getHocSinhID().equals(phanLopDTO.getHocSinhID()))
-                {
-                    LopBUS lopbus = new LopBUS();
-                    ArrayList<LopDTO> dslop = lopbus.list_lop();
-                    for (LopDTO lop : dslop) {
-                        if(phanLopDTO.getLopID().equals(lop.getLopID()))
-                        {
-                            tf7.setText(lop.getTenLop());
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
+                NamHocBUS nhbus = new NamHocBUS(1);
+                LopBUS lopBUS = new LopBUS(1);
+                String namhocid = nhbus.getCurrYearId();
+                String idlop = phanlop.get(hs.getHocSinhID(), namhocid).getLopID();
+                String tenlop = lopBUS.get(idlop).getTenLop();
+
+                tf7.setText(tenlop);
                 break;
             }
         }
@@ -172,7 +161,7 @@ public class TTTK_HS extends JPanel {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(850, 670);
-        TTTK_HS panel = new TTTK_HS(850, 670, "HS2");
+        TTTK_HS panel = new TTTK_HS(850, 670, "HSK241");
         frame.add(panel);
         frame.setVisible(true);
     }

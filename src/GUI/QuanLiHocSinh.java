@@ -484,6 +484,27 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         clearTextFields();
     }
 
+    // public void luuanhkhixacnhan(String img) {
+    //     // Lấy đường dẫn thư mục gốc của dự án
+    //     String projectRootPath = System.getProperty("user.dir");
+    //     String destinationFolder = projectRootPath + "\\src\\image\\HocSinh";
+    
+    //     // Tạo thư mục nếu nó chưa tồn tại
+    //     File folder = new File(destinationFolder);
+    //     if (!folder.exists()) {
+    //         folder.mkdirs(); // Tạo thư mục nếu nó không tồn tại
+    //     }
+    
+    //     String destinationPath = destinationFolder + "\\" + img;
+    
+    //     // Sao chép file ảnh
+    //     try {
+    //         Files.copy(Paths.get(img), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+    //         System.out.println("Copy thành công: " + destinationPath);
+    //     } catch (IOException e) {
+    //         System.out.println("Lỗi: " + e.getMessage());
+    //     }
+    // }
     public void updateRow() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
@@ -497,7 +518,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         String soDienThoai = tf[4].getText();
         String diaChi = tf[5].getText();
         String IMG = tf[6].getText();
-
+        // luuanhkhixacnhan(IMG);
         HocSinhDTO hocSinh = new HocSinhDTO(hocSinhID, tenHocSinh, gioiTinh, ngaySinh, diaChi,
                 soDienThoai);
         hocSinh.setIMG(IMG);

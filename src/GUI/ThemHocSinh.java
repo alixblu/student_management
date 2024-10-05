@@ -441,6 +441,7 @@ public class ThemHocSinh extends JFrame {
             imagePath = fileChooser.getSelectedFile().getAbsolutePath();
             // Hiển thị đường dẫn trong JTextField
             String fileName = fileChooser.getSelectedFile().getName();
+            System.out.println(fileName);
             pathAnhdd = fileName;
             textField_chonanh.setText(pathAnhdd);
             
