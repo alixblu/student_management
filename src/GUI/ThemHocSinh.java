@@ -379,6 +379,11 @@ public class ThemHocSinh extends JFrame {
                         JOptionPane.showMessageDialog(null, "Năm sinh không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         dateChooser.setDate(null);
                     }
+                    else if(tuoi>100)
+                    {
+                        JOptionPane.showMessageDialog(null, "Năm sinh không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        dateChooser.setDate(null);
+                    }
                     else if(comboBox_khoi.getSelectedItem().toString().equals("11") && tuoi < 16)
                     {
                         JOptionPane.showMessageDialog(null, "Năm sinh không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
