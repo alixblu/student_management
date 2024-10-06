@@ -327,7 +327,7 @@ public class QuanLyDiem extends JPanel{
                             String idmh = mh.getMonHocID();
                             if(ctbus.get(idhs, idnh, idhk, idmh) == null){
                                 ChiTietDiemDTO diemmonhoc = new ChiTietDiemDTO(idhs, idmh,idhk,idnh);
-                                ctbus.set(diemmonhoc);
+                                ctbus.add(diemmonhoc);
                             }
                             if(dtbbus.get(idhs, idnh, idhk) == null){
                                 DTB_HocKyDTO dtb = new DTB_HocKyDTO(idhs, idhk, idnh, 0.0);
@@ -342,11 +342,12 @@ public class QuanLyDiem extends JPanel{
                             KQ_HocSinhCaNamDTO kq = kqbus.get(idhs, idnh);
 
                             if(idhk.equals("1") && nhbus.isCurrentSem(nh.getNamHocBatDau()+"-"+nh.getNamHocKetThuc(), idhk) 
-                            && dtbbus.get(idhs, idnh, idhk).getDiemTrungBinh()!=0){
+                            && diemmonhoc.getDtbMon()!=0){
                                 dsct = ctbus.search(idhs, null, idhk, idnh);
                                 double tong=0;
                                 for(ChiTietDiemDTO ctd: dsct){
                                     tong+=ctd.getDtbMon();
+                                    System.out.println("tinhs diem hk1, tong= "+ tong);
                                 }
                                 dtb.setDiemTrungBinh(tong/mhbus.CountMH());
                                 dtbbus.set(dtb);
@@ -354,7 +355,7 @@ public class QuanLyDiem extends JPanel{
 
                             //tính điểm CN khi sang hk 2
                             if(idhk.equals("2") && nhbus.isCurrentSem(nh.getNamHocBatDau()+"-"+nh.getNamHocKetThuc(), idhk) 
-                            && dtbbus.get(idhs, idnh, idhk).getDiemTrungBinh()!=0){
+                            && diemmonhoc.getDtbMon()!=0){
                                 
                                 dsct = ctbus.search(idhs, null, idhk, idnh);
                                 double tong=0;

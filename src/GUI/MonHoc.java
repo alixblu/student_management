@@ -501,6 +501,10 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
     }
 //----------------------------------------------------------------------------------------
     public void exportExcel() throws IOException {
+        if (tblmodel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Bảng trống, không có dữ liệu để xuất.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return; 
+        }
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
         chooser.setFileFilter(filter);
@@ -512,7 +516,7 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachMonHoc");
             Row headerRow = sheet.createRow(0); // Header row at index 0
-            String[] headers = { "STT", "Môn học ID", "Tên môn học" };
+            String[] headers = { "STT", "Mã môn học", "Tên môn học" };
 
             // Creating header cells
             for (int i = 0; i < headers.length; i++) {

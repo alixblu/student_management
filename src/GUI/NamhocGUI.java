@@ -465,6 +465,10 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
     }
 
     public void exportExcel() throws IOException {
+        if (tblmodel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Bảng trống, không có dữ liệu để xuất.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return; 
+        }
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
         chooser.setFileFilter(filter);
@@ -476,7 +480,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
             Row headerRow = sheet.createRow(0); // Header row at index 0
-            String[] headers = { "Mã năm học", "Năm học bắt đầu", "Năm học kết thúc" , "Học kỳ" };
+            String[] headers = { "Mã năm học", "Năm bắt đầu", "Năm kết thúc" , "Học kỳ" };
 
             // Creating header cells
             for (int i = 0; i < headers.length; i++) {
