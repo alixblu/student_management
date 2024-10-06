@@ -71,6 +71,14 @@ public class hs_gopykien extends JPanel {
                 JOptionPane.showMessageDialog(null, "Thông báo không thể bỏ trống cả tiêu đề và nội dung");
                 return;
             }
+            if (txtContent.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Thông báo được bỏ trống nội dung");
+                return;
+            }
+            if (txtHeader.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Thông báo không được bỏ trống tiêu đề");
+                return;
+            }
             System.out.println("tao yk dto");
             YKienDTO yk = new YKienDTO(mahocsinh, txtHeader.getText(), txtContent.getText(), currDate.getdate(), hsbus.get(mahocsinh).getTenHocSinh());
 

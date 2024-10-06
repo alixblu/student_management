@@ -606,42 +606,70 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     }
 
     public void btnFind_actionPerformed() {
-        String searchText = JsearchText.getText().trim();
         String selectedOption = (String) searchselectBox.getSelectedItem();
         String selectedLop = (String) searchselectBox1.getSelectedItem();
-        String selectedMh = (String) searchselectBox2.getSelectedItem();
-
+        
         model = (DefaultTableModel) t.getModel();
         sorter = new TableRowSorter<>(model);
         t.setRowSorter(sorter);
-
+        
         ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
-
-        if (!searchText.isEmpty()) {
-            if (selectedOption.equals("Mã giáo viên")) {
-                filters.add(RowFilter.regexFilter(searchText, 0));
-            } else if (selectedOption.equals("Họ và tên")) {
-                filters.add(RowFilter.regexFilter("(?i)" + searchText, 1));
+        
+        if (selectedOption.equals("Mã giáo viên")) {
+            String searchText = JsearchText.getText().trim();
+            
+            
+    
+            if (searchText.isEmpty()) {
+                JOptionPane.showMessageDialog(t, "Không được để trống ô tìm kiếm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            if (!searchText.matches("[a-zA-Z0-9 ]+")) {
+                JOptionPane.showMessageDialog(t, "Không được nhập ký tự đặc biệt", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+    
+            filters.add(RowFilter.regexFilter("(?i)" + searchText, 0));
         }
-
+        else if (selectedOption.equals("Họ và tên")) {
+            String searchText = JsearchText.getText().trim();
+            if (searchText.isEmpty()) {
+                JOptionPane.showMessageDialog(t, "Không được để trống ô tìm kiếm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!searchText.matches("[a-zA-Z0-9 ]+")) {
+                JOptionPane.showMessageDialog(t, "Không được nhập ký tự đặc biệt", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            filters.add(RowFilter.regexFilter("(?i)" + searchText, 1)); // "(?i)" để không phân biệt hoa thường
+        }
+    
         if (!selectedLop.equals("None")) {
-            filters.add(RowFilter.regexFilter(selectedLop, 2));
+            filters.add(RowFilter.regexFilter(selectedLop, 3));
+        }
+        
+
+        if(selectedLop.equals("None") && searchText.equals("") && selectedOption.equals("None")){
+            JOptionPane.showMessageDialog(t, "Hãy chọn và nhập thông tin tìm kiếm tương ứng", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
-        if (!selectedMh.equals("None")) {
-            filters.add(RowFilter.regexFilter(selectedMh, 3));
-        }
 
         RowFilter<Object, Object> combinedFilter;
         if (filters.size() > 0) {
             combinedFilter = RowFilter.andFilter(filters);
         } else {
-            combinedFilter = null; // No filter
+            combinedFilter = null; // Không có bộ lọc nào
         }
-
+        
         sorter.setRowFilter(combinedFilter);
+        
+        if (sorter.getViewRowCount() == 0) {
+            JOptionPane.showMessageDialog(t, "Không tìm thấy dữ liệu phù hợp", "Thông báo", JOptionPane.WARNING_MESSAGE);
+        }
     }
+    
+    
 
     public void exportExcel() throws IOException {
         JFileChooser chooser = new JFileChooser();

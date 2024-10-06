@@ -151,6 +151,10 @@ public class gv_guiTB extends JPanel{
     private JPanel createLopTablePanel() {
         JPanel panel = new JPanel(new BorderLayout());
         dspl = plbus.getList();
+        if(dspl == null){
+            JOptionPane.showMessageDialog(panel, "Danh sách lớp đang trống", "Thông báo", ABORT);
+            return panel;
+        }
         dspc = pcbus.search(magiaovien, null);
 
         JTable table = new JTable();

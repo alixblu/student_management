@@ -85,6 +85,7 @@ public class admin_guiTB extends JPanel{
         public void actionPerformed(ActionEvent e) {
             String loaitb = "";
             CurrentDateTime currDate = new CurrentDateTime();
+
             if (checkboxHS.isSelected()) {
                 loaitb = "HS";
 
@@ -97,6 +98,7 @@ public class admin_guiTB extends JPanel{
                 ThongBaoDTO tb = new ThongBaoDTO("admin", txtHeader.getText(), txtContent.getText(),currDate.getdate(),loaitb);
                 tbbus.add(tb);
             }
+            
             if(loaitb.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Bạn chưa chọn đối tượng muốn gửi thông báo");
                 return;
@@ -105,6 +107,15 @@ public class admin_guiTB extends JPanel{
                 JOptionPane.showMessageDialog(null, "Thông báo không thể bỏ trống cả tiêu đề và nội dung");
                 return;
             }
+            if (txtContent.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Thông báo không được bỏ trống nội dung");
+                return;
+            }
+            if (txtHeader.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Thông báo không được bỏ trống tiêu đề");
+                return;
+            }
+            
             System.out.println("up thong bao to data");
             JOptionPane.showMessageDialog(null, "Thông báo đã được gửi");
             resetText();
