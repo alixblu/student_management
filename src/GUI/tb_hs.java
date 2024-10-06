@@ -248,12 +248,6 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
         return scrollpane;
     }
 
-
-
-
-    
-
-
     private void tableMouseClicked(java.awt.event.MouseEvent evt) throws ParseException {
         int row = t.getSelectedRow();
         

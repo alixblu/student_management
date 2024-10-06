@@ -50,7 +50,6 @@ public class QuanLyDiem extends JPanel{
     ArrayList<HocKyDTO> dshk;
     ArrayList<DTB_HocKyDTO> dsdtb;
     ArrayList<NamHocDTO> dsnh;
-    ArrayList<PhanLopDTO> dspl;
     ArrayList<LopDTO> dslop;
     
     PhanLopBUS plbus = new PhanLopBUS(1);
@@ -117,7 +116,7 @@ public class QuanLyDiem extends JPanel{
 
         dsmon = mhbus.getList();
         ArrayList<String> c2 = new ArrayList<>();
-        c1.add("Tất cả");
+        c2.add("Tất cả");
         for(MonHocDTO pc: dsmon){
             String tenlop = mhbus.get(pc.getMonHocID()).getTenMonHoc();
             c2.add(tenlop);
@@ -306,15 +305,10 @@ public class QuanLyDiem extends JPanel{
     tblModel.setRowCount(0);
 
     dshs = hsbus.getList();
-    dskq = kqbus.getList();
     dsmon = mhbus.getList();
-
-    dsdtb = dtbbus.getList();
-
     dshk = hkbus.getList();
     dslop = lopbus.getList();
     dsnh = nhbus.getList();    
-    dspl = plbus.getList();
     for(NamHocDTO nh:dsnh){
         String idnh = nh.getNamHocID();
 
@@ -347,21 +341,33 @@ public class QuanLyDiem extends JPanel{
                             DTB_HocKyDTO dtb = dtbbus.get(idhs, idnh, idhk);
                             KQ_HocSinhCaNamDTO kq = kqbus.get(idhs, idnh);
 
-
-                            if(idhk.equals("2") && nhbus.isCurrentSem(nh.getNamHocBatDau()+"-"+nh.getNamHocKetThuc(), idhk) 
+                            if(idhk.equals("1") && nhbus.isCurrentSem(nh.getNamHocBatDau()+"-"+nh.getNamHocKetThuc(), idhk) 
                             && dtbbus.get(idhs, idnh, idhk).getDiemTrungBinh()!=0){
-                                
-                                //tính điểm CN khi sang hk 2
                                 dsct = ctbus.search(idhs, null, idhk, idnh);
                                 double tong=0;
                                 for(ChiTietDiemDTO ctd: dsct){
                                     tong+=ctd.getDtbMon();
                                 }
                                 dtb.setDiemTrungBinh(tong/mhbus.CountMH());
+                                dtbbus.set(dtb);
+                            }
+
+                            //tính điểm CN khi sang hk 2
+                            if(idhk.equals("2") && nhbus.isCurrentSem(nh.getNamHocBatDau()+"-"+nh.getNamHocKetThuc(), idhk) 
+                            && dtbbus.get(idhs, idnh, idhk).getDiemTrungBinh()!=0){
+                                
+                                dsct = ctbus.search(idhs, null, idhk, idnh);
+                                double tong=0;
+                                for(ChiTietDiemDTO ctd: dsct){
+                                    tong+=ctd.getDtbMon();
+                                }
+                                dtb.setDiemTrungBinh(tong/mhbus.CountMH());
+                                dtbbus.set(dtb);
+
                                 double diemhk1 = dtbbus.get(idhs, idnh, "1").getDiemTrungBinh();
                                 double diemhk2 = dtbbus.get(idhs, idnh, "2").getDiemTrungBinh();
                                 kq.setDiemTrungBinhNam((diemhk1 + diemhk2)/2);
-
+                                
                                 //update hocluc
                                 if(kq.getDiemTrungBinhNam()<5){
                                     kq.setHocLuc("Yếu");
@@ -375,6 +381,13 @@ public class QuanLyDiem extends JPanel{
                                 else{
                                     kq.setHocLuc("Trung Bình");
                                 }
+
+                                //update ketqua
+                                if(kq.getDiemTrungBinhNam()<5){
+                                    kq.setKetQua("Học lại");
+                                }
+                                else kq.setHocLuc("Lên lớp");
+                                kqbus.set(kq);
                             }
 
                             //{"ID", "Tên HS", "Lớp", "Môn Học", "Điểm hệ 1", "Điểm hệ 2", "Điểm hệ 3","ĐTB môn HK","Học Kỳ","Điểm TB HK", "Năm Học", "Điểm TB CN"};
