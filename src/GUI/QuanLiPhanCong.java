@@ -45,12 +45,16 @@ import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.GiaoVienBUS;
+import BUS.LopBUS;
 import BUS.MonHocBUS;
+import BUS.PhanCongBUS;
 import BUS.QLPhanCongBUS;
 import DAO.GiaoVienDAO;
 import DTO.GiaoVienDTO;
 import DTO.HocSinhDTO;
+import DTO.LopDTO;
 import DTO.MonHocDTO;
+import DTO.PhanCongDTO;
 import DTO.QLPhanCongDTO;
 
 import java.text.ParseException;
@@ -104,12 +108,14 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     private String magv;
     private String tengiaovien;
     private String tenlop;
-    private String tenmon;
     private JComboBox phangiaoviencomboBox;
 
     private MonHocBUS mhBus;
     private GiaoVienBUS gvBus = new GiaoVienBUS();
     ArrayList<GiaoVienDTO> list_gv;
+
+    private PhanCongBUS pcBUS2 = new PhanCongBUS();
+    private LopBUS lopBUS = new LopBUS();
 
     public QuanLiPhanCong(int width, int height) throws SQLException {
         this.width = width;
@@ -279,9 +285,9 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     public JPanel JHocsinh() {
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
-        pcBUS.listMagv();
         // pcBUS.listTenmh();
         pcBUS.listTenlop();
+        pcBUS.listMagv();
         ArrayList<String> listlop = pcBUS.getTenLopList();
         // ArrayList<String> listmh = pcBUS.getTenMHList();
         ArrayList<String> listmagv = pcBUS.getMaGVList();
@@ -362,22 +368,31 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
 
         Integer lenght = header.length;
         pcBUS.listPC();
-        ArrayList<QLPhanCongDTO> dspc = pcBUS.getList();
+        pcBUS2.list();
 
+        // ArrayList<QLPhanCongDTO> dspc = pcBUS.getList();
+        ArrayList<PhanCongDTO> dspc2 = pcBUS2.getList();
+        ArrayList<LopDTO> list_lop = lopBUS.getList();
         list_gv = gvBus.getList();
 
-        Object[][] rowData = new Object[dspc.size()][lenght];
-        for (int i = 0; i < dspc.size(); i++) {
-            QLPhanCongDTO pc = dspc.get(i);
-            rowData[i][0] = pc.getMagv();
-            rowData[i][1] = pc.getTengv();
-            for(int j = 0 ; i <list_gv.size(); i++){
+        Object[][] rowData = new Object[dspc2.size()][lenght];
+        for (int i = 0; i < dspc2.size(); i++) {
+            PhanCongDTO pc2 = dspc2.get(i);
+            rowData[i][0] = pc2.getGiaoVienID();
+            for(int j = 0 ; j <list_gv.size(); j++){
                 GiaoVienDTO gv = list_gv.get(j);
-                if(pc.getMagv().equals(gv.getMaGV())){
+                if(pc2.getGiaoVienID().equals(gv.getMaGV())){
+                    rowData[i][1] = gv.getTenGV();
                     rowData[i][2] = gv.getphanMon();
-                    rowData[i][3] = pc.getLop();
                 }
             }
+            for(int k = 0 ; k <list_lop.size(); k++){
+                LopDTO lop = list_lop.get(k);
+                if(pc2.getLopID().equals(lop.getLopID())){
+                    rowData[i][3] = lop.getTenLop();
+                }
+            }
+
         }
 
 
