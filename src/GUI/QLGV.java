@@ -487,13 +487,27 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         }
     }
 
-    public void addRow() {
+    public boolean addRow() {
         // Kiểm tra nếu các trường cần thiết không trống
         if (tf[1].getText().isEmpty() || tf[4].getText().isEmpty() || tf[5].getText().isEmpty() || tf[7].getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
-            return;
+            return false;
         }
-
+    
+        // Kiểm tra tính hợp lệ của số điện thoại
+        String soDienThoai = tf[5].getText();
+        if (!isValidPhoneNumber(soDienThoai)) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!");
+            return false;
+        }
+    
+        // Kiểm tra tính hợp lệ của tên giáo viên
+        String tenGV = tf[1].getText();
+        if (!isValidTeacherName(tenGV)) {
+            JOptionPane.showMessageDialog(null, "Tên giáo viên không hợp lệ. Chỉ được chứa chữ hoa, chữ thường và khoảng trắng!");
+            return false;
+        }
+    
         // Vô hiệu hóa phân môn sau khi thêm
         phanmonComboBox.setEnabled(false);
     
@@ -503,37 +517,37 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     
         // Lấy các giá trị từ các trường nhập
         Integer countGV = gvBUS.CountGV() + 1;
-        System.out.println("Số Giáo viên: " + countGV);
         String giaovienID = "GV" + countGV;
-        String tenGV = tf[1].getText();
         String gioiTinh = (String) genderComboBox.getSelectedItem();
-        String ngaySinh = dateString;
-        String diaChi = tf[4].getText();
-        String soDienThoai = tf[5].getText();
         String phanMon = (String) phanmonComboBox.getSelectedItem();
         String IMG = tf[7].getText();
     
         // Tạo đối tượng giáo viên mới
-        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, ngaySinh, soDienThoai, phanMon, diaChi);
-        
+        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, dateString, soDienThoai, phanMon, tf[4].getText());
+    
         // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
     
-        // Thêm người dùng giáo viên vào hệ thống
-        user gvuser = new user(giaovienID, soDienThoai, "GV", "1");
-        User_BUS bus = new User_BUS(1);
-        bus.add(gvuser);
-    
         // Thêm dữ liệu vào bảng
-        Object[] rowData = { giaovienID, tenGV, gioiTinh, ngaySinh, diaChi, soDienThoai, phanMon, IMG };
+        Object[] rowData = { giaovienID, tenGV, gioiTinh, dateString, tf[4].getText(), soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
     
         // Gọi phương thức clearTextFields() để xóa dữ liệu cũ
         clearTextFields();
+    
+        return true; // Trả về true để xác nhận rằng việc thêm thành công
     }
     
+    // Phương thức kiểm tra tính hợp lệ của số điện thoại
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        return phoneNumber.matches("0\\d{9}"); // Kiểm tra bắt đầu từ 0 và có đủ 10 số
+    }
     
-
+    // Phương thức kiểm tra tính hợp lệ của tên giáo viên
+    private boolean isValidTeacherName(String name) {
+        return name.matches("[A-Za-zÀ-ÿ\\s]+"); // Chỉ cho phép chữ và khoảng trắng
+    }
+ 
     public void deleteRow() {
         int row = t.getSelectedRow();
         if (row != -1) {
@@ -571,13 +585,13 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     public void updateRow() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
-        
+    
         // Kiểm tra xem ngày có hợp lệ không
         if (date == null) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sinh hợp lệ.");
             return;
         }
-        
+    
         String dateString = sdf.format(date);
     
         // Lấy các giá trị từ các trường nhập
@@ -597,10 +611,22 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             return;
         }
     
+        // Kiểm tra tính hợp lệ của số điện thoại
+        if (!isValidPhoneNumber(soDienThoai)) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!");
+            return;
+        }
+    
+        // Kiểm tra tính hợp lệ của tên giáo viên
+        if (!isValidTeacherName(tenGiaoVien)) {
+            JOptionPane.showMessageDialog(null, "Tên giáo viên không hợp lệ. Chỉ được chứa chữ hoa, chữ thường và khoảng trắng!");
+            return;
+        }
+    
         // Khởi tạo đối tượng GiaoVienDTO
         GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGiaoVien, gioiTinh, IMG, ngaySinh, soDienThoai, phanMon, diaChi);
     
-        // Gọi phương thức cập nhật từ GiaoVienBUS (không cần kiểm tra giá trị trả về)
+        // Gọi phương thức cập nhật từ GiaoVienBUS
         gvBUS.updateGV(giaovien);
     
         // Cập nhật bảng nếu quá trình cập nhật cơ sở dữ liệu thành công
@@ -614,8 +640,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn để cập nhật.");
         }
     }
-    
-
 
     public void clearTextFields() {
         phanmonComboBox.setEnabled(true);
@@ -691,32 +715,66 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     
 
     public void btnAdd_actionPerformed() {
+        // Kiểm tra xem tất cả các trường nhập liệu có đầy đủ không
         if (checkEmpty()) {
-            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        
-
-        JOptionPane.showMessageDialog(this, "Mã giáo viên tăng tự động", "Lưu ý", JOptionPane.INFORMATION_MESSAGE);
-
+    
+        // Kiểm tra thông tin giáo viên trước khi thêm
+        if (!isValidTeacherInfo()) {
+            // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+            return;
+        }
+    
+        // Xác nhận thêm giáo viên
         int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn Thêm giáo viên này",
+                "Bạn có chắc muốn Thêm giáo viên này?",
                 "Xác nhận",
                 JOptionPane.YES_NO_OPTION,
-
                 JOptionPane.QUESTION_MESSAGE);
+    
         if (result == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this,
-                    "Thêm thành công",
-                    "Chức năng thêm",
-                    JOptionPane.INFORMATION_MESSAGE);
-            System.out.println("Ban chon them");
-            tf[0].requestFocus();
-            addRow();
+            addRow(); // Gọi phương thức addRow để thêm giáo viên
+            JOptionPane.showMessageDialog(this, "Thêm thành công", "Chức năng thêm", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Đã hủy thao tác thêm giáo viên", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
+    
+        tf[0].requestFocus(); // Đặt con trỏ vào trường ID giáo viên
     }
+    
+    // Phương thức kiểm tra tính hợp lệ của thông tin giáo viên
+    private boolean isValidTeacherInfo() {
+        String tenGiaoVien = tf[1].getText();
+        String soDienThoai = tf[5].getText();
+        String diaChi = tf[4].getText();
+        String IMG = tf[7].getText();
+    
+        // Kiểm tra tính hợp lệ cho các trường thông tin cần thiết
+        if (!isValidPhoneNumber(soDienThoai)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (gvBUS.checkPhoneNumberExists(soDienThoai)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại này đã tồn tại!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!isValidTeacherName(tenGiaoVien)) {
+            JOptionPane.showMessageDialog(this, "Tên giáo viên không hợp lệ. Chỉ được chứa chữ hoa, chữ thường và khoảng trắng!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        // Thêm kiểm tra cho địa chỉ và ảnh (IMG) nếu cần
+        if (diaChi.isEmpty() || diaChi.matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(null, "Địa chỉ không được bỏ trống và không chỉ chứa số!");
+            return false;
+        }
+    
+        return true; // Nếu tất cả các trường thông tin hợp lệ
+    }
+    
+    
+    
 
     public void btnDelete_actionPerformed() {
         String magv = tf[0].getText();

@@ -1,55 +1,62 @@
 package BUS;
 
 import DTO.GiaoVienDTO;
+import DAO.GiaoVienDAO;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import DAO.GiaoVienDAO;
+import java.util.List;
+import java.util.Iterator;
 
 public class GiaoVienBUS {
     private ArrayList<GiaoVienDTO> dsgv;
+    private GiaoVienDAO gvDAO;
 
     public GiaoVienBUS() {
+        gvDAO = new GiaoVienDAO(); // Khởi tạo một lần
         listGV();
     }
 
     public void listGV() {
-        GiaoVienDAO gvDAO = new GiaoVienDAO();
         dsgv = gvDAO.list();
     }
 
     public void addGV(GiaoVienDTO gv) {
+        // Kiểm tra tính hợp lệ trước khi thêm
+        if (checkMagv(gv.getMaGV()) || checkPhoneNumberExists(gv.getDienThoai())) {
+            System.out.println("Mã giáo viên hoặc số điện thoại đã tồn tại.");
+            return;
+        }
+
         dsgv.add(gv);
-        GiaoVienDAO gvDAO = new GiaoVienDAO();
         gvDAO.add(gv);
     }
 
     public void deleteGV(String idGV) {
-        for (GiaoVienDTO gv : dsgv) {
+        Iterator<GiaoVienDTO> iterator = dsgv.iterator();
+        while (iterator.hasNext()) {
+            GiaoVienDTO gv = iterator.next();
             if (gv.getMaGV().equals(idGV)) {
-                dsgv.remove(gv);
-                GiaoVienDAO gvDAO = new GiaoVienDAO();
+                iterator.remove(); // Sử dụng iterator để xóa
                 gvDAO.delete(idGV);
                 return;
             }
         }
     }
-    public void resetSubmit(){
-        GiaoVienDAO dao = new GiaoVienDAO();
-        dao.resetSubmit();
+
+    public void resetSubmit() {
+        gvDAO.resetSubmit();
     }
-    public void setSubmit(String magv, int isSubmit){
-        GiaoVienDAO dao = new GiaoVienDAO();
-        dao.setSubmit(magv, isSubmit);
+
+    public void setSubmit(String magv, int isSubmit) {
+        gvDAO.setSubmit(magv, isSubmit);
     }
-    public int getSubmit(String magv){
-        GiaoVienDAO dao = new GiaoVienDAO();
-        return dao.getSubmit(magv);
+
+    public int getSubmit(String magv) {
+        return gvDAO.getSubmit(magv);
     }
+
     public boolean checkMagv(String magv) {
-        GiaoVienDAO gvDao = new GiaoVienDAO();
-        dsgv = gvDao.checkMagv();
         for (GiaoVienDTO gv : dsgv) {
             if (gv.getMaGV().equals(magv)) {
                 return true;
@@ -58,10 +65,19 @@ public class GiaoVienBUS {
         return false;
     }
 
-    public String getIdMon(String magv){
-        GiaoVienDAO gVienDAO = new GiaoVienDAO();
-        return gVienDAO.getMonHocId(magv);
+    public boolean checkPhoneNumberExists(String soDienThoai) {
+        for (GiaoVienDTO giaovien : dsgv) {
+            if (giaovien.getDienThoai().equals(soDienThoai)) {
+                return true; // Nếu số điện thoại đã tồn tại
+            }
+        }
+        return false; // Nếu số điện thoại chưa tồn tại
     }
+
+    public String getIdMon(String magv) {
+        return gvDAO.getMonHocId(magv);
+    }
+
     public GiaoVienDTO getGV(String magv) {
         for (GiaoVienDTO gv : dsgv) {
             if (gv.getMaGV().equals(magv)) {
@@ -88,39 +104,33 @@ public class GiaoVienBUS {
     }
 
     public void ImportExcelDatabase(File file) {
-        GiaoVienDAO gvDAO = new GiaoVienDAO();
         gvDAO.ImportExcelDatabase(file);
     }
 
     public Integer CountGV() {
-        GiaoVienDAO gv = new GiaoVienDAO();
-        return gv.CountGV();
+        return gvDAO.CountGV();
     }
 
     public void updateGV(GiaoVienDTO s) {
-        GiaoVienDAO gvDAO = new GiaoVienDAO(); // Khởi tạo DAO một lần
-    
-        boolean isUpdated = false; // Cờ để kiểm tra xem có bản ghi nào được cập nhật hay không
+        boolean isUpdated = false;
         for (int i = 0; i < dsgv.size(); i++) {
             if (dsgv.get(i).getMaGV().equals(s.getMaGV())) {
                 dsgv.set(i, s); // Cập nhật đối tượng trong danh sách
                 gvDAO.Update(s); // Cập nhật cơ sở dữ liệu
-                isUpdated = true; // Đánh dấu là đã cập nhật
-                break; // Thoát vòng lặp sau khi tìm thấy và cập nhật
+                isUpdated = true;
+                break;
             }
         }
         
-        // Nếu không tìm thấy giáo viên trong danh sách, in ra thông báo
         if (!isUpdated) {
             System.out.println("Không tìm thấy giáo viên có mã: " + s.getMaGV());
         }
     }
-    
 
     public static void main(String[] args) {
         GiaoVienBUS giaoVienBUS = new GiaoVienBUS();
 
-        // Display all teachers
+        // Hiển thị tất cả giáo viên
         ArrayList<GiaoVienDTO> dsgv = giaoVienBUS.getList();
         for (GiaoVienDTO gv : dsgv) {
             System.out.println("MaGV: " + gv.getMaGV());
