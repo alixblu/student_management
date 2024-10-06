@@ -489,7 +489,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
     public boolean addRow() {
         // Kiểm tra nếu các trường cần thiết không trống
-        if (tf[1].getText().isEmpty() || tf[4].getText().isEmpty() || tf[5].getText().isEmpty() || tf[7].getText().isEmpty()) {
+        if (tf[1].getText().isEmpty() || tf[4].getText().isEmpty() || tf[5].getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
             return false;
         }
