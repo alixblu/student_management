@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -30,7 +31,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
-
+import java.util.Calendar;
 import BUS.ChangeAcc_BUS;
 import BUS.MonHocBUS;
 import DTO.MonHocDTO;
@@ -51,7 +52,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
+import javax.swing.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -254,30 +257,41 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         Pchucnang.add(btnExpExcel);
         return Pchucnang;
     }
-
+    public int calculateAge(Date birthDate) {
+        Calendar birthCal = Calendar.getInstance();
+        birthCal.setTime(birthDate);
+        int birthYear = birthCal.get(Calendar.YEAR);
+    
+        Calendar currentCal = Calendar.getInstance();
+        int currentYear = currentCal.get(Calendar.YEAR);
+    
+        return currentYear - birthYear; // Đơn giản tính toán tuổi
+    }
+    
     public JPanel JHocsinh() {
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
+        
         pcBUS.listMagv();
-        // pcBUS.listTenmh();
         pcBUS.listTenlop();
+        
         ArrayList<String> listlop = pcBUS.getTenLopList();
         ArrayList<MonHocDTO> listmh = mhBus.getList();
         ArrayList<String> listmagv = pcBUS.getMaGVList();
-        String[] arrHocsinh = { "Mã giáo viên ", "Tên giáo viên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại", "Phân môn",
-                "Chọn ảnh" };
+        
+        String[] arrHocsinh = { "Mã giáo viên ", "Tên giáo viên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại", "Phân môn", "Chọn ảnh" };
         int length = arrHocsinh.length;
         tf = new JTextField[length];
         buttons = new JButton[length];
-        Phocsinh.setLayout(null);
+        
         int toadoXbutton = 190;
         int toadoYbutton = 10;
         int toadoXTextfield = 330;
         int toadoYTextfield = 10;
         int x = 230;
         int y = 15;
+        
         for (int i = 0; i < arrHocsinh.length; i++) {
-
             if (i == 7) {
                 buttons[i] = new JButton(arrHocsinh[i]);
                 buttons[i].addActionListener(new ActionListener() {
@@ -291,42 +305,56 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                 buttons[i].setHorizontalAlignment(JButton.CENTER);
                 buttons[i].setName("btn" + i);
                 Phocsinh.add(buttons[i]);
-            } 
-             
-             else {
+            } else {
                 buttons[i] = new JButton(arrHocsinh[i]);
                 buttons[i].setBounds(toadoXbutton, toadoYbutton, 120, 30);
                 buttons[i].setHorizontalAlignment(JButton.CENTER);
                 buttons[i].setName("btn" + i);
             }
-
+    
             toadoYbutton = toadoYbutton + 35;
             Phocsinh.add(buttons[i]);
+            
             if (i == 6) {
                 MonHocBUS mhBus = new MonHocBUS();
-                ArrayList<String> tenMonHocs = mhBus.getTenMonHocs();;
+                ArrayList<String> tenMonHocs = mhBus.getTenMonHocs();
                 phanmonComboBox = new JComboBox<>(tenMonHocs.toArray(new String[0]));        
                 phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(phanmonComboBox);
                 toadoYTextfield = toadoYTextfield + 35;
-            }
-            else if (i == 3) {
+            } else if (i == 3) {
                 dateChooser = new JDateChooser();
                 dateChooser.setDateFormatString("dd/MM/yyyy");
                 dateChooser.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(dateChooser);
+                
+                // Kiểm tra tuổi hợp lệ khi người dùng thay đổi ngày sinh
+                dateChooser.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("date".equals(evt.getPropertyName())) {
+                            Date selectedDate = dateChooser.getDate();
+                            if (selectedDate != null) {
+                                // Gọi phương thức calculateAge từ lớp hiện tại
+                                int age = QLGV.this.calculateAge(selectedDate); // Sử dụng tên lớp bên ngoài
+                                if (!checkAgeValid(age)) {
+                                    dateChooser.setDate(null); // Xóa ngày đã chọn
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                
+    
                 toadoYTextfield = toadoYTextfield + 35;
-
-            }
-             else if (i == 2) { // Thay thế TextField của giới tính bằng JComboBox
+            } else if (i == 2) { 
                 String[] genders = { "Nam", "Nữ", "Khác" };
                 genderComboBox = new JComboBox<>(genders);
                 genderComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(genderComboBox);
                 toadoYTextfield = toadoYTextfield + 35;
-
-            } 
-            else {
+            } else {
                 tf[i] = new JTextField();
                 tf[i].setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
@@ -335,24 +363,27 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                 toadoYTextfield = toadoYTextfield + 35;
                 Phocsinh.add(tf[i]);
             }
+            
             tf[0].setEditable(false);
             y = y + 35;
         }
+        
         x = x + 180;
         JPanel Pchucnang = JChucnang();
         Pchucnang.setBounds(660, 3, 170, y);
         Phocsinh.add(Pchucnang);
-
+    
         lblimg = new JLabel();
-        lblimg.setBounds(0, 0, 180, y-80);
+        lblimg.setBounds(0, 0, 180, y - 80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
         lblimg.setOpaque(true);
         Phocsinh.add(lblimg);
+        
         Phocsinh.setPreferredSize(new Dimension(x, y));
-
+    
         return Phocsinh;
     }
-
+    
     public JScrollPane initTable() throws SQLException {
 
         t = new JTable();
@@ -401,7 +432,31 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         return scrollpane;
     }
-
+    public boolean checkAgeValid(int age) {
+        // Lấy năm sinh từ JDateChooser
+        java.util.Date selectedDate = dateChooser.getDate(); 
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày sinh!");
+            return false;
+        }
+    
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(selectedDate);
+        int yearOfBirth = cal.get(Calendar.YEAR);
+    
+        // Tính tuổi
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        age = currentYear - yearOfBirth;
+    
+        // Kiểm tra tuổi có nằm trong khoảng 20 đến 55
+        if (age < 20 || age > 55) {
+            JOptionPane.showMessageDialog(null, "Tuổi phải lớn hơn 20 và nhỏ hơn 55!");
+            return false;
+        }
+    
+        return true;
+    }
+    
     public void chooseImage() {
         JFileChooser fileChooser = new JFileChooser();
         // Thiết lập chế độ chỉ cho phép chọn file
@@ -432,44 +487,67 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         }
     }
 
-    public void addRow() {
+    public boolean addRow() {
+        // Kiểm tra nếu các trường cần thiết không trống
+        if (tf[1].getText().isEmpty() || tf[4].getText().isEmpty() || tf[5].getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
+            return false;
+        }
+    
+        // Kiểm tra tính hợp lệ của số điện thoại
+        String soDienThoai = tf[5].getText();
+        if (!isValidPhoneNumber(soDienThoai)) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!");
+            return false;
+        }
+    
+        // Kiểm tra tính hợp lệ của tên giáo viên
+        String tenGV = tf[1].getText();
+        if (!isValidTeacherName(tenGV)) {
+            JOptionPane.showMessageDialog(null, "Tên giáo viên không hợp lệ. Chỉ được chứa chữ hoa, chữ thường và khoảng trắng!");
+            return false;
+        }
+    
+        // Vô hiệu hóa phân môn sau khi thêm
         phanmonComboBox.setEnabled(false);
-
+    
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
         String dateString = sdf.format(date); // Convert Date to String
     
         // Lấy các giá trị từ các trường nhập
         Integer countGV = gvBUS.CountGV() + 1;
-        System.out.println("Số Giáo viên: " + countGV);
         String giaovienID = "GV" + countGV;
-        String tenGV = tf[1].getText();
         String gioiTinh = (String) genderComboBox.getSelectedItem();
-        String ngaySinh = dateString;
-        String diaChi = tf[4].getText();
-        String soDienThoai = tf[5].getText();
         String phanMon = (String) phanmonComboBox.getSelectedItem();
         String IMG = tf[7].getText();
     
         // Tạo đối tượng giáo viên mới
-        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, ngaySinh, soDienThoai, phanMon, diaChi);
-        
+        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, dateString, soDienThoai, phanMon, tf[4].getText());
+    
         // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
-        user gvuser = new user(giaovienID, soDienThoai, "GV", "1");
-        User_BUS bus = new User_BUS(1);
-        bus.add(gvuser);
+    
         // Thêm dữ liệu vào bảng
-        Object[] rowData = { giaovienID, tenGV, gioiTinh, ngaySinh, diaChi, soDienThoai, phanMon, IMG };
+        Object[] rowData = { giaovienID, tenGV, gioiTinh, dateString, tf[4].getText(), soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
     
         // Gọi phương thức clearTextFields() để xóa dữ liệu cũ
         clearTextFields();
     
-        // Vô hiệu hóa phân môn sau khi thêm giáo viên
+        return true; // Trả về true để xác nhận rằng việc thêm thành công
     }
     
-
+    // Phương thức kiểm tra tính hợp lệ của số điện thoại
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        return phoneNumber.matches("0\\d{9}"); // Kiểm tra bắt đầu từ 0 và có đủ 10 số
+    }
+    
+    // Phương thức kiểm tra tính hợp lệ của tên giáo viên
+    private boolean isValidTeacherName(String name) {
+        return name.matches("[A-Za-zÀ-ÿ\\s]+"); // Chỉ cho phép chữ và khoảng trắng
+    }
+ 
     public void deleteRow() {
         int row = t.getSelectedRow();
         if (row != -1) {
@@ -507,13 +585,13 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     public void updateRow() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
-        
+    
         // Kiểm tra xem ngày có hợp lệ không
         if (date == null) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sinh hợp lệ.");
             return;
         }
-        
+    
         String dateString = sdf.format(date);
     
         // Lấy các giá trị từ các trường nhập
@@ -533,10 +611,22 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             return;
         }
     
+        // Kiểm tra tính hợp lệ của số điện thoại
+        if (!isValidPhoneNumber(soDienThoai)) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!");
+            return;
+        }
+    
+        // Kiểm tra tính hợp lệ của tên giáo viên
+        if (!isValidTeacherName(tenGiaoVien)) {
+            JOptionPane.showMessageDialog(null, "Tên giáo viên không hợp lệ. Chỉ được chứa chữ hoa, chữ thường và khoảng trắng!");
+            return;
+        }
+    
         // Khởi tạo đối tượng GiaoVienDTO
         GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGiaoVien, gioiTinh, IMG, ngaySinh, soDienThoai, phanMon, diaChi);
     
-        // Gọi phương thức cập nhật từ GiaoVienBUS (không cần kiểm tra giá trị trả về)
+        // Gọi phương thức cập nhật từ GiaoVienBUS
         gvBUS.updateGV(giaovien);
     
         // Cập nhật bảng nếu quá trình cập nhật cơ sở dữ liệu thành công
@@ -550,21 +640,20 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn để cập nhật.");
         }
     }
+
+    public void clearTextFields() {
+        phanmonComboBox.setEnabled(true);
+        tf[0].setText("");
+        tf[1].setText("");
+        genderComboBox.setSelectedItem(null); // Thiết lập cho genderComboBox trống
+        dateChooser.setDate(null);
+        tf[4].setText("");
+        tf[5].setText("");
+        phanmonComboBox.setSelectedItem(null); // Thiết lập cho phanmonComboBox trống
+        tf[7].setText("");
+        lblimg.setIcon(null);
+    }
     
-
-
-public void clearTextFields() {
-    phanmonComboBox.setEnabled(true);
-    tf[0].setText("");
-    tf[1].setText("");
-    genderComboBox.setSelectedItem(null); // Thiết lập cho genderComboBox trống
-    dateChooser.setDate(null);
-    tf[4].setText("");
-    tf[5].setText("");
-    phanmonComboBox.setSelectedItem(null); // Thiết lập cho phanmonComboBox trống
-    tf[7].setText("");
-    lblimg.setIcon(null);
-}
 
 
     public boolean checkEmpty() {
@@ -626,32 +715,66 @@ public void clearTextFields() {
     
 
     public void btnAdd_actionPerformed() {
+        // Kiểm tra xem tất cả các trường nhập liệu có đầy đủ không
         if (checkEmpty()) {
-            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        
-
-        JOptionPane.showMessageDialog(this, "Mã giáo viên tăng tự động", "Lưu ý", JOptionPane.INFORMATION_MESSAGE);
-
+    
+        // Kiểm tra thông tin giáo viên trước khi thêm
+        if (!isValidTeacherInfo()) {
+            // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
+            return;
+        }
+    
+        // Xác nhận thêm giáo viên
         int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn Thêm giáo viên này",
+                "Bạn có chắc muốn Thêm giáo viên này?",
                 "Xác nhận",
                 JOptionPane.YES_NO_OPTION,
-
                 JOptionPane.QUESTION_MESSAGE);
+    
         if (result == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this,
-                    "Thêm thành công",
-                    "Chức năng thêm",
-                    JOptionPane.INFORMATION_MESSAGE);
-            System.out.println("Ban chon them");
-            tf[0].requestFocus();
-            addRow();
+            addRow(); // Gọi phương thức addRow để thêm giáo viên
+            JOptionPane.showMessageDialog(this, "Thêm thành công", "Chức năng thêm", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Đã hủy thao tác thêm giáo viên", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
+    
+        tf[0].requestFocus(); // Đặt con trỏ vào trường ID giáo viên
     }
+    
+    // Phương thức kiểm tra tính hợp lệ của thông tin giáo viên
+    private boolean isValidTeacherInfo() {
+        String tenGiaoVien = tf[1].getText();
+        String soDienThoai = tf[5].getText();
+        String diaChi = tf[4].getText();
+        String IMG = tf[7].getText();
+    
+        // Kiểm tra tính hợp lệ cho các trường thông tin cần thiết
+        if (!isValidPhoneNumber(soDienThoai)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (gvBUS.checkPhoneNumberExists(soDienThoai)) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại này đã tồn tại!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!isValidTeacherName(tenGiaoVien)) {
+            JOptionPane.showMessageDialog(this, "Tên giáo viên không hợp lệ. Chỉ được chứa chữ hoa, chữ thường và khoảng trắng!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        // Thêm kiểm tra cho địa chỉ và ảnh (IMG) nếu cần
+        if (diaChi.isEmpty() || diaChi.matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(null, "Địa chỉ không được bỏ trống và không chỉ chứa số!");
+            return false;
+        }
+    
+        return true; // Nếu tất cả các trường thông tin hợp lệ
+    }
+    
+    
+    
 
     public void btnDelete_actionPerformed() {
         String magv = tf[0].getText();

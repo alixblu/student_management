@@ -437,15 +437,12 @@ INSERT INTO `thongbao` (`idnguoigui`, `tieudetb`, `noidungtb`, `thoigiantb`, `lo
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `role` varchar(50) NOT NULL,
-  `enable` tinyint(1) NOT NULL DEFAULT 1
+  `username` VARCHAR(50) COLLATE utf8_bin NOT NULL,
+  `password` VARCHAR(50) COLLATE utf8_bin NOT NULL,
+  `role` VARCHAR(50) NOT NULL,
+  `enable` TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `user`
---
 
 INSERT INTO `user` (`username`, `password`, `role`, `enable`) VALUES
 ('admin', 'admin', 'admin', 1),
