@@ -143,43 +143,44 @@ public class TestDN extends JFrame {
         // actionlistner
         jbxacnhan.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+        
                 if (jtf1.getText().equals("")) {
                     JOptionPane.showMessageDialog(jpright, "Bạn chưa nhập tài khoản");
+                    return;
                 }
                 if (String.valueOf(jtf2.getPassword()).equals("")) {
                     JOptionPane.showMessageDialog(jpright, "Bạn chưa nhập mật khẩu");
-                } else {
-                    Connection con = mysql.getConnection();
-                    PreparedStatement ps;
-
-                    try {
-                        ps = con.prepareStatement("SELECT * FROM user WHERE username = ? AND password = ?");
-                        ps.setString(1, jtf1.getText());
-                        ps.setString(2, String.valueOf(jtf2.getPassword()));
-
-                        ResultSet rs = ps.executeQuery();
-                        if (rs.next()) {
-                            System.out.println("Yes");
-                            userName = jtf1.getText();
-                            // System.out.println(username);
-                            Text mf = new Text(userName);
-                            // Calculator mf=new Calculator();
-                            mf.setVisible(true);
-                            // mf.pack();
-                            mf.setLocationRelativeTo(null);
-                            TestDN.this.dispose();
-
-                        } else {
-                            System.out.println("NO");
-                            JOptionPane.showMessageDialog(jpright, "Tài khoản không chính xác");
-                        }
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
+                    return;
+                }
+        
+                Connection con = mysql.getConnection();
+                PreparedStatement ps;
+        
+                try {
+                    // Sử dụng BINARY để so sánh phân biệt
+                    ps = con.prepareStatement("SELECT * FROM user WHERE BINARY username = ? AND BINARY password = ?");
+                    ps.setString(1, jtf1.getText());
+                    ps.setString(2, String.valueOf(jtf2.getPassword()));
+        
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()) {
+                        System.out.println("Yes");
+                        userName = jtf1.getText();
+                        Text mf = new Text(userName);
+                        mf.setVisible(true);
+                        mf.setLocationRelativeTo(null);
+                        TestDN.this.dispose();
+                    } else {
+                        System.out.println("NO");
+                        JOptionPane.showMessageDialog(jpright, "Tài khoản không chính xác");
                     }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
+        
+        
 
         jbxacnhan.setForeground(Color.blue);
         jbxacnhan.setBackground(Color.gray);
