@@ -618,13 +618,16 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
 
     public void clearTextFields() {
-        for (JTextField field : tf) {
-            field.setText("");
-        }
-        phanmonComboBox.setSelectedIndex(0);
-        genderComboBox.setSelectedIndex(0);
+        phanmonComboBox.setEnabled(true);
+        tf[0].setText("");
+        tf[1].setText("");
+        genderComboBox.setSelectedItem(null); // Thiết lập cho genderComboBox trống
         dateChooser.setDate(null);
-        lblimg.setIcon(null); // Xóa hình ảnh trên JLabel
+        tf[4].setText("");
+        tf[5].setText("");
+        phanmonComboBox.setSelectedItem(null); // Thiết lập cho phanmonComboBox trống
+        tf[7].setText("");
+        lblimg.setIcon(null);
     }
     
 
