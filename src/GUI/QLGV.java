@@ -868,7 +868,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
             Row headerRow = sheet.createRow(0); 
-            String[] headers = { "STT", "GiaovienID", "Tên Giáo viên", "Giới Tính", "Năm Sinh", "Địa chỉ", "SĐT", "Phân môn", "Ảnh chân dung" };
+            String[] headers = { "STT", "Mã giáo viên", "Họ và tên", "Giới Tính", "Năm Sinh", "Địa chỉ", "SĐT", "Phân môn", "Ảnh chân dung" };
     
             // Creating header cells
             for (int i = 0; i < headers.length; i++) {
