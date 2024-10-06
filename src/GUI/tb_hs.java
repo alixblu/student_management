@@ -64,7 +64,8 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
 
 
     PhanLopBUS plBus = new PhanLopBUS(1);
-    ArrayList<ThongBaoDTO> filteredList;
+    private ArrayList<ThongBaoDTO> filteredList;
+    private ArrayList<ThongBaoDTO> hs;
 
     public tb_hs(int width, int height,String username) throws SQLException {
         this.width = width;
@@ -190,11 +191,11 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
         if (tbBUS.getList() == null) {
             tbBUS.list();
         }
-        ArrayList<ThongBaoDTO> hs = tbBUS.getList();
+        hs = tbBUS.getList();
 
         System.out.println("Danh sách thông báo: " + hs.size());
 
-        filteredList = new ArrayList<>();
+        filteredList = new ArrayList<ThongBaoDTO>();
         
         // plBus = new PhanLopBUS();
         for (ThongBaoDTO thongbao : hs) {

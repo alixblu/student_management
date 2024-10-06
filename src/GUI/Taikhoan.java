@@ -616,61 +616,62 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
     
 
     public void exportExcel() throws IOException {
+        ArrayList<user> dsu = uBUS.getList();
+    
+        if (dsu.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Danh sách tài khoản trống, không có dữ liệu để xuất.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return; 
+        }
+    
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
         chooser.setFileFilter(filter);
         chooser.setDialogTitle("Lưu tệp");
         chooser.setAcceptAllFileFilterUsed(false);
+        
         if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().toString().concat(".xls");
-
+    
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachTaikhoan");
-            Row headerRow = sheet.createRow(0); // Header row at index 0
-            String[] headers = { "STT", "username", "Password", "role", "enable"};
-
-            // Creating header cells
+    
+            Row headerRow = sheet.createRow(0);
+            String[] headers = { "STT", "Username", "Password", "Role", "Trạng thái" };
+    
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
             }
-
-            ArrayList<user> dsu = uBUS.getList();
+    
             for (int i = 0; i < dsu.size(); i++) {
-                Row row = sheet.createRow(i + 1); // Data rows start from index 1
-
+                Row row = sheet.createRow(i + 1); 
+    
                 user User = dsu.get(i);
-                System.out.println(User.getusername());
-
-                row.createCell(0).setCellValue(i + 1);
-                row.createCell(1).setCellValue(User.getusername());
-                row.createCell(2).setCellValue(User.getpassword());
-                row.createCell(3).setCellValue(User.getrole());
-                row.createCell(4).setCellValue(User.getenable());
+    
+                row.createCell(0).setCellValue(i + 1); // STT
+                row.createCell(1).setCellValue(User.getusername()); // Username
+                row.createCell(2).setCellValue(User.getpassword()); // Password
+                row.createCell(3).setCellValue(User.getrole()); // Role
+                row.createCell(4).setCellValue(User.getenable()); // Trạng thái
             }
-
-            // String path = "D:/Coding/N2_HK2/DAJAVA/java_nhom_9/Excel/hsss.xlsx";
+    
             File file = new File(path);
             if (file.exists()) {
-                file.delete();
+                file.delete(); 
             }
             file.createNewFile();
-
-            try {
-                FileOutputStream fos = new FileOutputStream(file);
-                workbook.write(fos);
-                // workbook.close();
-                // fos.close();
-                System.out.println("Excel file exported successfully to: " + path);
+    
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                workbook.write(fos); 
             } catch (IOException e) {
                 e.printStackTrace();
-                // Handle exception
             }
-            JOptionPane.showMessageDialog(this, "IN THÀNH CÔNG");
-            Desktop.getDesktop().open(file);
-
+    
+            JOptionPane.showMessageDialog(this, "Dữ liệu đã được xuất thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            Desktop.getDesktop().open(file); // Open the file after saving
         }
     }
+    
 
     public void autoCreateAccount() {
         String username = tf[0].getText();
