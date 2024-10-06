@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -30,7 +31,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
-
+import java.util.Calendar;
 import BUS.ChangeAcc_BUS;
 import BUS.MonHocBUS;
 import DTO.MonHocDTO;
@@ -51,7 +52,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
+import javax.swing.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -254,30 +257,41 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         Pchucnang.add(btnExpExcel);
         return Pchucnang;
     }
-
+    public int calculateAge(Date birthDate) {
+        Calendar birthCal = Calendar.getInstance();
+        birthCal.setTime(birthDate);
+        int birthYear = birthCal.get(Calendar.YEAR);
+    
+        Calendar currentCal = Calendar.getInstance();
+        int currentYear = currentCal.get(Calendar.YEAR);
+    
+        return currentYear - birthYear; // Đơn giản tính toán tuổi
+    }
+    
     public JPanel JHocsinh() {
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
+        
         pcBUS.listMagv();
-        // pcBUS.listTenmh();
         pcBUS.listTenlop();
+        
         ArrayList<String> listlop = pcBUS.getTenLopList();
         ArrayList<MonHocDTO> listmh = mhBus.getList();
         ArrayList<String> listmagv = pcBUS.getMaGVList();
-        String[] arrHocsinh = { "Mã giáo viên ", "Tên giáo viên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại", "Phân môn",
-                "Chọn ảnh" };
+        
+        String[] arrHocsinh = { "Mã giáo viên ", "Tên giáo viên", "Giới tính", "Năm sinh", "Địa chỉ", "Số điện thoại", "Phân môn", "Chọn ảnh" };
         int length = arrHocsinh.length;
         tf = new JTextField[length];
         buttons = new JButton[length];
-        Phocsinh.setLayout(null);
+        
         int toadoXbutton = 190;
         int toadoYbutton = 10;
         int toadoXTextfield = 330;
         int toadoYTextfield = 10;
         int x = 230;
         int y = 15;
+        
         for (int i = 0; i < arrHocsinh.length; i++) {
-
             if (i == 7) {
                 buttons[i] = new JButton(arrHocsinh[i]);
                 buttons[i].addActionListener(new ActionListener() {
@@ -291,42 +305,56 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                 buttons[i].setHorizontalAlignment(JButton.CENTER);
                 buttons[i].setName("btn" + i);
                 Phocsinh.add(buttons[i]);
-            } 
-             
-             else {
+            } else {
                 buttons[i] = new JButton(arrHocsinh[i]);
                 buttons[i].setBounds(toadoXbutton, toadoYbutton, 120, 30);
                 buttons[i].setHorizontalAlignment(JButton.CENTER);
                 buttons[i].setName("btn" + i);
             }
-
+    
             toadoYbutton = toadoYbutton + 35;
             Phocsinh.add(buttons[i]);
+            
             if (i == 6) {
                 MonHocBUS mhBus = new MonHocBUS();
-                ArrayList<String> tenMonHocs = mhBus.getTenMonHocs();;
+                ArrayList<String> tenMonHocs = mhBus.getTenMonHocs();
                 phanmonComboBox = new JComboBox<>(tenMonHocs.toArray(new String[0]));        
                 phanmonComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(phanmonComboBox);
                 toadoYTextfield = toadoYTextfield + 35;
-            }
-            else if (i == 3) {
+            } else if (i == 3) {
                 dateChooser = new JDateChooser();
                 dateChooser.setDateFormatString("dd/MM/yyyy");
                 dateChooser.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(dateChooser);
+                
+                // Kiểm tra tuổi hợp lệ khi người dùng thay đổi ngày sinh
+                dateChooser.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        if ("date".equals(evt.getPropertyName())) {
+                            Date selectedDate = dateChooser.getDate();
+                            if (selectedDate != null) {
+                                // Gọi phương thức calculateAge từ lớp hiện tại
+                                int age = QLGV.this.calculateAge(selectedDate); // Sử dụng tên lớp bên ngoài
+                                if (!checkAgeValid(age)) {
+                                    dateChooser.setDate(null); // Xóa ngày đã chọn
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                
+    
                 toadoYTextfield = toadoYTextfield + 35;
-
-            }
-             else if (i == 2) { // Thay thế TextField của giới tính bằng JComboBox
+            } else if (i == 2) { 
                 String[] genders = { "Nam", "Nữ", "Khác" };
                 genderComboBox = new JComboBox<>(genders);
                 genderComboBox.setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 Phocsinh.add(genderComboBox);
                 toadoYTextfield = toadoYTextfield + 35;
-
-            } 
-            else {
+            } else {
                 tf[i] = new JTextField();
                 tf[i].setBounds(toadoXTextfield, toadoYTextfield, 320, 30);
                 tf[i].setFont(new Font("Arial", Font.BOLD, 12));
@@ -335,24 +363,27 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                 toadoYTextfield = toadoYTextfield + 35;
                 Phocsinh.add(tf[i]);
             }
+            
             tf[0].setEditable(false);
             y = y + 35;
         }
+        
         x = x + 180;
         JPanel Pchucnang = JChucnang();
         Pchucnang.setBounds(660, 3, 170, y);
         Phocsinh.add(Pchucnang);
-
+    
         lblimg = new JLabel();
-        lblimg.setBounds(0, 0, 180, y-80);
+        lblimg.setBounds(0, 0, 180, y - 80);
         lblimg.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
         lblimg.setOpaque(true);
         Phocsinh.add(lblimg);
+        
         Phocsinh.setPreferredSize(new Dimension(x, y));
-
+    
         return Phocsinh;
     }
-
+    
     public JScrollPane initTable() throws SQLException {
 
         t = new JTable();
@@ -401,7 +432,31 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         return scrollpane;
     }
-
+    public boolean checkAgeValid(int age) {
+        // Lấy năm sinh từ JDateChooser
+        java.util.Date selectedDate = dateChooser.getDate(); 
+        if (selectedDate == null) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ngày sinh!");
+            return false;
+        }
+    
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(selectedDate);
+        int yearOfBirth = cal.get(Calendar.YEAR);
+    
+        // Tính tuổi
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        age = currentYear - yearOfBirth;
+    
+        // Kiểm tra tuổi có nằm trong khoảng 20 đến 55
+        if (age < 20 || age > 55) {
+            JOptionPane.showMessageDialog(null, "Tuổi phải lớn hơn 20 và nhỏ hơn 55!");
+            return false;
+        }
+    
+        return true;
+    }
+    
     public void chooseImage() {
         JFileChooser fileChooser = new JFileChooser();
         // Thiết lập chế độ chỉ cho phép chọn file
@@ -433,8 +488,15 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     }
 
     public void addRow() {
-        phanmonComboBox.setEnabled(false);
+        // Kiểm tra nếu các trường cần thiết không trống
+        if (tf[1].getText().isEmpty() || tf[4].getText().isEmpty() || tf[5].getText().isEmpty() || tf[7].getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
+            return;
+        }
 
+        // Vô hiệu hóa phân môn sau khi thêm
+        phanmonComboBox.setEnabled(false);
+    
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
         String dateString = sdf.format(date); // Convert Date to String
@@ -456,18 +518,20 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         
         // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
+    
+        // Thêm người dùng giáo viên vào hệ thống
         user gvuser = new user(giaovienID, soDienThoai, "GV", "1");
         User_BUS bus = new User_BUS(1);
         bus.add(gvuser);
+    
         // Thêm dữ liệu vào bảng
         Object[] rowData = { giaovienID, tenGV, gioiTinh, ngaySinh, diaChi, soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
     
         // Gọi phương thức clearTextFields() để xóa dữ liệu cũ
         clearTextFields();
-    
-        // Vô hiệu hóa phân môn sau khi thêm giáo viên
     }
+    
     
 
     public void deleteRow() {
@@ -553,18 +617,16 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     
 
 
-public void clearTextFields() {
-    phanmonComboBox.setEnabled(true);
-    tf[0].setText("");
-    tf[1].setText("");
-    genderComboBox.setSelectedItem(null); // Thiết lập cho genderComboBox trống
-    dateChooser.setDate(null);
-    tf[4].setText("");
-    tf[5].setText("");
-    phanmonComboBox.setSelectedItem(null); // Thiết lập cho phanmonComboBox trống
-    tf[7].setText("");
-    lblimg.setIcon(null);
-}
+    public void clearTextFields() {
+        for (JTextField field : tf) {
+            field.setText("");
+        }
+        phanmonComboBox.setSelectedIndex(0);
+        genderComboBox.setSelectedIndex(0);
+        dateChooser.setDate(null);
+        lblimg.setIcon(null); // Xóa hình ảnh trên JLabel
+    }
+    
 
 
     public boolean checkEmpty() {
