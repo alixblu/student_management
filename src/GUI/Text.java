@@ -44,7 +44,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
 
     public Text(String username) throws SQLException {
         this.userName = username;
-        Toolkit screen = Toolkit.getDefaultToolkit();
+        // Toolkit screen = Toolkit.getDefaultToolkit();
         init();
         setTitle("Quản lý học sinh ");
         // item.addMouseListener(this);
@@ -266,11 +266,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
 
             case "CN6": // Quản lý Tài khoản
                 main.removeAll();
-                try {
-                    main.add(new Taikhoan(850, 670));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                main.add(new Taikhoan(850, 670));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -296,11 +292,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
 
             case "CN10": // Thống kê
                 main.removeAll();
-                try {
-                    main.add(new ThongKe(850, 670));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                main.add(new ThongKe(850, 670));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -314,11 +306,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
 
             case "CN12": // Danh sách HS
                 main.removeAll();
-                try {
-                    main.add(new QuanLiHocSinh_GV(850, 670));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                main.add(new QuanLiHocSinh_GV(850, 670));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -332,11 +320,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
 
             case "CN14": // Thông tin tài khoản GV
                 main.removeAll();
-                try {
-                    main.add(new TTTK_GV(850, 670, userName));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                main.add(new TTTK_GV(850, 670, userName));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -350,11 +334,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
 
             case "CN16":// GV nhận thông báo
                 main.removeAll();
-                try {
-                    main.add(new tb_gv(850,670,userName));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                main.add(new tb_gv(850,670,userName));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -366,12 +346,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
                 break;
             case "CN18": // Xem điểm HS
                 main.removeAll();
-                try {
-                    main.add(new diemHS(userName));
-                } catch (SQLException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                main.add(new diemHS(userName));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -383,12 +358,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
                 break;
             case "CN20": // Xem thông tin tài khoản HS
                 main.removeAll();
-                try {
-                    main.add(new TTTK_HS(850, 670, userName));
-                } catch (SQLException e) {
-                    System.out.println("khong vao duoc");
-                    e.printStackTrace();
-                }
+                main.add(new TTTK_HS(850, 670, userName));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -399,17 +369,17 @@ public class Text extends JFrame implements MouseListener, ActionListener {
                 main.revalidate();
                 break;
             case "CN22":// HS nhận thông báo
-            main.removeAll();
-            try {
+            // try {
+                main.removeAll();
                 System.out.println("THông báo học sinh"  + userName);
                 main.add(new tb_hs( 850, 670, userName));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
                 main.repaint();
                 main.revalidate();
                 break;
-            }
+            // } catch (SQLException e) {
+            //     e.printStackTrace();
+            // }
+        }
     }
 
     public void outNav() {

@@ -687,6 +687,11 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     
 
     public void exportExcel() throws IOException {
+        if (tblmodel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Bảng trống, không có dữ liệu để xuất.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return; 
+        }
+    
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
         chooser.setFileFilter(filter);
@@ -694,36 +699,37 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
         chooser.setAcceptAllFileFilterUsed(false);
         if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().toString().concat(".xls");
-
+    
             Workbook workbook = new HSSFWorkbook();
-
+    
             Sheet sheet = workbook.createSheet("DanhSachPhanCong");
             Row headerRow = sheet.createRow(0);
-            String[] headers = { "Mã giáo viên", "Tên Giáo Viên", "Tên lớp" };
-
+            String[] headers = { "Mã giáo viên", "Tên Giáo Viên", "Môn dạy học", "Tên lớp" };
+    
+            // Create header cells
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
             }
-
+    
             for (int i = 0; i < tblmodel.getRowCount(); i++) {
                 Row row = sheet.createRow(i + 1);
-
+    
                 for (int j = 0; j < tblmodel.getColumnCount(); j++) {
                     Cell cell = row.createCell(j);
                     cell.setCellValue(tblmodel.getValueAt(i, j).toString());
                 }
             }
-
+    
             try (FileOutputStream fos = new FileOutputStream(path)) {
                 workbook.write(fos);
             }
-
-            JOptionPane.showMessageDialog(this, "Dữ liệu đã được xuất thành công.", "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
+    
+            JOptionPane.showMessageDialog(this, "Dữ liệu đã được xuất thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             Desktop.getDesktop().open(new File(path));
         }
     }
+    
 
     @Override
     public void mouseClicked(MouseEvent e) {
