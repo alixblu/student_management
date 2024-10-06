@@ -636,13 +636,9 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             JOptionPane.showMessageDialog(this, "Không tồn tại ID này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        else if(checkTenHS(tf[1].getText())==false)
+        else if(checkTen(tf[1].getText())==false)
         {
-            String tmp = "ư ơ â ă ê ấ ớ ắ ẫ ứ  ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠứựữừ";
-            System.out.println("Input: '" + tmp + "'");
-            boolean check = checkTenHS(tmp);
-            System.out.println("Is valid: " + check);
-            
+            System.out.println("Sai teen roi efeetge");
             JOptionPane.showMessageDialog(this, "Tên học sinh không hợp lệ!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -930,17 +926,17 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         return sdt.matches(regex);
     }
     
-    public boolean checkTenHS(String ten) {
-        // Biểu thức chính quy để kiểm tra tên học sinh: chỉ chứa chữ cái và khoảng trắng.
-        String regex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠứựữừ-ỹ\\s]+$";
+    public boolean checkTen(String ten) {
+        // Updated regex with Unicode letter class and whitespace
+        String regex = "^[\\p{L}\\s]+$";
         
-        // Kiểm tra xem tên có khớp với biểu thức chính quy hay không
+        // Test against the regex
         return ten.matches(regex);
     }
     
     public boolean checkDiaChi(String tenDC) {
-        // Biểu thức chính quy để kiểm tra địa chỉ: thêm ký tự gạch chéo (/)
-        String regex = "^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+$";
+        // Biểu thức chính quy để kiểm tra địa chỉ: nếu chỉ có số thì phải có chữ cái, nếu không thì chỉ có chữ cái là được.
+        String regex = "^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+)$";
         
         // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
         return tenDC.matches(regex);
