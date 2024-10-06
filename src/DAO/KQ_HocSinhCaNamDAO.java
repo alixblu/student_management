@@ -28,14 +28,14 @@ public class KQ_HocSinhCaNamDAO {
                 String namhocid = rs.getString(2);
                 String hocluc = rs.getString(3);
                 String hanhkiem = rs.getString(4);
-                double diemtb = rs.getDouble(5);
+                Double diem = rs.getDouble(5);
                 String kq = rs.getString(6);
 
                 KQ_HocSinhCaNamDTO k = new KQ_HocSinhCaNamDTO(id, namhocid);
                 k.setHocLuc(hocluc);
                 k.setHanhKiem(hanhkiem);
                 k.setKetQua(kq);
-                k.setDiemTrungBinhNam(0.0);
+                k.setDiemTrungBinhNam(diem);
                 ds.add(k);
             }
             rs.close();
@@ -48,19 +48,19 @@ public class KQ_HocSinhCaNamDAO {
     }
 
     public void set(KQ_HocSinhCaNamDTO kqHS) {
-        System.out.println("error here");
-        MySQLConnect mySQL = new MySQLConnect();
-        double diemTrungBinhNam = kqHS.getDiemTrungBinhNam();
-        
+        System.out.println("error here set(KQ_HocSinhCaNamDTO kqHS)");
+        MySQLConnect mySQL = new MySQLConnect();        
         String sql = "UPDATE kqhocsinhcanam SET ";
         sql += "HocSinhid='" + kqHS.getHocSinhID() + "', ";
         sql += "NamHocid='" + kqHS.getNamHocID() + "', ";
         sql += "HocLuc='" + kqHS.getHocLuc() + "', ";
         sql += "HanhKiem='" + kqHS.getHanhKiem() + "', ";
+        sql += "KetQua='" + kqHS.getKetQua() + "', ";
+        sql += "Diemtb='" + kqHS.getDiemTrungBinhNam() + "', ";
 
         sql += " WHERE HocSinhid='" + kqHS.getHocSinhID() + "' AND ";
         sql += "NamHocid='" + kqHS.getNamHocID() + "'";
-        
+
         System.out.println(sql);
         
         mySQL.executeUpdate(sql);
@@ -75,7 +75,7 @@ public class KQ_HocSinhCaNamDAO {
         sql += "'" + kqHS.getNamHocID() + "',";
         sql += "'" + kqHS.getHocLuc() + "',";
         sql += "'" + kqHS.getHanhKiem() + "',";
-        sql += "'" + kqHS.getDiemTrungBinhNam() + "',";
+        sql +=  kqHS.getDiemTrungBinhNam() + ",";
         sql += "'" + kqHS.getKetQua() + "')";
     
         System.out.println(sql);
