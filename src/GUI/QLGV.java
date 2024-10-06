@@ -551,8 +551,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         }
     }
     
-
-
 public void clearTextFields() {
     phanmonComboBox.setEnabled(true);
     tf[0].setText("");

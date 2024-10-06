@@ -430,41 +430,43 @@ public class HocPhi extends JPanel{
         }
     }
     private class FilterBtnListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
-            tblModel.setRowCount(0);
+            // Remove the line that resets row count to prevent clearing data
+            // tblModel.setRowCount(0); 
+            
             String timkiem = (String) option1.getSelectedItem(); 
             String tenlop = (String) optionLop.getSelectedItem(); 
             String hocphi = (String) optionHP.getSelectedItem(); 
-            
-            String searchid = searchID.getText();
-
-            tblModel = (NonEditableTableModel) t.getModel();
+            String searchid = searchID.getText(); 
+    
+            tblModel = (DefaultTableModel) t.getModel();
             sorter = new TableRowSorter<>(tblModel);
             t.setRowSorter(sorter);
-
+    
             List<RowFilter<Object, Object>> filters = new ArrayList<>();
-
-            if(!searchid.isEmpty()){
+    
+            if (!searchid.isEmpty() && timkiem.equals("Mã HS")) {
                 filters.add(RowFilter.regexFilter(searchid, 0));
+            }
+            if (!searchid.isEmpty() && timkiem.equals("Tên HS")) {
+                filters.add(RowFilter.regexFilter("(?i)" + searchid, 1));
             }
             if (!tenlop.equals("Tất cả")) {
                 filters.add(RowFilter.regexFilter(tenlop, 2));
             }
             if (!hocphi.equals("Tất cả")) {
-                filters.add(RowFilter.regexFilter(hocphi, 3));
+                filters.add(RowFilter.regexFilter(hocphi, 6));
             }
-
-
-            // Apply combined filters
+    
             if (!filters.isEmpty()) {
-                sorter.setRowFilter(RowFilter.andFilter(filters));
+                sorter.setRowFilter(RowFilter.andFilter(filters)); // Apply combined filter
+            } else {
+                sorter.setRowFilter(null); // Show all if no filter is selected
             }
-
         }
-        
     }
+    
     private JPanel createFeePanel() {
         JPanel midFee = new JPanel(new GridBagLayout());
         String[] a = {"Học phí cơ bản:", "Phí Cơ sở Vật chất:", "Lệ phí thi:", "Phí Sinh hoạt Ngoại khóa:"};

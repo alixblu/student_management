@@ -941,4 +941,21 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
         return tenDC.matches(regex);
     }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                JFrame frame = new JFrame("Quản Lý Học Sinh");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setSize(850, 670); // Set frame size
+                frame.setLocationRelativeTo(null); // Center the frame
+
+                QuanLiHocSinh quanLiHocSinh = new QuanLiHocSinh(800, 600); // Initialize with width and height
+                frame.add(quanLiHocSinh);
+
+                frame.setVisible(true); // Make the frame visible
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 }
