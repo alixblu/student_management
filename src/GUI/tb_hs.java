@@ -199,9 +199,13 @@ public final class tb_hs extends JPanel implements MouseListener, ActionListener
         // plBus = new PhanLopBUS();
         for (ThongBaoDTO thongbao : hs) {
             System.out.println(thongbao.getLoaitb()); // In ra loaitb để kiểm tra
-            if (thongbao.getLoaitb().equals(username) || thongbao.getLoaitb().equals("HS")) {
+            if (thongbao.getLoaitb().equals(username)) {
                 filteredList.add(thongbao);
             } 
+            System.out.println(thongbao.getLoaitb());
+            if(thongbao.getLoaitb().equals("HS")){
+                filteredList.add(thongbao);
+            }
             loaitb = thongbao.getLoaitb();
             if (plBus.KtraTB(loaitb, username) == true) {
                 filteredList.add(thongbao);

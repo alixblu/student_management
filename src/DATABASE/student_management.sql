@@ -437,8 +437,8 @@ INSERT INTO `thongbao` (`idnguoigui`, `tieudetb`, `noidungtb`, `thoigiantb`, `lo
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `username` VARCHAR(50) NOT NULL, COLLATE utf8_bin,
+  `password` varchar(50) NOT NULL, COLLATE utf8_bin,
   `role` varchar(50) NOT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
