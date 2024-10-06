@@ -45,12 +45,16 @@ import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.GiaoVienBUS;
+import BUS.LopBUS;
 import BUS.MonHocBUS;
+import BUS.PhanCongBUS;
 import BUS.QLPhanCongBUS;
 import DAO.GiaoVienDAO;
 import DTO.GiaoVienDTO;
 import DTO.HocSinhDTO;
+import DTO.LopDTO;
 import DTO.MonHocDTO;
+import DTO.PhanCongDTO;
 import DTO.QLPhanCongDTO;
 
 import java.text.ParseException;
@@ -104,12 +108,14 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     private String magv;
     private String tengiaovien;
     private String tenlop;
-    private String tenmon;
     private JComboBox phangiaoviencomboBox;
 
     private MonHocBUS mhBus;
     private GiaoVienBUS gvBus = new GiaoVienBUS();
     ArrayList<GiaoVienDTO> list_gv;
+
+    private PhanCongBUS pcBUS2 = new PhanCongBUS();
+    private LopBUS lopBUS = new LopBUS();
 
     public QuanLiPhanCong(int width, int height) throws SQLException {
         this.width = width;
@@ -279,9 +285,9 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     public JPanel JHocsinh() {
         JPanel Phocsinh = new JPanel();
         Phocsinh.setLayout(null);
-        pcBUS.listMagv();
         // pcBUS.listTenmh();
         pcBUS.listTenlop();
+        pcBUS.listMagv();
         ArrayList<String> listlop = pcBUS.getTenLopList();
         // ArrayList<String> listmh = pcBUS.getTenMHList();
         ArrayList<String> listmagv = pcBUS.getMaGVList();
@@ -362,22 +368,31 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
 
         Integer lenght = header.length;
         pcBUS.listPC();
-        ArrayList<QLPhanCongDTO> dspc = pcBUS.getList();
+        pcBUS2.list();
 
+        // ArrayList<QLPhanCongDTO> dspc = pcBUS.getList();
+        ArrayList<PhanCongDTO> dspc2 = pcBUS2.getList();
+        ArrayList<LopDTO> list_lop = lopBUS.getList();
         list_gv = gvBus.getList();
 
-        Object[][] rowData = new Object[dspc.size()][lenght];
-        for (int i = 0; i < dspc.size(); i++) {
-            QLPhanCongDTO pc = dspc.get(i);
-            rowData[i][0] = pc.getMagv();
-            rowData[i][1] = pc.getTengv();
-            for(int j = 0 ; i <list_gv.size(); i++){
+        Object[][] rowData = new Object[dspc2.size()][lenght];
+        for (int i = 0; i < dspc2.size(); i++) {
+            PhanCongDTO pc2 = dspc2.get(i);
+            rowData[i][0] = pc2.getGiaoVienID();
+            for(int j = 0 ; j <list_gv.size(); j++){
                 GiaoVienDTO gv = list_gv.get(j);
-                if(pc.getMagv().equals(gv.getMaGV())){
+                if(pc2.getGiaoVienID().equals(gv.getMaGV())){
+                    rowData[i][1] = gv.getTenGV();
                     rowData[i][2] = gv.getphanMon();
-                    rowData[i][3] = pc.getLop();
                 }
             }
+            for(int k = 0 ; k <list_lop.size(); k++){
+                LopDTO lop = list_lop.get(k);
+                if(pc2.getLopID().equals(lop.getLopID())){
+                    rowData[i][3] = lop.getTenLop();
+                }
+            }
+
         }
 
 
@@ -606,42 +621,70 @@ public final class QuanLiPhanCong extends JPanel implements MouseListener, Actio
     }
 
     public void btnFind_actionPerformed() {
-        String searchText = JsearchText.getText().trim();
         String selectedOption = (String) searchselectBox.getSelectedItem();
         String selectedLop = (String) searchselectBox1.getSelectedItem();
-        String selectedMh = (String) searchselectBox2.getSelectedItem();
-
+        
         model = (DefaultTableModel) t.getModel();
         sorter = new TableRowSorter<>(model);
         t.setRowSorter(sorter);
-
+        
         ArrayList<RowFilter<Object, Object>> filters = new ArrayList<>();
-
-        if (!searchText.isEmpty()) {
-            if (selectedOption.equals("Mã giáo viên")) {
-                filters.add(RowFilter.regexFilter(searchText, 0));
-            } else if (selectedOption.equals("Họ và tên")) {
-                filters.add(RowFilter.regexFilter("(?i)" + searchText, 1));
+        
+        if (selectedOption.equals("Mã giáo viên")) {
+            String searchText = JsearchText.getText().trim();
+            
+            
+    
+            if (searchText.isEmpty()) {
+                JOptionPane.showMessageDialog(t, "Không được để trống ô tìm kiếm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
             }
+            if (!searchText.matches("[a-zA-Z0-9 ]+")) {
+                JOptionPane.showMessageDialog(t, "Không được nhập ký tự đặc biệt", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+    
+            filters.add(RowFilter.regexFilter("(?i)" + searchText, 0));
         }
-
+        else if (selectedOption.equals("Họ và tên")) {
+            String searchText = JsearchText.getText().trim();
+            if (searchText.isEmpty()) {
+                JOptionPane.showMessageDialog(t, "Không được để trống ô tìm kiếm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!searchText.matches("[a-zA-Z0-9 ]+")) {
+                JOptionPane.showMessageDialog(t, "Không được nhập ký tự đặc biệt", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            filters.add(RowFilter.regexFilter("(?i)" + searchText, 1)); // "(?i)" để không phân biệt hoa thường
+        }
+    
         if (!selectedLop.equals("None")) {
-            filters.add(RowFilter.regexFilter(selectedLop, 2));
+            filters.add(RowFilter.regexFilter(selectedLop, 3));
+        }
+        
+
+        if(selectedLop.equals("None") && searchText.equals("") && selectedOption.equals("None")){
+            JOptionPane.showMessageDialog(t, "Hãy chọn và nhập thông tin tìm kiếm tương ứng", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
-        if (!selectedMh.equals("None")) {
-            filters.add(RowFilter.regexFilter(selectedMh, 3));
-        }
 
         RowFilter<Object, Object> combinedFilter;
         if (filters.size() > 0) {
             combinedFilter = RowFilter.andFilter(filters);
         } else {
-            combinedFilter = null; // No filter
+            combinedFilter = null; // Không có bộ lọc nào
         }
-
+        
         sorter.setRowFilter(combinedFilter);
+        
+        if (sorter.getViewRowCount() == 0) {
+            JOptionPane.showMessageDialog(t, "Không tìm thấy dữ liệu phù hợp", "Thông báo", JOptionPane.WARNING_MESSAGE);
+        }
     }
+    
+    
 
     public void exportExcel() throws IOException {
         JFileChooser chooser = new JFileChooser();

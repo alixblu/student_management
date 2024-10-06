@@ -1,4 +1,4 @@
-package GUI;
+﻿package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,9 +17,7 @@ import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
 import com.toedter.calendar.JDateChooser;
-
 import BUS.ChangeAcc_BUS;
 import BUS.ChiTietDiemBUS;
 import BUS.HocSinhBUS;
@@ -504,7 +502,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         HocSinhDTO hocSinh = new HocSinhDTO(hocSinhID, tenHocSinh, gioiTinh, ngaySinh, diaChi,
                 soDienThoai);
         hocSinh.setIMG(IMG);
-
+        System.out.println(hocSinh.toString());
         // Gọi phương thức addHS() từ lớp QLHS_BUS để thêm học sinh vào cơ sở dữ liệu
         hsBUS.updateHS(hocSinh);
 
@@ -634,12 +632,30 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             JOptionPane.showMessageDialog(this, "Hãy nhập ID học sinh cần sửa", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        if (hsBUS.checkMaHS(mahs) == false) {
+        else if (hsBUS.checkMaHS(mahs) == false) {
             JOptionPane.showMessageDialog(this, "Không tồn tại ID này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+        else if(checkTenHS(tf[1].getText())==false)
+        {
+            String tmp = "ư ơ â ă ê ấ ớ ắ ẫ ứ  ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠứựữừ";
+            System.out.println("Input: '" + tmp + "'");
+            boolean check = checkTenHS(tmp);
+            System.out.println("Is valid: " + check);
+            
+            JOptionPane.showMessageDialog(this, "Tên học sinh không hợp lệ!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else if(checkDiaChi(tf[4].getText())==false)
+        {
+            JOptionPane.showMessageDialog(this, "Địa chỉ không hợp lệ!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else if(checkSDT(tf[5].getText())==false)
+        {
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         int result = JOptionPane.showConfirmDialog(this,
                 "Bạn có chắc muốn sửa học sinh này",
                 "Xác nhận",
@@ -903,5 +919,30 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         } catch (IOException e) {
             System.out.println("Lỗi: " + e.getMessage());
         }
+    }
+
+
+    public boolean checkSDT(String sdt) {
+        // Biểu thức chính quy để kiểm tra số điện thoại: bắt đầu bằng số 0 và có đúng 10 chữ số.
+        String regex = "^0[0-9]{9}$";
+        
+        // Kiểm tra xem sdt có khớp với biểu thức chính quy hay không
+        return sdt.matches(regex);
+    }
+    
+    public boolean checkTenHS(String ten) {
+        // Biểu thức chính quy để kiểm tra tên học sinh: chỉ chứa chữ cái và khoảng trắng.
+        String regex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠứựữừ-ỹ\\s]+$";
+        
+        // Kiểm tra xem tên có khớp với biểu thức chính quy hay không
+        return ten.matches(regex);
+    }
+    
+    public boolean checkDiaChi(String tenDC) {
+        // Biểu thức chính quy để kiểm tra địa chỉ: thêm ký tự gạch chéo (/)
+        String regex = "^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+$";
+        
+        // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
+        return tenDC.matches(regex);
     }
 }

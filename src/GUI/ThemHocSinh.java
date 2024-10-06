@@ -360,6 +360,7 @@ public class ThemHocSinh extends JFrame {
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("dd/MM/yyyy");
         dateChooser.setBounds(530, 249, 226, 26);
+        dateChooser.getDateEditor().setEnabled(false);
         contentPane.add(dateChooser);
         dateChooser.getDateEditor().addPropertyChangeListener("date", new PropertyChangeListener() {
 

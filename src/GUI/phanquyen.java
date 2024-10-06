@@ -283,7 +283,23 @@ public class phanquyen extends JPanel implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String maquyen = txtMaQuyen.getText();
+
+              
+                if (!maquyen.matches("[a-zA-Z0-9]+")) {
+                    JOptionPane.showMessageDialog(null, "Mã quyền không được chứa khoảng trắng hoặc ký tự đặc biệt",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } 
+
                 String tenquyen = txtTenQuyen.getText();
+
+                if (!tenquyen.matches("[a-zA-Z\\s]+")) {
+                    JOptionPane.showMessageDialog(null, "Tên quyền không được chứa ký tự đặc biệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } 
+                
+
+
                 dschitietquyen = new ArrayList<>();
                 for (int i = 0; i < cbx.length; i++) {
                     if (cbx[i].isSelected()) {
