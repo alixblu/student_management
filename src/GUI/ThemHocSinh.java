@@ -238,7 +238,7 @@ public class ThemHocSinh extends JFrame {
                         JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin", "Thông báo",  JOptionPane.ERROR_MESSAGE);
                         return ;
                     }
-                    else if(checkTenHS(textField_tenhs.getText())==false)
+                    else if(checkTen(textField_tenhs.getText())==false)
                     {
                         JOptionPane.showMessageDialog(null, "Tên không hợp lệ", "Thông báo",  JOptionPane.ERROR_MESSAGE);
                         return ;
@@ -360,6 +360,7 @@ public class ThemHocSinh extends JFrame {
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("dd/MM/yyyy");
         dateChooser.setBounds(530, 249, 226, 26);
+        dateChooser.getDateEditor().setEnabled(false);
         contentPane.add(dateChooser);
         dateChooser.getDateEditor().addPropertyChangeListener("date", new PropertyChangeListener() {
 
@@ -374,6 +375,11 @@ public class ThemHocSinh extends JFrame {
                     namSinh = calendar.get(Calendar.YEAR);
                     tuoi = 2024-namSinh;
                     if(comboBox_khoi.getSelectedItem().toString().equals("10") && tuoi < 15)
+                    {
+                        JOptionPane.showMessageDialog(null, "Năm sinh không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        dateChooser.setDate(null);
+                    }
+                    else if(tuoi>100)
                     {
                         JOptionPane.showMessageDialog(null, "Năm sinh không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         dateChooser.setDate(null);
@@ -411,21 +417,22 @@ public class ThemHocSinh extends JFrame {
         return sdt.matches(regex);
     }
     
-    public boolean checkTenHS(String ten) {
-        // Biểu thức chính quy để kiểm tra tên học sinh: chỉ chứa chữ cái và khoảng trắng.
-        String regex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s]+$";
+    public boolean checkTen(String ten) {
+        // Updated regex with Unicode letter class and whitespace
+        String regex = "^[\\p{L}\\s]+$";
         
-        // Kiểm tra xem tên có khớp với biểu thức chính quy hay không
+        // Test against the regex
         return ten.matches(regex);
     }
     
     public boolean checkDiaChi(String tenDC) {
-        // Biểu thức chính quy để kiểm tra địa chỉ: thêm ký tự gạch chéo (/)
-        String regex = "^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+$";
+        // Biểu thức chính quy để kiểm tra địa chỉ: nếu chỉ có số thì phải có chữ cái, nếu không thì chỉ có chữ cái là được.
+        String regex = "^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+)$";
         
         // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
         return tenDC.matches(regex);
     }
+    
     
     
     

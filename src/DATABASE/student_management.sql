@@ -96,17 +96,10 @@ INSERT INTO `chitietquyen` (`maquyen`, `machucnang`, `enable`) VALUES
 ('DD', 'CN1', '0'),
 ('DD', 'CN2', '0'),
 ('DD', 'CN3', '0');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `chucnang`
---
-
-CREATE TABLE IF NOT EXISTS `chucnang` (
-  `machucnang` varchar(50) NOT NULL,
-  `tenchucnang` varchar(50) NOT NULL,
-  `img` varchar(100) NOT NULL
+CREATE TABLE `chucnang` (
+  `machucnang` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `tenchucnang` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `img` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -114,30 +107,30 @@ CREATE TABLE IF NOT EXISTS `chucnang` (
 --
 
 INSERT INTO `chucnang` (`machucnang`, `tenchucnang`, `img`) VALUES
-('CN1', 'QL Học Sinh', ':Shop_20px.png:Shop_20px_active.png'),
-('CN2', 'QL Giáo Viên', ':Shop_20px.png:Shop_20px_active.png'),
-('CN3', 'QL Môn Học', ':Shop_20px.png:Shop_20px_active.png'),
-('CN4', 'QL Năm Học', ':Shop_20px.png:Shop_20px_active.png'),
-('CN5', 'QL Phân Công', ':Shop_20px.png:Shop_20px_active.png'),
-('CN6', 'QL Tài Khoản', ':Shop_20px.png:Shop_20px_active.png'),
-('CN9', 'Thanh Toán HP', ':Shop_20px.png:Shop_20px_active.png'),
-('CN8', 'Xem Ý Kiến', ':Shop_20px.png:Shop_20px_active.png'),
-('CN7', 'QL Điểm', ':Shop_20px.png:Shop_20px_active.png'),
-('CN10', 'Thống Kê', ':Shop_20px.png:Shop_20px_active.png'),
-('CN11', 'Thông Báo HS/GV', ':Shop_20px.png:Shop_20px_active.png'),
-('CN12', 'Danh sách HS', ':Shop_20px.png:Shop_20px_active.png'),
-('CN13', 'Nhập Điểm', ':Shop_20px.png:Shop_20px_active.png'),
-('CN14', 'Thông Tin GV', ':Shop_20px.png:Shop_20px_active.png'),
-('CN15', 'Gửi Thông Báo', ':Shop_20px.png:Shop_20px_active.png'),
-('CN16', 'Nhận Thông Báo', ':Shop_20px.png:Shop_20px_active.png'),
-('CN17', 'Đổi mật khấu', ':Shop_20px.png:Shop_20px_active.png'),
-('CN18', 'Xem Điểm', ':Shop_20px.png:Shop_20px_active.png'),
-('CN19', 'Góp Ý Kiến', ':Shop_20px.png:Shop_20px_active.png'),
-('CN20', 'Thông Tin HS', ':Shop_20px.png:Shop_20px_active.png'),
-('CN21', 'Phân Quyền', ':Shop_20px.png:Shop_20px_active.png'),
-('CN22', 'HS NHậnTB', ':Shop_20px.png:Shop_20px_active.png');
+('CN1', 'QL Học Sinh', ':icon_hs_t.png:icon_hs.png'),
+('CN2', 'QL Giáo Viên', ':ttgv_t.png:ttgv.png'),
+('CN3', 'QL Môn Học', ':mh_t.png:mh.png'),
+('CN4', 'QL Năm Học', ':nh_t.png:nh.png'),
+('CN5', 'QL Phân Công', ':pc_t.png:pc.png'),
+('CN6', 'QL Tài Khoản', ':account_t.png:account.png'),
+('CN9', 'Thanh Toán HP', ':hp_t.png:hp.png'),
+('CN8', 'Xem Ý Kiến', ':yk_t.png:yk.png'),
+('CN7', 'QL Điểm', ':grade_t.png:grade.png'),
+('CN10', 'Thống Kê', ':tk_t.png:tk.png'),
+('CN11', 'Thông Báo HS/GV', ':tb_t.png:tb.png'),
+('CN12', 'Danh sách HS', ':lhs_t.png:lhs.png'),
+('CN13', 'Nhập Điểm', ':nd_t.png:nd.png'),
+('CN14', 'Thông Tin GV', ':ttgv_t.png:ttgv.png'),
+('CN15', 'Gửi Thông Báo', ':tb_t.png:tb.png'),
+('CN16', 'Nhận Thông Báo', ':tb_t.png:tb.png'),
+('CN17', 'Đổi mật khấu', ':dmk_t.png:dmk.png'),
+('CN18', 'Xem Điểm', ':grade_t.png:grade.png'),
+('CN19', 'Góp Ý Kiến', ':yk_t.png:yk.png'),
+('CN20', 'Thông Tin HS', ':icon_hs_t.png:icon_hs.png'),
+('CN21', 'Phân Quyền', ':pq_t.png:pq.png'),
+('CN22', 'HS NHậnTB', ':icon_hs_.png:icon_hs.png');
+COMMIT;
 
--- --------------------------------------------------------
 
 --
 -- Table structure for table `diemtbhocky`

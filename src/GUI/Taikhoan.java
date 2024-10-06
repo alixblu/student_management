@@ -316,7 +316,8 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
 
             y += 35;
         }
-
+        tf[0].setEditable(false);
+        tf[3].setEditable(false);
         JPanel Pchucnang = JChucnang();
         Pchucnang.setBounds(510, 35, 290, y - 70);
         Pchucnang.setBackground(new Color(99, 116, 198));
