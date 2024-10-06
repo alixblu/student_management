@@ -328,9 +328,12 @@ public class ThongKe extends JPanel{
     }
 
     private class expBtnListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (tblModel.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "Bảng trống, không có dữ liệu để xuất.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return; 
+            }
             JFileChooser chooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
             chooser.setFileFilter(filter);
@@ -348,7 +351,7 @@ public class ThongKe extends JPanel{
                 Workbook workbook = new HSSFWorkbook();
                 Sheet sheet = workbook.createSheet("DanhSachHocSinh");
                 Row headerRow = sheet.createRow(0); // Header row at index 0
-                String[] headers = { "ID", "Tên HS", "Giới tính", "Ngày sinh", "Điện thoại", "Lớp", "Hạnh Kiểm", "Học Lực",
+                String[] headers = {"STT", "ID", "Tên HS", "Giới tính", "Ngày sinh", "Điện thoại", "Lớp", "Hạnh Kiểm", "Học Lực",
                 "Tình trạng học phí", "Năm Học", "Kết quả" };
 
                 // Creating header cells
@@ -361,7 +364,6 @@ public class ThongKe extends JPanel{
                 for (int i = 0; i < rowCount; i++) {
                     Row row = sheet.createRow(i + 1); // Bắt đầu từ hàng thứ hai (vì hàng đầu tiên là tiêu đề)
 
-                    // Thêm cột STT
                     row.createCell(0).setCellValue(i + 1);
 
                     for (int j = 0; j < tblModel.getColumnCount(); j++) {
@@ -376,7 +378,6 @@ public class ThongKe extends JPanel{
                 try {
                     file.createNewFile();
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
 

@@ -727,6 +727,13 @@ public void clearTextFields() {
     }
 
     public void exportExcel() throws IOException {
+        ArrayList<GiaoVienDTO> dsgv = gvBUS.getList();
+    
+        if (dsgv == null || dsgv.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Danh sách giáo viên rỗng, không thể xuất tệp!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return; // Exit the method, no further execution
+        }
+    
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Tập tin Excel", "xls");
         chooser.setFileFilter(filter);
@@ -734,25 +741,22 @@ public void clearTextFields() {
         chooser.setAcceptAllFileFilterUsed(false);
         if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
             String path = chooser.getSelectedFile().toString().concat(".xls");
-
+    
             Workbook workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet("DanhSachHocSinh");
-            Row headerRow = sheet.createRow(0); // Header row at index 0
-            String[] headers = { "STT", "GiaovienID", "Tên Giao viên", "Giới Tính", "Năm Sinh", "Địa chỉ", "SĐT", "Phân môn" };
-
+            Row headerRow = sheet.createRow(0); 
+            String[] headers = { "STT", "GiaovienID", "Tên Giáo viên", "Giới Tính", "Năm Sinh", "Địa chỉ", "SĐT", "Phân môn", "Ảnh chân dung" };
+    
             // Creating header cells
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
             }
-
-            ArrayList<GiaoVienDTO> dsgv = gvBUS.getList();
+    
             for (int i = 0; i < dsgv.size(); i++) {
                 Row row = sheet.createRow(i + 1); // Data rows start from index 1
-
+    
                 GiaoVienDTO gv = dsgv.get(i);
-                System.out.println(gv.getDiachi());
-
                 row.createCell(0).setCellValue(i + 1);
                 row.createCell(1).setCellValue(gv.getMaGV());
                 row.createCell(2).setCellValue(gv.getTenGV());
@@ -761,31 +765,28 @@ public void clearTextFields() {
                 row.createCell(5).setCellValue(gv.getDiachi());
                 row.createCell(6).setCellValue(gv.getDienThoai());
                 row.createCell(7).setCellValue(gv.getphanMon());
-
+                row.createCell(8).setCellValue(gv.getIMG());
             }
-
-            // String path = "D:/Coding/N2_HK2/DAJAVA/java_nhom_9/Excel/hsss.xlsx";
+    
             File file = new File(path);
             if (file.exists()) {
-                file.delete();
+                file.delete(); // Delete existing file if it exists
             }
-            file.createNewFile();
-
+            file.createNewFile(); // Create a new file
+    
             try {
                 FileOutputStream fos = new FileOutputStream(file);
                 workbook.write(fos);
-                // workbook.close();
-                // fos.close();
                 System.out.println("Excel file exported successfully to: " + path);
             } catch (IOException e) {
-                e.printStackTrace();
-                // Handle exception
+                e.printStackTrace(); // Handle exception
             }
+    
             JOptionPane.showMessageDialog(this, "IN THÀNH CÔNG");
-            Desktop.getDesktop().open(file);
-
+            Desktop.getDesktop().open(file); // Open the file after saving
         }
     }
+    
 
     public void autoCreateAccount(String magv) {
         accBUS = new ChangeAcc_BUS();
