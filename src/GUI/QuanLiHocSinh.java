@@ -463,27 +463,6 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         clearTextFields();
     }
 
-    // public void luuanhkhixacnhan(String img) {
-    //     // Lấy đường dẫn thư mục gốc của dự án
-    //     String projectRootPath = System.getProperty("user.dir");
-    //     String destinationFolder = projectRootPath + "\\src\\image\\HocSinh";
-    
-    //     // Tạo thư mục nếu nó chưa tồn tại
-    //     File folder = new File(destinationFolder);
-    //     if (!folder.exists()) {
-    //         folder.mkdirs(); // Tạo thư mục nếu nó không tồn tại
-    //     }
-    
-    //     String destinationPath = destinationFolder + "\\" + img;
-    
-    //     // Sao chép file ảnh
-    //     try {
-    //         Files.copy(Paths.get(img), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
-    //         System.out.println("Copy thành công: " + destinationPath);
-    //     } catch (IOException e) {
-    //         System.out.println("Lỗi: " + e.getMessage());
-    //     }
-    // }
     public void updateRow() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
@@ -866,18 +845,9 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
             pathAnhdd_1 = fileName;
             tf[6].setText(pathAnhdd_1);
             
-            // Tạo một ImageIcon từ đường dẫn hình ảnh
             imageIcon = new ImageIcon(imagePath);
     
-            // Chỉnh kích thước của hình ảnh để phù hợp với JLabel
-            /*Image image = imageIcon.getImage().getScaledInstance(labelimg.getWidth(), labelimg.getHeight(),
-                    Image.SCALE_SMOOTH);
-                
-            // Tạo một ImageIcon mới từ hình ảnh đã được điều chỉnh kích thước
-            ImageIcon scaledImageIcon = new ImageIcon(image);
-    
-            // Hiển thị hình ảnh trên JLabel
-            labelimg.setIcon(scaledImageIcon);*/
+            
             Image image = imageIcon.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(),
                     Image.SCALE_SMOOTH);
 

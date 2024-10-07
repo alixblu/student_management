@@ -192,29 +192,29 @@ public  class NhanTB extends JPanel implements MouseListener, ActionListener {
     }
 
     public JScrollPane initTable() throws SQLException {
-    t = new JTable();
-    t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-    scrollpane = new JScrollPane(t);
-    scrollpane.setPreferredSize(new Dimension(846, 500));
-    
-    // Set custom table model
-    tblmodel = new DefaultTableModel();
-    String[] headers = { "ID người gửi", "Tiêu đề", "Nội dung thông báo", "Thời gian được gửi" };
-    for (String header : headers) {
-        tblmodel.addColumn(header);
-    }
-    t.setModel(tblmodel);
-    
-    // Populate table with data
-    dstb = tbBUS.search(username);
-    for (ThongBaoDTO tb : dstb) {
-        String[] rowData = new String[] {
-            tb.getIdnguoigui(),
-            tb.getTieudetb(),
-            tb.getNoidungtb(),
-            tb.getThoigiantb()
-        };
-        tblmodel.addRow(rowData);
+        t = new JTable();
+        t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        scrollpane = new JScrollPane(t);
+        scrollpane.setPreferredSize(new Dimension(846, 500));
+        
+        // Set custom table model
+        tblmodel = new DefaultTableModel();
+        String[] headers = { "ID người gửi", "Tiêu đề", "Nội dung thông báo", "Thời gian được gửi" };
+        for (String header : headers) {
+            tblmodel.addColumn(header);
+        }
+        t.setModel(tblmodel);
+        
+        // Populate table with data
+        dstb = tbBUS.search(username);
+        for (ThongBaoDTO tb : dstb) {
+            String[] rowData = new String[] {
+                tb.getIdnguoigui(),
+                tb.getTieudetb(),
+                tb.getNoidungtb(),
+                tb.getThoigiantb()
+            };
+            tblmodel.addRow(rowData);
     }
     
     Font font = new Font("Arial", Font.BOLD, 12);

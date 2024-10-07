@@ -25,7 +25,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 //--------------------------------------------
 
-
 public class TestDN extends JFrame {
     private JPanel jptop, jpleft, jpright, lll;
     private JLabel jltendangnhap, jlmatkhau;
@@ -139,11 +138,11 @@ public class TestDN extends JFrame {
         k3.setBackground(my_color_west);
         k3.setPreferredSize(new Dimension(0, 250));
 
-        jbxacnhan = new JButton("Xác nhận");    
+        jbxacnhan = new JButton("Xác nhận");
         // actionlistner
         jbxacnhan.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-        
+
                 if (jtf1.getText().equals("")) {
                     JOptionPane.showMessageDialog(jpright, "Bạn chưa nhập tài khoản");
                     return;
@@ -152,16 +151,16 @@ public class TestDN extends JFrame {
                     JOptionPane.showMessageDialog(jpright, "Bạn chưa nhập mật khẩu");
                     return;
                 }
-        
+
                 Connection con = mysql.getConnection();
                 PreparedStatement ps;
-        
+
                 try {
                     // Sử dụng BINARY để so sánh phân biệt
                     ps = con.prepareStatement("SELECT * FROM user WHERE BINARY username = ? AND BINARY password = ?");
                     ps.setString(1, jtf1.getText());
                     ps.setString(2, String.valueOf(jtf2.getPassword()));
-        
+
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
                         System.out.println("Yes");
@@ -179,8 +178,6 @@ public class TestDN extends JFrame {
                 }
             }
         });
-        
-        
 
         jbxacnhan.setForeground(Color.blue);
         jbxacnhan.setBackground(Color.gray);
