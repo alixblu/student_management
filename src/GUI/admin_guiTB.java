@@ -85,23 +85,30 @@ public class admin_guiTB extends JPanel{
         public void actionPerformed(ActionEvent e) {
             String loaitb = "";
             CurrentDateTime currDate = new CurrentDateTime();
-
-            if (checkboxHS.isSelected()) {
-                loaitb = "HS";
-
-                ThongBaoDTO tb = new ThongBaoDTO("admin", txtHeader.getText(), txtContent.getText(),currDate.getdate(),loaitb);
-                tbbus.add(tb);
-            }
-            if (checkboxGV.isSelected()) {
-                loaitb = "GV";
-
-                ThongBaoDTO tb = new ThongBaoDTO("admin", txtHeader.getText(), txtContent.getText(),currDate.getdate(),loaitb);
-                tbbus.add(tb);
-            }
             
-            if(loaitb.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Bạn chưa chọn đối tượng muốn gửi thông báo");
-                return;
+            if(checkboxHS.isSelected() && checkboxGV.isSelected()){
+                loaitb = "ALL";
+                ThongBaoDTO tb = new ThongBaoDTO("admin", txtHeader.getText(), txtContent.getText(),currDate.getdate(),loaitb);
+                tbbus.add(tb);
+            }
+            else{
+                if (checkboxHS.isSelected()) {
+                    loaitb = "HS";
+                    
+                    ThongBaoDTO tb = new ThongBaoDTO("admin", txtHeader.getText(), txtContent.getText(),currDate.getdate(),loaitb);
+                    tbbus.add(tb);
+                }
+                if (checkboxGV.isSelected()) {
+                    loaitb = "GV";
+                    
+                    ThongBaoDTO tb = new ThongBaoDTO("admin", txtHeader.getText(), txtContent.getText(),currDate.getdate(),loaitb);
+                    tbbus.add(tb);
+                }
+                if(loaitb.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Bạn chưa chọn đối tượng muốn gửi thông báo");
+                    return;
+                }
+                
             }
             if (txtContent.getText().equals("") && txtHeader.getText().equals("")){
                 JOptionPane.showMessageDialog(null, "Thông báo không thể bỏ trống cả tiêu đề và nội dung");

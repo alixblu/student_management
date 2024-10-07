@@ -334,7 +334,7 @@ public class Text extends JFrame implements MouseListener, ActionListener {
 
             case "CN16":// GV nhận thông báo
                 main.removeAll();
-                main.add(new tb_gv(850,670,userName));
+                main.add(new NhanTB(850,670,userName));
                 main.repaint();
                 main.revalidate();
                 break;
@@ -372,13 +372,10 @@ public class Text extends JFrame implements MouseListener, ActionListener {
             // try {
                 main.removeAll();
                 System.out.println("THông báo học sinh"  + userName);
-                main.add(new tb_hs( 850, 670, userName));
+                main.add(new NhanTB( 850, 670, userName));
                 main.repaint();
                 main.revalidate();
                 break;
-            // } catch (SQLException e) {
-            //     e.printStackTrace();
-            // }
         }
     }
 

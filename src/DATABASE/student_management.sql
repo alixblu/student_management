@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2024 at 05:51 PM
+-- Generation Time: Oct 07, 2024 at 10:55 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -29,6 +29,7 @@ USE `student_management`;
 -- Table structure for table `chitietdiem`
 --
 
+DROP TABLE IF EXISTS `chitietdiem`;
 CREATE TABLE IF NOT EXISTS `chitietdiem` (
   `HocSinhid` varchar(10) NOT NULL,
   `MonHocid` varchar(11) NOT NULL,
@@ -47,11 +48,17 @@ CREATE TABLE IF NOT EXISTS `chitietdiem` (
 
 INSERT INTO `chitietdiem` (`HocSinhid`, `MonHocid`, `HocKyid`, `NamHocid`, `Diem1`, `Diem2`, `Diem3`, `dtbMon`) VALUES
 ('HSK241', 'MH1', 1, '20242025', 0.00, 0.00, 0.00, 0.00),
+('HSK241', 'MH1', 2, '20242025', 0.00, 0.00, 0.00, 0.00),
 ('HSK241', 'MH2', 1, '20242025', 8.00, 6.00, 5.00, 5.83),
+('HSK241', 'MH2', 2, '20242025', 0.00, 0.00, 0.00, 0.00),
 ('HSK242', 'MH1', 1, '20242025', 0.00, 0.00, 0.00, 0.00),
+('HSK242', 'MH1', 2, '20242025', 0.00, 0.00, 0.00, 0.00),
 ('HSK242', 'MH2', 1, '20242025', 0.00, 0.00, 0.00, 0.00),
+('HSK242', 'MH2', 2, '20242025', 0.00, 0.00, 0.00, 0.00),
 ('HSK243', 'MH1', 1, '20242025', 0.00, 0.00, 0.00, 0.00),
-('HSK243', 'MH2', 1, '20242025', 0.00, 0.00, 0.00, 0.00);
+('HSK243', 'MH1', 2, '20242025', 0.00, 0.00, 0.00, 0.00),
+('HSK243', 'MH2', 1, '20242025', 0.00, 0.00, 0.00, 0.00),
+('HSK243', 'MH2', 2, '20242025', 0.00, 0.00, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -59,6 +66,7 @@ INSERT INTO `chitietdiem` (`HocSinhid`, `MonHocid`, `HocKyid`, `NamHocid`, `Diem
 -- Table structure for table `chitietquyen`
 --
 
+DROP TABLE IF EXISTS `chitietquyen`;
 CREATE TABLE IF NOT EXISTS `chitietquyen` (
   `maquyen` varchar(50) NOT NULL,
   `machucnang` varchar(50) NOT NULL,
@@ -96,10 +104,18 @@ INSERT INTO `chitietquyen` (`maquyen`, `machucnang`, `enable`) VALUES
 ('DD', 'CN1', '0'),
 ('DD', 'CN2', '0'),
 ('DD', 'CN3', '0');
-CREATE TABLE `chucnang` (
-  `machucnang` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `tenchucnang` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `img` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chucnang`
+--
+
+DROP TABLE IF EXISTS `chucnang`;
+CREATE TABLE IF NOT EXISTS `chucnang` (
+  `machucnang` varchar(50) NOT NULL,
+  `tenchucnang` varchar(50) NOT NULL,
+  `img` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -129,13 +145,14 @@ INSERT INTO `chucnang` (`machucnang`, `tenchucnang`, `img`) VALUES
 ('CN20', 'Thông Tin HS', ':icon_hs_t.png:icon_hs.png'),
 ('CN21', 'Phân Quyền', ':pq_t.png:pq.png'),
 ('CN22', 'HS NHậnTB', ':icon_hs_.png:icon_hs.png');
-COMMIT;
 
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `diemtbhocky`
 --
 
+DROP TABLE IF EXISTS `diemtbhocky`;
 CREATE TABLE IF NOT EXISTS `diemtbhocky` (
   `HocSinhid` varchar(10) NOT NULL,
   `HocKyid` int(11) NOT NULL,
@@ -149,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `diemtbhocky` (
 --
 
 INSERT INTO `diemtbhocky` (`HocSinhid`, `HocKyid`, `NamHocid`, `DiemTrungBinh`) VALUES
-('HSK241', 1, '20242025', 0),
+('HSK241', 1, '20242025', 2.915),
 ('HSK241', 2, '20242025', 0),
 ('HSK242', 1, '20242025', 0),
 ('HSK242', 2, '20242025', 0),
@@ -162,6 +179,7 @@ INSERT INTO `diemtbhocky` (`HocSinhid`, `HocKyid`, `NamHocid`, `DiemTrungBinh`) 
 -- Table structure for table `giaovien`
 --
 
+DROP TABLE IF EXISTS `giaovien`;
 CREATE TABLE IF NOT EXISTS `giaovien` (
   `GiaoVienid` varchar(5) NOT NULL DEFAULT 'GV',
   `TenGiaoVien` varchar(50) NOT NULL,
@@ -181,7 +199,9 @@ CREATE TABLE IF NOT EXISTS `giaovien` (
 --
 
 INSERT INTO `giaovien` (`GiaoVienid`, `TenGiaoVien`, `GioiTinh`, `NamSinh`, `DiaChi`, `DienThoai`, `PhanMon`, `IMG`, `isSubmit`, `enable`) VALUES
-('GV1', 'GV test1 toán', 'Nam', '22/10/2024', 'ffefef', '0789654123', 'Toán', '', 0, 1);
+('GV1', 'GV test1 toán', 'Nam', '22/10/2024', 'ffefef', '0789654123', 'Toán', '', 0, 1),
+('GV2', 'bdfbdfb', 'Nam', '12/10/1993', 'rrger%^%^', '0867456433', 'Toán', '', 0, 1),
+('GV3', 'ehethe', 'Nam', '30/10/1997', 'wrgrwg%^%U^u', '0968574736', 'Toán', '', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -189,6 +209,7 @@ INSERT INTO `giaovien` (`GiaoVienid`, `TenGiaoVien`, `GioiTinh`, `NamSinh`, `Dia
 -- Table structure for table `hocky`
 --
 
+DROP TABLE IF EXISTS `hocky`;
 CREATE TABLE IF NOT EXISTS `hocky` (
   `HocKyid` int(11) NOT NULL,
   `TenHocKy` varchar(50) NOT NULL,
@@ -209,6 +230,7 @@ INSERT INTO `hocky` (`HocKyid`, `TenHocKy`) VALUES
 -- Table structure for table `hocphi`
 --
 
+DROP TABLE IF EXISTS `hocphi`;
 CREATE TABLE IF NOT EXISTS `hocphi` (
   `idhs` varchar(10) NOT NULL,
   `idnh` varchar(22) NOT NULL,
@@ -222,6 +244,7 @@ CREATE TABLE IF NOT EXISTS `hocphi` (
 -- Table structure for table `hocsinh`
 --
 
+DROP TABLE IF EXISTS `hocsinh`;
 CREATE TABLE IF NOT EXISTS `hocsinh` (
   `HocSinhid` varchar(10) NOT NULL DEFAULT 'HS',
   `HoVaTen` varchar(50) NOT NULL,
@@ -250,6 +273,7 @@ INSERT INTO `hocsinh` (`HocSinhid`, `HoVaTen`, `GioiTinh`, `NgaySinh`, `DienThoa
 -- Table structure for table `kqhocsinhcanam`
 --
 
+DROP TABLE IF EXISTS `kqhocsinhcanam`;
 CREATE TABLE IF NOT EXISTS `kqhocsinhcanam` (
   `HocSinhid` varchar(10) NOT NULL,
   `NamHocid` varchar(50) NOT NULL,
@@ -275,6 +299,7 @@ INSERT INTO `kqhocsinhcanam` (`HocSinhid`, `NamHocid`, `HocLuc`, `HanhKiem`, `Di
 -- Table structure for table `lop`
 --
 
+DROP TABLE IF EXISTS `lop`;
 CREATE TABLE IF NOT EXISTS `lop` (
   `Lopid` int(11) NOT NULL,
   `TenLop` varchar(50) NOT NULL,
@@ -299,6 +324,7 @@ INSERT INTO `lop` (`Lopid`, `TenLop`) VALUES
 -- Table structure for table `monhoc`
 --
 
+DROP TABLE IF EXISTS `monhoc`;
 CREATE TABLE IF NOT EXISTS `monhoc` (
   `MonHocid` varchar(11) NOT NULL,
   `TenMonHoc` varchar(50) NOT NULL,
@@ -319,6 +345,7 @@ INSERT INTO `monhoc` (`MonHocid`, `TenMonHoc`) VALUES
 -- Table structure for table `namhoc`
 --
 
+DROP TABLE IF EXISTS `namhoc`;
 CREATE TABLE IF NOT EXISTS `namhoc` (
   `NamHocid` varchar(50) NOT NULL,
   `NamBatDau` int(5) NOT NULL,
@@ -341,6 +368,7 @@ INSERT INTO `namhoc` (`NamHocid`, `NamBatDau`, `NamKetThuc`, `HocKy`, `enable`) 
 -- Table structure for table `phancong`
 --
 
+DROP TABLE IF EXISTS `phancong`;
 CREATE TABLE IF NOT EXISTS `phancong` (
   `GiaoVienid` varchar(5) NOT NULL DEFAULT 'GV',
   `Lopid` int(11) NOT NULL,
@@ -362,6 +390,7 @@ INSERT INTO `phancong` (`GiaoVienid`, `Lopid`, `enable`) VALUES
 -- Table structure for table `phanlop`
 --
 
+DROP TABLE IF EXISTS `phanlop`;
 CREATE TABLE IF NOT EXISTS `phanlop` (
   `HocSinhid` varchar(10) NOT NULL,
   `Lopid` int(11) NOT NULL,
@@ -384,6 +413,7 @@ INSERT INTO `phanlop` (`HocSinhid`, `Lopid`, `NamHocid`) VALUES
 -- Table structure for table `quyen`
 --
 
+DROP TABLE IF EXISTS `quyen`;
 CREATE TABLE IF NOT EXISTS `quyen` (
   `tenquyen` varchar(50) NOT NULL,
   `maquyen` varchar(50) NOT NULL,
@@ -397,8 +427,7 @@ CREATE TABLE IF NOT EXISTS `quyen` (
 INSERT INTO `quyen` (`tenquyen`, `maquyen`, `enable`) VALUES
 ('admin', 'admin', 1),
 ('Giáo Viên', 'GV', 1),
-('Học Sinh', 'HS', 1),
-('Học Sinh', 'DD', 0);
+('Học Sinh', 'HS', 1);
 
 -- --------------------------------------------------------
 
@@ -406,6 +435,7 @@ INSERT INTO `quyen` (`tenquyen`, `maquyen`, `enable`) VALUES
 -- Table structure for table `thongbao`
 --
 
+DROP TABLE IF EXISTS `thongbao`;
 CREATE TABLE IF NOT EXISTS `thongbao` (
   `idnguoigui` varchar(11) NOT NULL,
   `tieudetb` text DEFAULT NULL,
@@ -419,16 +449,11 @@ CREATE TABLE IF NOT EXISTS `thongbao` (
 --
 
 INSERT INTO `thongbao` (`idnguoigui`, `tieudetb`, `noidungtb`, `thoigiantb`, `loaitb`) VALUES
-('admin', '', '', '2024-10-02', 'HS'),
-('admin', '', '', '2024-10-02', 'HS'),
-('admin', '', '', '2024-10-02', 'GV'),
-('admin', '', 'nbhnbhb', '2024-10-02', 'HS'),
-('admin', '', 'nbhnbhb', '2024-10-02', 'GV'),
-('GV1', 'h', '', '2024-10-02', '122'),
-('admin', 'nghi thu 2', '', '2024-10-02', 'HS'),
-('admin', 'nghi t3', '', '2024-10-02', 'GV'),
-('admin', 'nghi t4', '', '2024-10-02', 'HS'),
-('admin', 'nghi t4', '', '2024-10-02', 'GV');
+('admin', 'admin to ALL GV, HS', 'fe', '2024-10-07', 'ALL'),
+('GV1', 'GV toi CA lop 10A1', 'sc', '2024-10-07', '101'),
+('GV1', 'Gv 10A1 toi HSK242', 'csac', '2024-10-07', 'HSK242'),
+('admin', 'admin to HS', 'd', '2024-10-07', 'HS'),
+('admin', 'Admin to GV', 's', '2024-10-07', 'GV');
 
 -- --------------------------------------------------------
 
@@ -436,13 +461,17 @@ INSERT INTO `thongbao` (`idnguoigui`, `tieudetb`, `noidungtb`, `thoigiantb`, `lo
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-  `username` VARCHAR(50) COLLATE utf8_bin NOT NULL,
-  `password` VARCHAR(50) COLLATE utf8_bin NOT NULL,
-  `role` VARCHAR(50) NOT NULL,
-  `enable` TINYINT(1) NOT NULL DEFAULT 1
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `password` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `role` varchar(50) NOT NULL,
+  `enable` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `user`
+--
 
 INSERT INTO `user` (`username`, `password`, `role`, `enable`) VALUES
 ('admin', 'admin', 'admin', 1),
@@ -457,6 +486,7 @@ INSERT INTO `user` (`username`, `password`, `role`, `enable`) VALUES
 -- Table structure for table `ykien`
 --
 
+DROP TABLE IF EXISTS `ykien`;
 CREATE TABLE IF NOT EXISTS `ykien` (
   `idnguoigui` varchar(10) NOT NULL,
   `tieudeyk` text DEFAULT NULL,

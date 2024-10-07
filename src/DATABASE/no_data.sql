@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2024 at 03:35 PM
+-- Generation Time: Oct 07, 2024 at 10:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -29,14 +29,17 @@ USE `student_management`;
 -- Table structure for table `chitietdiem`
 --
 
+DROP TABLE IF EXISTS `chitietdiem`;
 CREATE TABLE IF NOT EXISTS `chitietdiem` (
   `HocSinhid` varchar(10) NOT NULL,
   `MonHocid` varchar(11) NOT NULL,
   `HocKyid` int(11) NOT NULL,
-  `HeSoid` int(11) NOT NULL,
   `NamHocid` varchar(20) NOT NULL DEFAULT '',
-  `Diem` float DEFAULT NULL,
-  PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`,`HeSoid`) USING BTREE
+  `Diem1` double(10,2) NOT NULL DEFAULT 0.00,
+  `Diem2` double(10,2) NOT NULL DEFAULT 0.00,
+  `Diem3` double(10,2) NOT NULL DEFAULT 0.00,
+  `dtbMon` double(10,2) NOT NULL DEFAULT 0.00,
+  PRIMARY KEY (`HocSinhid`,`MonHocid`,`HocKyid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -45,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `chitietdiem` (
 -- Table structure for table `chitietquyen`
 --
 
+DROP TABLE IF EXISTS `chitietquyen`;
 CREATE TABLE IF NOT EXISTS `chitietquyen` (
   `maquyen` varchar(50) NOT NULL,
   `machucnang` varchar(50) NOT NULL,
@@ -78,7 +82,10 @@ INSERT INTO `chitietquyen` (`maquyen`, `machucnang`, `enable`) VALUES
 ('HS', 'CN18', '1'),
 ('HS', 'CN19', '1'),
 ('HS', 'CN20', '1'),
-('admin', 'CN21', '1');
+('admin', 'CN21', '1'),
+('DD', 'CN1', '0'),
+('DD', 'CN2', '0'),
+('DD', 'CN3', '0');
 
 -- --------------------------------------------------------
 
@@ -86,6 +93,7 @@ INSERT INTO `chitietquyen` (`maquyen`, `machucnang`, `enable`) VALUES
 -- Table structure for table `chucnang`
 --
 
+DROP TABLE IF EXISTS `chucnang`;
 CREATE TABLE IF NOT EXISTS `chucnang` (
   `machucnang` varchar(50) NOT NULL,
   `tenchucnang` varchar(50) NOT NULL,
@@ -97,28 +105,28 @@ CREATE TABLE IF NOT EXISTS `chucnang` (
 --
 
 INSERT INTO `chucnang` (`machucnang`, `tenchucnang`, `img`) VALUES
-('CN1', 'QL Học Sinh', ':Shop_20px.png:Shop_20px_active.png'),
-('CN2', 'QL Giáo Viên', ':Shop_20px.png:Shop_20px_active.png'),
-('CN3', 'QL Môn Học', ':Shop_20px.png:Shop_20px_active.png'),
-('CN4', 'QL Năm Học', ':Shop_20px.png:Shop_20px_active.png'),
-('CN5', 'QL Phân Công', ':Shop_20px.png:Shop_20px_active.png'),
-('CN6', 'QL Tài Khoản', ':Shop_20px.png:Shop_20px_active.png'),
-('CN9', 'Thanh Toán HP', ':Shop_20px.png:Shop_20px_active.png'),
-('CN8', 'Xem Ý Kiến', ':Shop_20px.png:Shop_20px_active.png'),
-('CN7', 'QL Điểm', ':Shop_20px.png:Shop_20px_active.png'),
-('CN10', 'Thống Kê', ':Shop_20px.png:Shop_20px_active.png'),
-('CN11', 'Thông Báo HS/GV', ':Shop_20px.png:Shop_20px_active.png'),
-('CN12', 'Danh sách HS', ':Shop_20px.png:Shop_20px_active.png'),
-('CN13', 'Nhập Điểm', ':Shop_20px.png:Shop_20px_active.png'),
-('CN14', 'Thông Tin GV', ':Shop_20px.png:Shop_20px_active.png'),
-('CN15', 'Gửi Thông Báo', ':Shop_20px.png:Shop_20px_active.png'),
-('CN16', 'Nhận Thông Báo', ':Shop_20px.png:Shop_20px_active.png'),
-('CN17', 'Đổi mật khấu', ':Shop_20px.png:Shop_20px_active.png'),
-('CN18', 'Xem Điểm', ':Shop_20px.png:Shop_20px_active.png'),
-('CN19', 'Góp Ý Kiến', ':Shop_20px.png:Shop_20px_active.png'),
-('CN20', 'Thông Tin HS', ':Shop_20px.png:Shop_20px_active.png'),
-('CN21', 'Phân Quyền', ':Shop_20px.png:Shop_20px_active.png'),
-('CN22', 'HS NHậnTB', ':Shop_20px.png:Shop_20px_active.png');
+('CN1', 'QL Học Sinh', ':icon_hs_t.png:icon_hs.png'),
+('CN2', 'QL Giáo Viên', ':ttgv_t.png:ttgv.png'),
+('CN3', 'QL Môn Học', ':mh_t.png:mh.png'),
+('CN4', 'QL Năm Học', ':nh_t.png:nh.png'),
+('CN5', 'QL Phân Công', ':pc_t.png:pc.png'),
+('CN6', 'QL Tài Khoản', ':account_t.png:account.png'),
+('CN9', 'Thanh Toán HP', ':hp_t.png:hp.png'),
+('CN8', 'Xem Ý Kiến', ':yk_t.png:yk.png'),
+('CN7', 'QL Điểm', ':grade_t.png:grade.png'),
+('CN10', 'Thống Kê', ':tk_t.png:tk.png'),
+('CN11', 'Thông Báo HS/GV', ':tb_t.png:tb.png'),
+('CN12', 'Danh sách HS', ':lhs_t.png:lhs.png'),
+('CN13', 'Nhập Điểm', ':nd_t.png:nd.png'),
+('CN14', 'Thông Tin GV', ':ttgv_t.png:ttgv.png'),
+('CN15', 'Gửi Thông Báo', ':tb_t.png:tb.png'),
+('CN16', 'Nhận Thông Báo', ':tb_t.png:tb.png'),
+('CN17', 'Đổi mật khấu', ':dmk_t.png:dmk.png'),
+('CN18', 'Xem Điểm', ':grade_t.png:grade.png'),
+('CN19', 'Góp Ý Kiến', ':yk_t.png:yk.png'),
+('CN20', 'Thông Tin HS', ':icon_hs_t.png:icon_hs.png'),
+('CN21', 'Phân Quyền', ':pq_t.png:pq.png'),
+('CN22', 'HS NHậnTB', ':icon_hs_.png:icon_hs.png');
 
 -- --------------------------------------------------------
 
@@ -126,12 +134,13 @@ INSERT INTO `chucnang` (`machucnang`, `tenchucnang`, `img`) VALUES
 -- Table structure for table `diemtbhocky`
 --
 
+DROP TABLE IF EXISTS `diemtbhocky`;
 CREATE TABLE IF NOT EXISTS `diemtbhocky` (
   `HocSinhid` varchar(10) NOT NULL,
   `HocKyid` int(11) NOT NULL,
   `NamHocid` varchar(20) NOT NULL,
-  `DiemTrungBinh` float DEFAULT NULL,
-  PRIMARY KEY (`HocSinhid`,`HocKyid`)
+  `DiemTrungBinh` double DEFAULT NULL,
+  PRIMARY KEY (`HocSinhid`,`HocKyid`,`NamHocid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -140,6 +149,7 @@ CREATE TABLE IF NOT EXISTS `diemtbhocky` (
 -- Table structure for table `giaovien`
 --
 
+DROP TABLE IF EXISTS `giaovien`;
 CREATE TABLE IF NOT EXISTS `giaovien` (
   `GiaoVienid` varchar(5) NOT NULL DEFAULT 'GV',
   `TenGiaoVien` varchar(50) NOT NULL,
@@ -149,6 +159,7 @@ CREATE TABLE IF NOT EXISTS `giaovien` (
   `DienThoai` varchar(11) NOT NULL DEFAULT '',
   `PhanMon` varchar(50) NOT NULL,
   `IMG` text DEFAULT NULL,
+  `isSubmit` tinyint(1) NOT NULL DEFAULT 0,
   `enable` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`GiaoVienid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -159,6 +170,7 @@ CREATE TABLE IF NOT EXISTS `giaovien` (
 -- Table structure for table `hocky`
 --
 
+DROP TABLE IF EXISTS `hocky`;
 CREATE TABLE IF NOT EXISTS `hocky` (
   `HocKyid` int(11) NOT NULL,
   `TenHocKy` varchar(50) NOT NULL,
@@ -179,6 +191,7 @@ INSERT INTO `hocky` (`HocKyid`, `TenHocKy`) VALUES
 -- Table structure for table `hocphi`
 --
 
+DROP TABLE IF EXISTS `hocphi`;
 CREATE TABLE IF NOT EXISTS `hocphi` (
   `idhs` varchar(10) NOT NULL,
   `idnh` varchar(22) NOT NULL,
@@ -192,6 +205,7 @@ CREATE TABLE IF NOT EXISTS `hocphi` (
 -- Table structure for table `hocsinh`
 --
 
+DROP TABLE IF EXISTS `hocsinh`;
 CREATE TABLE IF NOT EXISTS `hocsinh` (
   `HocSinhid` varchar(10) NOT NULL DEFAULT 'HS',
   `HoVaTen` varchar(50) NOT NULL,
@@ -211,12 +225,13 @@ CREATE TABLE IF NOT EXISTS `hocsinh` (
 -- Table structure for table `kqhocsinhcanam`
 --
 
+DROP TABLE IF EXISTS `kqhocsinhcanam`;
 CREATE TABLE IF NOT EXISTS `kqhocsinhcanam` (
   `HocSinhid` varchar(10) NOT NULL,
   `NamHocid` varchar(50) NOT NULL,
   `HocLuc` varchar(50) DEFAULT NULL,
   `HanhKiem` varchar(10) DEFAULT 'Tốt',
-  `Diemtb` float DEFAULT NULL,
+  `Diemtb` double DEFAULT NULL,
   `KetQua` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`HocSinhid`,`NamHocid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -227,6 +242,7 @@ CREATE TABLE IF NOT EXISTS `kqhocsinhcanam` (
 -- Table structure for table `lop`
 --
 
+DROP TABLE IF EXISTS `lop`;
 CREATE TABLE IF NOT EXISTS `lop` (
   `Lopid` int(11) NOT NULL,
   `TenLop` varchar(50) NOT NULL,
@@ -251,6 +267,7 @@ INSERT INTO `lop` (`Lopid`, `TenLop`) VALUES
 -- Table structure for table `monhoc`
 --
 
+DROP TABLE IF EXISTS `monhoc`;
 CREATE TABLE IF NOT EXISTS `monhoc` (
   `MonHocid` varchar(11) NOT NULL,
   `TenMonHoc` varchar(50) NOT NULL,
@@ -263,6 +280,7 @@ CREATE TABLE IF NOT EXISTS `monhoc` (
 -- Table structure for table `namhoc`
 --
 
+DROP TABLE IF EXISTS `namhoc`;
 CREATE TABLE IF NOT EXISTS `namhoc` (
   `NamHocid` varchar(50) NOT NULL,
   `NamBatDau` int(5) NOT NULL,
@@ -278,6 +296,7 @@ CREATE TABLE IF NOT EXISTS `namhoc` (
 -- Table structure for table `phancong`
 --
 
+DROP TABLE IF EXISTS `phancong`;
 CREATE TABLE IF NOT EXISTS `phancong` (
   `GiaoVienid` varchar(5) NOT NULL DEFAULT 'GV',
   `Lopid` int(11) NOT NULL,
@@ -290,6 +309,7 @@ CREATE TABLE IF NOT EXISTS `phancong` (
 -- Table structure for table `phanlop`
 --
 
+DROP TABLE IF EXISTS `phanlop`;
 CREATE TABLE IF NOT EXISTS `phanlop` (
   `HocSinhid` varchar(10) NOT NULL,
   `Lopid` int(11) NOT NULL,
@@ -303,6 +323,7 @@ CREATE TABLE IF NOT EXISTS `phanlop` (
 -- Table structure for table `quyen`
 --
 
+DROP TABLE IF EXISTS `quyen`;
 CREATE TABLE IF NOT EXISTS `quyen` (
   `tenquyen` varchar(50) NOT NULL,
   `maquyen` varchar(50) NOT NULL,
@@ -324,6 +345,7 @@ INSERT INTO `quyen` (`tenquyen`, `maquyen`, `enable`) VALUES
 -- Table structure for table `thongbao`
 --
 
+DROP TABLE IF EXISTS `thongbao`;
 CREATE TABLE IF NOT EXISTS `thongbao` (
   `idnguoigui` varchar(11) NOT NULL,
   `tieudetb` text DEFAULT NULL,
@@ -338,9 +360,10 @@ CREATE TABLE IF NOT EXISTS `thongbao` (
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `password` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `role` varchar(50) NOT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -358,6 +381,7 @@ INSERT INTO `user` (`username`, `password`, `role`, `enable`) VALUES
 -- Table structure for table `ykien`
 --
 
+DROP TABLE IF EXISTS `ykien`;
 CREATE TABLE IF NOT EXISTS `ykien` (
   `idnguoigui` varchar(10) NOT NULL,
   `tieudeyk` text DEFAULT NULL,

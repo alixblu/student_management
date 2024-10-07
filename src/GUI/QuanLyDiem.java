@@ -315,13 +315,13 @@ public class QuanLyDiem extends JPanel{
         for(HocKyDTO hk:dshk){
             String idhk = hk.getHocKyID();
 
-            for(HocSinhDTO hs:dshs){
-                String idhs = hs.getHocSinhID();
+            for(LopDTO lop:dslop){
+                String idlop = lop.getLopID();
                 
-                for(LopDTO lop:dslop){
-                    String idlop = lop.getLopID();
+                for(HocSinhDTO hs:dshs){
+                    String idhs = hs.getHocSinhID();
         
-                    if(plbus.get(idhs, idnh, idlop)!=null){
+                    if(plbus.get(idhs, idnh, idlop)!=null){                
 
                         for(MonHocDTO mh:dsmon){
                             String idmh = mh.getMonHocID();

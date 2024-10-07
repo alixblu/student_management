@@ -1,5 +1,6 @@
 package BUS;
 
+import DTO.PhanLopDTO;
 import DTO.ThongBaoDTO;
 import java.util.ArrayList;
 
@@ -57,11 +58,44 @@ public class ThongBaoBUS {
             }
         }
     }
-
+    //HS, HSK
+    public ArrayList<ThongBaoDTO> search( String username){
+        ArrayList<ThongBaoDTO> search = new ArrayList<>();
+        PhanLopBUS plbus = new PhanLopBUS(1);
+        
+        for(ThongBaoDTO tb: dsThongBao){
+            if(!isNumeric(tb.getLoaitb())){
+                
+                if(tb.getLoaitb().equals("ALL")){
+                    search.add(tb);
+                    continue;
+                }
+                if(username.contains(tb.getLoaitb())){
+                    System.out.println("true");
+                    search.add(tb);
+                }
+            }
+            else{
+                String idnam = tb.getThoigiantb().substring(0, 4)
+                                +String.valueOf(Integer.parseInt(tb.getThoigiantb().substring(0, 4))+1);
+                if(plbus.get(username, idnam, tb.getLoaitb()) != null){
+                    search.add(tb);
+                }else continue;
+            }
+        }
+        return search;
+    }
+    public boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     public static void main(String[] args) {
         ThongBaoBUS thongBaoBUS = new ThongBaoBUS();
-        ArrayList<ThongBaoDTO> dsThongBao = thongBaoBUS.getList();
-
+        ArrayList<ThongBaoDTO> dsThongBao = thongBaoBUS.search("HSK242");
         for (ThongBaoDTO tb : dsThongBao) {
             System.out.println("ID Người gửi: " + tb.getIdnguoigui());
             System.out.println("Tiêu đề: " + tb.getTieudetb());

@@ -325,7 +325,7 @@ public class gv_guiTB extends JPanel{
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(850, 670);
-        gv_guiTB panel = new gv_guiTB(850, 670,"GV3");
+        gv_guiTB panel = new gv_guiTB(850, 670,"GV1");
         frame.add(panel);
         frame.setVisible(true);
     }
