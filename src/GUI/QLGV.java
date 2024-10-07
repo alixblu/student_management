@@ -533,7 +533,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         // Tạo tài khoản user cho giáo viên mới
         user accgv = new user(giaovienID, sdt, "GV", "1"); // "GV" là vai trò giáo viên, "1" là mật khẩu mặc định
     
-        // Thêm giáo viên vào BUS
+        // // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
     
         // Thêm tài khoản giáo viên vào User_BUS
@@ -543,7 +543,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         // Thêm dữ liệu vào bảng
         Object[] rowData = { giaovienID, tenGV, gioiTinh, dateString, tf[4].getText(), soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
-        autoCreateAccount(giaovienID);
+        // autoCreateAccount(giaovienID);
 
         clearTextFields();
 
@@ -571,32 +571,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         clearTextFields();
     }
 
-    // public void updateRow() {
-    // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    // Date date = dateChooser.getDate();
-    // String dateString = sdf.format(date);
-
-    // // Lấy các giá trị từ các trường nhập
-    // String giaovienID = tf[0].getText();
-    // String tenHocSinh = tf[1].getText();
-    // String gioiTinh = (String) genderComboBox.getSelectedItem();
-    // String ngaySinh = dateString;
-    // String soDienThoai = tf[4].getText();
-    // String diaChi = tf[5].getText();
-    // String IMG = tf[6].getText();
-
-    // GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID,ngaySinh, tenHocSinh,
-    // gioiTinh, IMG, soDienThoai, diaChi);
-    // giaovien.setIMG(IMG);
-    // gvBUS.updateGV(giaovien);
-
-    // Object[] rowData = { giaovienID, tenHocSinh, gioiTinh, ngaySinh, diaChi,
-    // soDienThoai, IMG };
-    // int row = t.getSelectedRow();
-    // tblmodel.removeRow(row);
-    // tblmodel.addRow(rowData);
-    // clearTextFields();
-    // }
+    
     public void updateRow(String giaovienID) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
@@ -781,7 +756,8 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (diaChi.isEmpty() || !diaChi.matches("^[\\w\\s/]+$") || diaChi.matches("^[\\d/]+$")) {
+        // || !diaChi.matches("^[\\w\\s/]+$") 
+        if (!diaChi.matches("^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\\\s,./-]+)$")) {
             JOptionPane.showMessageDialog(null, "Địa chỉ có thể chứa các ký tự chữ, số, dấu cách, và dấu '/'!");
             return false;
         }
@@ -967,13 +943,13 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         }
     }
 
-    public void autoCreateAccount(String magv) {
-        accBUS = new ChangeAcc_BUS();
-        String username = magv;
-        String password = tf[5].getText();
-        Account_DTO acc = new Account_DTO(username, password);
-        accBUS.Add(acc);
-    }
+    // public void autoCreateAccount(String magv) {
+    //     accBUS = new ChangeAcc_BUS();
+    //     String username = magv;
+    //     String password = tf[5].getText();
+    //     Account_DTO acc = new Account_DTO(username, password);
+    //     accBUS.Add(acc);
+    // }
 
     @Override
     public void mouseClicked(MouseEvent e) {
