@@ -89,6 +89,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     private JComboBox<String> phanmonComboBox;
     private ArrayList<MonHocDTO> listmh;
     GiaoVienBUS gvBUS = new GiaoVienBUS();
+    User_BUS userBus = new User_BUS();
     MonHocBUS mhBus = new MonHocBUS();
     private static String pathAnhdd = "";
     ChangeAcc_BUS accBUS = new ChangeAcc_BUS();
@@ -517,18 +518,28 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
         String dateString = sdf.format(date); // Convert Date to String
-
+    
+        // Lấy các giá trị từ các trường nhậpKhô
         Integer countGV = gvBUS.CountGV() + 1;
         String giaovienID = "GV" + countGV;
         String gioiTinh = (String) genderComboBox.getSelectedItem();
         String phanMon = (String) phanmonComboBox.getSelectedItem();
         String IMG = tf[7].getText();
-
-        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, dateString, soDienThoai, phanMon,
-                tf[4].getText());
-
+        String sdt = tf[5].getText();
+    
+        // Tạo đối tượng giáo viên mới
+        GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, dateString, soDienThoai, phanMon, tf[4].getText());
+    
+        // Tạo tài khoản user cho giáo viên mới
+        user accgv = new user(giaovienID, sdt, "GV", "1"); // "GV" là vai trò giáo viên, "1" là mật khẩu mặc định
+    
+        // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
-
+    
+        // Thêm tài khoản giáo viên vào User_BUS
+        User_BUS userBUS = new User_BUS();
+        userBUS.add(accgv);
+    
         // Thêm dữ liệu vào bảng
         Object[] rowData = { giaovienID, tenGV, gioiTinh, dateString, tf[4].getText(), soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
@@ -538,7 +549,8 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         return true; // Trả về true để xác nhận rằng việc thêm thành công
     }
-
+    
+    
     // Phương thức kiểm tra tính hợp lệ của số điện thoại
     private boolean isValidPhoneNumber(String phoneNumber) {
         return phoneNumber.matches("0\\d{9}"); // Kiểm tra bắt đầu từ 0 và có đủ 10 số
@@ -769,12 +781,12 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        // Thêm kiểm tra cho địa chỉ và ảnh (IMG) nếu cần
-        if (diaChi.isEmpty() || diaChi.matches("^(?![\\d/]+$)[\\w\\s/]+$")) {
-            JOptionPane.showMessageDialog(null, "Địa chỉ không được bỏ trống và không chỉ chứa số!");
+        if (diaChi.isEmpty() || !diaChi.matches("^[\\w\\s/]+$") || diaChi.matches("^[\\d/]+$")) {
+            JOptionPane.showMessageDialog(null, "Địa chỉ có thể chứa các ký tự chữ, số, dấu cách, và dấu '/'!");
             return false;
         }
-
+        
+    
         return true; // Nếu tất cả các trường thông tin hợp lệ
     }
 
@@ -807,9 +819,8 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        // Thêm kiểm tra cho địa chỉ và ảnh (IMG) nếu cần
-        if (diaChi.isEmpty() || diaChi.matches("^(?![\\d/]+$)[\\w\\s/]+$")) {
-            JOptionPane.showMessageDialog(null, "Địa chỉ không được bỏ trống và không chỉ chứa số!");
+        if (diaChi.isEmpty() || !diaChi.matches("^[\\w\\s/]+$") || diaChi.matches("^[\\d/]+$")) {
+            JOptionPane.showMessageDialog(null, "Địa chỉ có thể chứa các ký tự chữ, số, dấu cách, và dấu '/'!");
             return false;
         }
 

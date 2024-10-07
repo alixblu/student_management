@@ -421,7 +421,7 @@ public class diemHS extends JPanel {
         // Nếu không có dữ liệu, hiển thị thông báo
         if (!hasData) {
             tblModel.setRowCount(0);
-            JOptionPane.showMessageDialog(null, "Không có dữ liệu!");
+            // JOptionPane.showMessageDialog(null, "Không có dữ liệu!");
             System.out.println("Không có dữ liệu nào được thêm vào bảng.");
         }
     }
