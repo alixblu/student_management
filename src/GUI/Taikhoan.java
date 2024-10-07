@@ -111,7 +111,7 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
         init();
         
         // Adding action listeners
-        btnThem.addActionListener(this);
+        // btnThem.addActionListener(this);
         btnXoa.addActionListener(this);
         btnSua.addActionListener(this);
         btnFind.addActionListener(this);
@@ -119,7 +119,7 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
         btnExpExcel.addActionListener(this);
     
         // Adding mouse listeners
-        btnThem.addMouseListener(this);
+        // btnThem.addMouseListener(this);
         btnXoa.addMouseListener(this);
         btnSua.addMouseListener(this);
         btnFind.addMouseListener(this);
@@ -211,15 +211,6 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
         Color myColor = new Color(99, 116, 198);
         JPanel Pchucnang = new JPanel();
         Pchucnang.setLayout(new GridLayout(2, 2, 15, 15)); // Chia thành 2 hàng và 2 cột
-
-        // Nút Thêm
-        java.net.URL imageURL_Add = getClass().getResource("/image/btnAdd.png");
-        ImageIcon orgIcon = new ImageIcon(imageURL_Add);
-        Image scaleImg = orgIcon.getImage().getScaledInstance(155, 40, Image.SCALE_SMOOTH);
-        btnThem = new JButton(new ImageIcon(scaleImg));
-        btnThem.setPreferredSize(new Dimension(155, 40));
-        btnThem.setBorder(raisedBevel);
-        Pchucnang.add(btnThem); // Thêm nút vào panel
 
         // Nút Xóa
         java.net.URL imageURL_Del = getClass().getResource("/image/btnDelete.png");
@@ -401,22 +392,22 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
     }
 
     public void updateRow() {
-        // Get the values from the text fields and combo box
         String username = tf[0].getText();
         String password = tf[1].getText();
         String role = (String) roleComboBox.getSelectedItem(); // Get the selected item from the combo box
         String enable = tf[3].getText();
-    
-        // Create a new user object with updated values
+        if (password != null && !password.contains(" ")) {
+        } else {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được chứa khoảng trắng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         user updatedUser = new user(username, password, role, enable);
     
-        // Update the user in the database
         uBUS.updateuser(updatedUser);
     
-        // Get the index of the selected row
         int row = t.getSelectedRow();
     
-        // Update the values in the table model
         tblmodel.setValueAt(username, row, 0);
         tblmodel.setValueAt(password, row, 1);
         tblmodel.setValueAt(role, row, 2);
@@ -476,56 +467,13 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
     
     
     public void resetTable() {
-        // Xóa toàn bộ dữ liệu trong bảng
-        // int rowCount = tblmodel.getRowCount();
-        // for (int i = rowCount - 1; i >= 0; i--) {
-        //     tblmodel.removeRow(i);
-        // }
-        // Tải lại dữ liệu từ nguồn dữ liệu mới vào bảng
-
-            // Khởi tạo lại bảng với dữ liệu mới
-            clearTextFields();
-            t.repaint(); // Cập nhật hiển thị của bảng
-            t.setRowSorter(new TableRowSorter<>(tblmodel));
+        clearTextFields();
+        t.repaint(); // Cập nhật hiển thị của bảng
+        t.setRowSorter(new TableRowSorter<>(tblmodel));
     }
     
     
     
-    public void btnAdd_actionPerformed() {
-        if (checkEmpty()) {
-            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    
-        String user = tf[0].getText();
-        System.out.println(user);
-    
-        if (uBUS.check(user) == true) {
-            JOptionPane.showMessageDialog(this, "Username này đã tồn tại", "CHECK",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }    
-        int result = JOptionPane.showConfirmDialog(this,
-                "Bạn có chắc muốn Thêm tài khoản này",
-                "Xác nhận",
-                JOptionPane.YES_NO_OPTION,
-    
-                JOptionPane.QUESTION_MESSAGE);
-        if (result == JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this,
-                    "Thêm thành công",
-                    "Chức năng thêm",
-                    JOptionPane.INFORMATION_MESSAGE);
-            System.out.println("Ban chon them");
-            tf[0].requestFocus();
-            autoCreateAccount();
-            addRow();
-        }
-    }
-    
-    
-
     public void btnDelete_actionPerformed() {
         String user = tf[0].getText();
         System.out.println(user);
@@ -673,54 +621,27 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
     }
     
 
-    public void autoCreateAccount() {
-        String username = tf[0].getText();
-        String password = tf[1].getText();
-        String role = (String) roleComboBox.getSelectedItem();
-        String enable = tf[3].getText();
-        
-        // Kiểm tra xem thông tin người dùng nhập vào có hợp lệ không
-        if(username.isEmpty() || password.isEmpty() || role.isEmpty() || enable.isEmpty()) {
-            // Thông báo lỗi hoặc xử lý tùy ý
-            return;
-        }
-        
-        User_BUS accBUS = new User_BUS();
-        user acc = new user(username, password, role, enable);
-        accBUS.add(acc);
-    }
-    
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == JsearchText) {
             clearTextFields();
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+ 
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
 
-        if (e.getSource() == btnThem) {
-            btnThem.setBackground(Color.red);
-        }
         if (e.getSource() == btnXoa) {
             btnXoa.setBackground(Color.red);
         }
@@ -733,16 +654,14 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
         if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(Color.green);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (e.getSource() == btnThem) {
-            btnThem.setBackground(defaultColor);
-        } else if (e.getSource() == btnXoa) {
+        // if (e.getSource() == btnThem) {
+        //     btnThem.setBackground(defaultColor);
+        // } else 
+        if (e.getSource() == btnXoa) {
             btnXoa.setBackground(defaultColor);
         } else if (e.getSource() == btnSua) {
             btnSua.setBackground(defaultColor);
@@ -751,18 +670,11 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
         } else if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(defaultColor);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnThem) {
-            btnAdd_actionPerformed();
-        }
-        // Other button actions
-        else if (e.getSource() == btnXoa) {
+         if (e.getSource() == btnXoa) {
             btnDelete_actionPerformed();
         } else if (e.getSource() == btnSua) {
             btnSua_actionPerformed();

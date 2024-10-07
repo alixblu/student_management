@@ -392,7 +392,7 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
     }
 
     public void btnAdd_actionPerformed() {
-    	
+        String tenmh = tf[1].getText();
     	Integer countHS = +mhBUS.CountMH() + 1;
     	String monhocID = "MH" + String.valueOf(countHS);
 //    	tf[0].setText(monhocID);
@@ -402,6 +402,13 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+        if (tenmh.matches("[a-zA-Z0-9\\s]+")) {
+            System.out.println("...");
+        } else {
+            JOptionPane.showMessageDialog(this, "Tên môn học không được chứa kí tự đặc biệt!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         
         int result = JOptionPane.showConfirmDialog(this,"Bạn có chắc muốn Thêm môn học này","Xác nhận",
                 JOptionPane.YES_NO_OPTION,
@@ -448,7 +455,6 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
 
     public void btnSua_actionPerformed() {
         String mamh = tf[0].getText();
-
         if (mamh.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Hãy nhập ID môn học cần sửa", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -458,6 +464,7 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
             JOptionPane.showMessageDialog(this, "Không tồn tại ID này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
 
         int result = JOptionPane.showConfirmDialog(this,
                 "Bạn có chắc muốn sửa học sinh này",

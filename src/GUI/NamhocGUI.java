@@ -2,13 +2,10 @@ package GUI;
 import java.awt.GridLayout;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -32,54 +28,35 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.border.Border;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import com.toedter.calendar.JDateChooser;
 
 import BUS.ChangeAcc_BUS;
 import BUS.GiaoVienBUS;
+import BUS.KQ_HocSinhCaNamBUS;
 
 import java.time.LocalDate;
-import DTO.Account_DTO;
 import DTO.GiaoVienDTO;
-import DTO.HocSinhDTO;
+import DTO.KQ_HocSinhCaNamDTO;
 import DTO.NamHocDTO;
 import BUS.NamHocBUS;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-// import org.apache.poi.ss.usermodel.*;
-// import org.apache.poi.xssf.usermodel.XSSFCell;
-// import org.apache.poi.xssf.usermodel.XSSFRow;
-// import org.apache.poi.xssf.usermodel.XSSFSheet;
-// import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-// import org.apache.poi.common.io.FileOutputStream;
-/*
-* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-* Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
-*/
+
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
-// import org.apache.poi.ss.usermodel.Row;
-// import org.apache.commons.io.*;;
 
 /**
  *
@@ -524,7 +501,18 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
     
 
     public void btnHK2_actionPerformed() throws SQLException{
-        String manamhoc = tf[0].getText(); 
+        KQ_HocSinhCaNamBUS ktcn = new KQ_HocSinhCaNamBUS(1);
+        ArrayList<KQ_HocSinhCaNamDTO> dscn = ktcn.getList();
+        String manamhoc = tf[0].getText();
+        for(KQ_HocSinhCaNamDTO cn : dscn){
+            System.out.println("đã vào");
+            if(cn.getNamHocID().equals(manamhoc)){
+                if(cn.getKetQua().equals("")){
+                    JOptionPane.showMessageDialog(this, "Chưa kết thúc học kì 1 nên không tạo HK2");
+                    return;
+                }
+            }
+        }
         String ma2 = manamhoc.substring(0, manamhoc.length() - 2) + "02";
         if (nhBUS.ktraManh(ma2) == 1) {
             JOptionPane.showMessageDialog(t, "Học kỳ 2 của năm học " +tf[1].getText()+" dã được tạo");
@@ -608,7 +596,6 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnThem) {
             btnAdd_actionPerformed();
-
         }
         else if (e.getSource() == btnFind) {
             btnFind_actionPerformed();
@@ -624,14 +611,12 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
             try {
                 exportExcel();
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         } else if (e.getSource() == btnHK2) {
             try {
                 btnHK2_actionPerformed();
             } catch (SQLException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
