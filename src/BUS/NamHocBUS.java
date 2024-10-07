@@ -229,9 +229,20 @@ public class NamHocBUS {
         return null;
     }
 
+    public ArrayList<String> listNamBatDau()
+    {
+        ArrayList<String> listNamBD = new ArrayList<>();
+        ArrayList<NamHocDTO> namhoc = getList();
+        for (NamHocDTO namHocDTO : namhoc) {
+            listNamBD.add(namHocDTO.getNamHocBatDau()+"");
+        }
+        return listNamBD;
+    }
     public static void main(String[] args) {
         NamHocBUS namhocbus = new NamHocBUS();
-        NamHocDTO nh = namhocbus.getNamHocByConditon("20242025");
-        System.out.println(nh.getNamHocBatDau());
+        ArrayList<String>nh = namhocbus.listNamBatDau();
+        for (String string : nh) {
+            System.out.println(string);
+        }
     }
 }
