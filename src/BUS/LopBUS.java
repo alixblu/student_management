@@ -166,20 +166,10 @@ public class LopBUS {
 
     public static void main(String[] args) {
         // Create an instance of LopBUS
-        LopBUS lopBUS = new LopBUS(1);
-    
-        // Search for classes with the name "10A1"
-        String classNameToSearch = "Tất cả";
-        ArrayList<LopDTO> searchResult = lopBUS.search(null, classNameToSearch);
-    
-        // Print the search result
-        if (!searchResult.isEmpty()) {
-            System.out.println("Search Result for Class " + classNameToSearch + ":");
-            for (LopDTO lop : searchResult) {
-                System.out.println(lop);
-            }
-        } else {
-            System.out.println("No result found for Class " + classNameToSearch);
+        LopBUS lopBUS = new LopBUS();
+        ArrayList<LopDTO> lop = lopBUS.getList();
+        for (LopDTO lopDTO : lop) {
+            System.out.println(lopDTO.getTenLop());
         }
     }
     

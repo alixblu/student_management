@@ -263,7 +263,6 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         chooseImage_1();
-                        
                     }
                 });
                 buttons[i].setBounds(toadoXbutton, toadoYbutton, 120, 30);
@@ -495,20 +494,19 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         String tenHocSinh = tf[1].getText();
         String gioiTinh = (String) genderComboBox.getSelectedItem();
         String ngaySinh = dateString;
-        String soDienThoai = tf[4].getText();
-        String diaChi = tf[5].getText();
+        String soDienThoai = tf[5].getText();
+        String diaChi = tf[4].getText();
         String IMG = tf[6].getText();
-        // luuanhkhixacnhan(IMG);
-        HocSinhDTO hocSinh = new HocSinhDTO(hocSinhID, tenHocSinh, gioiTinh, ngaySinh, diaChi,
-                soDienThoai);
+        String tenlop = classComboBox.getSelectedItem().toString();
+        luuanhkhixacnhan();
+        HocSinhDTO hocSinh = new HocSinhDTO(hocSinhID, tenHocSinh, gioiTinh, ngaySinh, soDienThoai, diaChi);
         hocSinh.setIMG(IMG);
         System.out.println(hocSinh.toString());
         // Gọi phương thức addHS() từ lớp QLHS_BUS để thêm học sinh vào cơ sở dữ liệu
         hsBUS.updateHS(hocSinh);
-
-        Object[] rowData = { hocSinhID, tenHocSinh, gioiTinh, ngaySinh, diaChi, soDienThoai, IMG };
-
         int row = t.getSelectedRow();
+        String nienkhoa = (String.valueOf(t.getValueAt(row, 8)));
+        Object[] rowData = { hocSinhID, tenHocSinh, gioiTinh, ngaySinh, diaChi, soDienThoai, IMG, tenlop, nienkhoa };
         tblmodel.removeRow(row);
         tblmodel.addRow(rowData);
         clearTextFields();
@@ -638,7 +636,6 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         }
         else if(checkTen(tf[1].getText())==false)
         {
-            System.out.println("Sai teen roi efeetge");
             JOptionPane.showMessageDialog(this, "Tên học sinh không hợp lệ!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -659,9 +656,10 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            luuanhkhixacnhan();
+            //luuanhkhixacnhan();
             updateRow();
             JOptionPane.showMessageDialog(this, "Bạn đã sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            
         } else if (result == JOptionPane.NO_OPTION) {
             JOptionPane.showMessageDialog(this, "Bạn đã sửa thất bại", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -735,14 +733,13 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 row.createCell(4).setCellValue(hocsinhdto.getDiaChi());
                 row.createCell(5).setCellValue(hocsinhdto.getDienThoai());
                 row.createCell(6).setCellValue(hocsinhdto.getIMG());
-                PhanLopDTO pl = new PhanLopBUS().get(hocsinhdto.getHocSinhID());
+                PhanLopBUS plBus = new PhanLopBUS();
+                PhanLopDTO pl = plBus.get(hocsinhdto.getHocSinhID());
                 ArrayList<LopDTO> dslop = new LopBUS().getList();
                 for (LopDTO lopDTO : dslop) {
                     if(pl.getLopID().equals(lopDTO.getLopID()))
                     {
                         row.createCell(7).setCellValue(lopDTO.getTenLop());
-                        break;
-                    }else{
                         break;
                     }
                 }
