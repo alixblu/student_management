@@ -170,4 +170,10 @@ public class PhanLopBUS {
         ArrayList<PhanLopDTO> dsphanlop = pl.list();
         return dsphanlop; 
     }
+
+    public static void main(String[] args) {
+        PhanLopBUS pl = new PhanLopBUS();
+        PhanLopDTO lop = pl.get("HSK243");
+        System.out.println(lop.getLopID()+"  "+ lop.getHocSinhID());
+    }
 }
