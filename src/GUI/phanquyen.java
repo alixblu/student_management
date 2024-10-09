@@ -293,10 +293,11 @@ public class phanquyen extends JPanel implements ActionListener {
 
                 String tenquyen = txtTenQuyen.getText();
 
-                if (!tenquyen.matches("[a-zA-Z\\s]+")) {
+                if (!tenquyen.matches("[\\p{L}\\s]+")) {
                     JOptionPane.showMessageDialog(null, "Tên quyền không được chứa ký tự đặc biệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
-                } 
+                }
+                
                 
 
 
@@ -356,6 +357,7 @@ public class phanquyen extends JPanel implements ActionListener {
         JLabel lblMaQuyen = new JLabel("Mã Quyền:");
         JTextField txtMaQuyen = new JTextField();
         txtMaQuyen.setPreferredSize(new Dimension(150, 25));
+        txtMaQuyen.setEnabled(false);
         JLabel lblTenQuyen = new JLabel("Tên Quyền:");
         JTextField txtTenQuyen = new JTextField();
         txtTenQuyen.setPreferredSize(new Dimension(150, 25));
@@ -429,6 +431,10 @@ public class phanquyen extends JPanel implements ActionListener {
                     if (pqBUS.checkExist(newmaquyen)) {
                         JOptionPane.showMessageDialog(editDialog, "Mã quyền đã tồn tại", "Cảnh báo",
                                 JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (!newtenquyen.matches("[\\p{L}\\s]+")) {
+                        JOptionPane.showMessageDialog(null, "Tên quyền không được chứa ký tự đặc biệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
