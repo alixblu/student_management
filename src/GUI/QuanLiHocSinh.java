@@ -85,7 +85,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
     private ImageIcon imageIcon;
     private String pathAnhdd_1;
-    String imagePath;
+    String imagePath = "";
     String destinationFolder;
     String destinationPath;
 
@@ -477,7 +477,6 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         String diaChi = tf[4].getText();
         String IMG = tf[6].getText();
         String tenlop = classComboBox.getSelectedItem().toString();
-        luuanhkhixacnhan();
         HocSinhDTO hocSinh = new HocSinhDTO(hocSinhID, tenHocSinh, gioiTinh, ngaySinh, soDienThoai, diaChi);
         hocSinh.setIMG(IMG);
         System.out.println(hocSinh.toString());
@@ -635,8 +634,8 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
 
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
-            //luuanhkhixacnhan();
             updateRow();
+            luuanhkhixacnhan();
             JOptionPane.showMessageDialog(this, "Bạn đã sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             
         } else if (result == JOptionPane.NO_OPTION) {
