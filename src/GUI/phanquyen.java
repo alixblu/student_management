@@ -146,7 +146,13 @@ public class phanquyen extends JPanel implements ActionListener {
             rowData[i][1] = quyen.getTenquyen();
         }
 
-        model = new DefaultTableModel(rowData, header);
+        // model = new DefaultTableModel(rowData, header);
+        model = new DefaultTableModel(rowData, header) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Disables editing
+            }
+        };
         t = new JTable(model);
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         t.getTableHeader().setBackground(new Color(70, 130, 180)); // Steel blue header
@@ -154,11 +160,11 @@ public class phanquyen extends JPanel implements ActionListener {
         t.setSelectionBackground(new Color(100, 149, 237)); // Cornflower blue selection
         t.setGridColor(new Color(173, 216, 230)); // Light blue grid lines
         t.setRowHeight(50);
-
         Font headerFont = t.getTableHeader().getFont();
         t.getTableHeader().setFont(new Font(headerFont.getName(), Font.BOLD, 16));
         scrollpane = new JScrollPane(t);
         scrollpane.setPreferredSize(new Dimension(846, 400));
+        
         t.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -168,6 +174,7 @@ public class phanquyen extends JPanel implements ActionListener {
                     Logger.getLogger(phanquyen.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+
         });
 
         return scrollpane;
@@ -293,7 +300,7 @@ public class phanquyen extends JPanel implements ActionListener {
 
                 String tenquyen = txtTenQuyen.getText();
 
-                if (!tenquyen.matches("[\\p{L}\\s]+")) {
+                if (!tenquyen.matches("[\\p{L}\\s\\d]+")) {
                     JOptionPane.showMessageDialog(null, "Tên quyền không được chứa ký tự đặc biệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -424,19 +431,21 @@ public class phanquyen extends JPanel implements ActionListener {
                         dschitietquyen.add(ctq);
                     }
                 }
-                pqBUS.deleteQuyen(maQuyen);
-                pqBUS.deleteChitietquyen(maQuyen);
+                
 
                 if (!newmaquyen.isEmpty() && !newtenquyen.isEmpty() && !dschitietquyen.isEmpty()) {
-                    if (pqBUS.checkExist(newmaquyen)) {
-                        JOptionPane.showMessageDialog(editDialog, "Mã quyền đã tồn tại", "Cảnh báo",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    if (!newtenquyen.matches("[\\p{L}\\s]+")) {
+                    // if (pqBUS.checkExist(newmaquyen)) {
+                    //     JOptionPane.showMessageDialog(editDialog, "Mã quyền đã tồn tại", "Cảnh báo",
+                    //             JOptionPane.ERROR_MESSAGE);
+                    //     return;
+                    // }
+                    if (!newmaquyen.matches("[\\p{L}\\s\\d]+")) {
                         JOptionPane.showMessageDialog(null, "Tên quyền không được chứa ký tự đặc biệt", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    
+                    pqBUS.deleteQuyen(maQuyen);
+                    pqBUS.deleteChitietquyen(maQuyen);
 
                     phanquyenDTO newQuyen = new phanquyenDTO(newmaquyen, newtenquyen);
                     dsquyen.add(newQuyen);
