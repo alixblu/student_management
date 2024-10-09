@@ -304,7 +304,10 @@ public class ThemHocSinh extends JFrame {
                         "Chức năng thêm",
                         JOptionPane.INFORMATION_MESSAGE);
                         QuanLiHocSinh.tblmodel.addRow(rowData);
-                        luuanhkhixacnhan();
+                        if(!textField_chonanh.getText().equals(""))
+                        {
+                            luuanhkhixacnhan();
+                        }
                         dispose();
                     } 
                     else if (result == JOptionPane.NO_OPTION) 

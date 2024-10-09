@@ -635,7 +635,10 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
                 JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.YES_OPTION) {
             updateRow();
-            luuanhkhixacnhan();
+            if(!img.toString().equals(tf[6].getText()))
+            {
+                luuanhkhixacnhan();
+            }
             JOptionPane.showMessageDialog(this, "Bạn đã sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             
         } else if (result == JOptionPane.NO_OPTION) {
