@@ -9,6 +9,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import java.awt.Image;
 import BUS.LopBUS;
+import BUS.NamHocBUS;
 import BUS.PhanLopBUS;
 import BUS.QLHS_BUS;
 import DTO.Account_DTO;
@@ -258,6 +259,10 @@ public class ThemHocSinh extends JFrame {
                         JOptionPane.showMessageDialog(null, "Địa chỉ không hợp lệ", "Thông báo",  JOptionPane.ERROR_MESSAGE);
                         return ;
                     }
+                    else if (checknamhoc()==false) {
+                        JOptionPane.showMessageDialog(null, "Năm học không tồn tại", "Thông báo",  JOptionPane.ERROR_MESSAGE);
+                        return ;
+                    }
                     int result = JOptionPane.showConfirmDialog(null, 
                     "Bạn chắc chắn muốn thêm học sinh này?",
                     "Xác nhận",
@@ -495,6 +500,20 @@ public class ThemHocSinh extends JFrame {
         accBUS = new ChangeAcc_BUS();
         Account_DTO acc = new Account_DTO(username, password);
         accBUS.Add(acc);
+    }
+
+    public boolean checknamhoc()
+    {
+        Calendar calendar = Calendar.getInstance();
+        int nam = calendar.get(Calendar.YEAR);
+        ArrayList<String> listNamBD = new NamHocBUS().listNamBatDau();
+        for (String string : listNamBD) {
+            if(string.equals(nam+""))
+            {
+                return true;
+            } 
+        }
+        return false;
     }
 }
 
