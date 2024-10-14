@@ -254,6 +254,7 @@ public class phanquyen extends JPanel implements ActionListener {
         JDialog addDialog = new JDialog();
         addDialog.setSize(dialogWidth, dialogHeight);
         addDialog.setLayout(new BorderLayout());
+        addDialog.setModal(true);
 
         JPanel inputPanel = new JPanel(new FlowLayout(1, 10, 10));
         JLabel lblMaQuyen = new JLabel("Mã Quyền:");
@@ -358,6 +359,7 @@ public class phanquyen extends JPanel implements ActionListener {
         JDialog editDialog = new JDialog();
         editDialog.setSize(dialogWidth, dialogHeight);
         editDialog.setLayout(new BorderLayout());
+        editDialog.setModal(true);
         editDialog.setBackground(new Color(180,204,227));
 
         JPanel inputPanel = new JPanel(new FlowLayout(1, 10, 10));

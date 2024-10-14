@@ -105,11 +105,13 @@ public class MessageFromHs extends JPanel implements ActionListener {
         ngaybatdau = new JLabel("Ngày bắt đầu");
         chonbd = new JDateChooser();
         chonbd.setPreferredSize(new Dimension(100, 25));
+        chonbd.getDateEditor().setEnabled(false); 
 
         ngayketthuc = new JLabel("Ngày kết thúc");
         chonkt = new JDateChooser();
         chonkt.setPreferredSize(new Dimension(100, 25));
-
+        chonkt.getDateEditor().setEnabled(false); 
+        
         trangthai = new JLabel("Trạng thái");
         String[] cbtrangthai = { "All", "Chưa xem", "Đã xem", "Ghi nhận", "Xấu" };
         trangthaiBox = new JComboBox<>(cbtrangthai);

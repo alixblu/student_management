@@ -72,7 +72,7 @@ public class hs_gopykien extends JPanel {
                 return;
             }
             if (txtContent.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "Thông báo được bỏ trống nội dung");
+                JOptionPane.showMessageDialog(null, "Thông báo không được bỏ trống nội dung");
                 return;
             }
             if (txtHeader.getText().equals("")) {
