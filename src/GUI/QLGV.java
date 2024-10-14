@@ -51,6 +51,9 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -94,6 +97,9 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     private static String pathAnhdd = "";
     ChangeAcc_BUS accBUS = new ChangeAcc_BUS();
     QLPhanCongBUS pcBUS = new QLPhanCongBUS();
+    private String imagePath;
+    private String destinationPath;
+
 
     // Arraylist <MonHocDTO> = new MonHocDTO();
     public QLGV(int width, int height) throws SQLException {
@@ -469,43 +475,55 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             // Lấy đường dẫn của tập tin hình ảnh được chọn
-            String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+            imagePath = fileChooser.getSelectedFile().getAbsolutePath();
             // Hiển thị đường dẫn trong JTextField
             String fileName = fileChooser.getSelectedFile().getName();
-            pathAnhdd = fileName;
-            tf[7].setText(fileName);
-
-            // Tạo một ImageIcon từ đường dẫn hình ảnh
+            String pathAnhdd_1 = fileName;
+            tf[7].setText(pathAnhdd_1);
+            
             ImageIcon imageIcon = new ImageIcon(imagePath);
-
-            // Chỉnh kích thước của hình ảnh để phù hợp với JLabel
+            
             Image image = imageIcon.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(),
                     Image.SCALE_SMOOTH);
-
-            // Tạo một ImageIcon mới từ hình ảnh đã được điều chỉnh kích thước
             ImageIcon scaledImageIcon = new ImageIcon(image);
-
-            // Hiển thị hình ảnh trên JLabel
             lblimg.setIcon(scaledImageIcon);
 
         }
     }
 
+    public void luuanhkhixacnhan(String imgName, String imagePath) {
+        String projectRootPath = System.getProperty("user.dir");
+        String destinationFolder = projectRootPath + "\\src\\image\\GiaoVien";
+        String destinationPath = destinationFolder + "\\" + imgName;
+        File directory = new File(destinationFolder);
+        if (!directory.exists()) {
+            directory.mkdirs(); // Tạo thư mục nếu không tồn tại
+        }
+        File sourceFile = new File(imagePath); // Tệp ảnh nguồn
+        File destinationFile = new File(destinationPath); // Tệp đích
+    
+        try {
+            // Sao chép tệp, thay thế nếu tệp đã tồn tại
+            Files.copy(sourceFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File đã được lưu thành công: " + destinationPath);
+        } catch (IOException e) {
+            System.out.println("Có lỗi khi lưu tệp: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public boolean addRow() {
-        // Kiểm tra nếu các trường cần thiết không trống
         if (tf[1].getText().isEmpty() || tf[4].getText().isEmpty() || tf[5].getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng điền đầy đủ thông tin!");
             return false;
         }
 
-        // Kiểm tra tính hợp lệ của số điện thoại
         String soDienThoai = tf[5].getText();
         if (!isValidPhoneNumber(soDienThoai)) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!");
             return false;
         }
 
-        // Kiểm tra tính hợp lệ của tên giáo viên
         String tenGV = tf[1].getText();
         if (!isValidTeacherName(tenGV)) {
             JOptionPane.showMessageDialog(null,
@@ -517,9 +535,8 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
-        String dateString = sdf.format(date); // Convert Date to String
+        String dateString = sdf.format(date); 
     
-        // Lấy các giá trị từ các trường nhậpKhô
         Integer countGV = gvBUS.CountGV() + 1;
         String giaovienID = "GV" + countGV;
         String gioiTinh = (String) genderComboBox.getSelectedItem();
@@ -527,36 +544,26 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         String IMG = tf[7].getText();
         String sdt = tf[5].getText();
     
-        // Tạo đối tượng giáo viên mới
         GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGV, gioiTinh, IMG, dateString, soDienThoai, phanMon, tf[4].getText());
     
-        // Tạo tài khoản user cho giáo viên mới
         user accgv = new user(giaovienID, sdt, "GV", "1"); // "GV" là vai trò giáo viên, "1" là mật khẩu mặc định
-    
-        // // Thêm giáo viên vào BUS
         gvBUS.addGV(giaovien);
-    
-        // Thêm tài khoản giáo viên vào User_BUS
         User_BUS userBUS = new User_BUS();
         userBUS.add(accgv);
     
-        // Thêm dữ liệu vào bảng
         Object[] rowData = { giaovienID, tenGV, gioiTinh, dateString, tf[4].getText(), soDienThoai, phanMon, IMG };
         tblmodel.addRow(rowData);
-        // autoCreateAccount(giaovienID);
-
+        luuanhkhixacnhan(IMG,imagePath);
         clearTextFields();
 
         return true; // Trả về true để xác nhận rằng việc thêm thành công
     }
     
     
-    // Phương thức kiểm tra tính hợp lệ của số điện thoại
     private boolean isValidPhoneNumber(String phoneNumber) {
         return phoneNumber.matches("0\\d{9}"); // Kiểm tra bắt đầu từ 0 và có đủ 10 số
     }
 
-    // Phương thức kiểm tra tính hợp lệ của tên giáo viên
     private boolean isValidTeacherName(String name) {
         return name.matches("^[\\p{L}\\s]+$"); // Chỉ cho phép chữ và khoảng trắng
     }
@@ -576,7 +583,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date = dateChooser.getDate();
 
-        // Kiểm tra xem ngày có hợp lệ không
         if (date == null) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập ngày sinh hợp lệ.");
             return;
@@ -584,7 +590,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         String dateString = sdf.format(date);
 
-        // Lấy các giá trị từ các trường nhập
         String tenGiaoVien = tf[1].getText();
         String gioiTinh = (String) genderComboBox.getSelectedItem();
         String soDienThoai = tf[5].getText();
@@ -592,33 +597,27 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         String phanMon = (String) phanmonComboBox.getSelectedItem();
         String IMG = tf[7].getText();
 
-        // Kiểm tra xem tất cả các trường nhập đều có giá trị
         if (tenGiaoVien.isEmpty() || gioiTinh.isEmpty() || diaChi.isEmpty() || phanMon.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin.");
             return;
         }
 
-        // Kiểm tra tính hợp lệ của số điện thoại
         if (!isValidPhoneNumber(soDienThoai)) {
             JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ. Phải bắt đầu từ 0 và đủ 10 số!");
             return;
         }
 
-        // Kiểm tra tính hợp lệ của tên giáo viên
         if (!isValidTeacherName(tenGiaoVien)) {
             JOptionPane.showMessageDialog(null,
                     "Tên giáo viên không hợp lệ. Chỉ được chứa chữ hoa, chữ thường và khoảng trắng!");
             return;
         }
 
-        // Khởi tạo đối tượng GiaoVienDTO
         GiaoVienDTO giaovien = new GiaoVienDTO(giaovienID, tenGiaoVien, gioiTinh, IMG, dateString, soDienThoai, phanMon,
                 diaChi);
 
-        // Gọi phương thức cập nhật từ GiaoVienBUS
         gvBUS.updateGV(giaovien);
 
-        // Cập nhật bảng nếu quá trình cập nhật cơ sở dữ liệu thành công
         int row = t.getSelectedRow();
         if (row != -1) {
             Object[] rowData = { giaovienID, tenGiaoVien, gioiTinh, dateString, diaChi, soDienThoai, phanMon, IMG };
@@ -660,7 +659,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
     private void tableMouseClicked(java.awt.event.MouseEvent evt) throws ParseException {
         int row = t.getSelectedRow();
 
-        // Lấy thông tin từ các cột của hàng được chọn
         mahs = (String) t.getValueAt(row, 0);
         hoten = (String.valueOf(t.getValueAt(row, 1)));
         gioitinh = (String.valueOf(t.getValueAt(row, 2)));
@@ -670,7 +668,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         phanMon = (String.valueOf(t.getValueAt(row, 6)));
         img = (String.valueOf(t.getValueAt(row, 7)));
 
-        // Hiển thị thông tin lên các trường
         tf[0].setText(mahs);
         tf[1].setText(hoten);
         genderComboBox.setSelectedItem(gioitinh);
@@ -686,7 +683,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         // Hiển thị ảnh nếu có
         if (!img.isEmpty()) {
-            String path = "/image/Avatar/" + img;
+            String path = "/image/GiaoVien/" + img;
             java.net.URL imgHS = getClass().getResource(path);
             ImageIcon orgIcon_HS = new ImageIcon(imgHS);
             Image scaleImg_HS = orgIcon_HS.getImage().getScaledInstance(lblimg.getWidth(), lblimg.getHeight(),
@@ -697,25 +694,19 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             lblimg.setIcon(null);
         }
 
-        // Sau khi hiển thị thông tin giáo viên, vô hiệu hóa phân môn (không cho phép
-        // chỉnh sửa)
         phanmonComboBox.setEnabled(false);
     }
 
     public void btnAdd_actionPerformed() {
-        // Kiểm tra xem tất cả các trường nhập liệu có đầy đủ không
         if (checkEmpty()) {
             JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ các thông tin", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Kiểm tra thông tin giáo viên trước khi thêm
         if (!isValidTeacherInfo()) {
-            // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
             return;
         }
 
-        // Xác nhận thêm giáo viên
         int result = JOptionPane.showConfirmDialog(this,
                 "Bạn có chắc muốn Thêm giáo viên này?",
                 "Xác nhận",
@@ -733,7 +724,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         tf[0].requestFocus(); // Đặt con trỏ vào trường ID giáo viên
     }
 
-    // Phương thức kiểm tra tính hợp lệ của thông tin giáo viên
     private boolean isValidTeacherInfo() {
         String tenGiaoVien = tf[1].getText();
         String soDienThoai = tf[5].getText();
@@ -756,7 +746,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        // || !diaChi.matches("^[\\w\\s/]+$") 
         if (!diaChi.matches("^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\\\s,./-]+)$")) {
             JOptionPane.showMessageDialog(null, "Địa chỉ có thể chứa các ký tự chữ, số, dấu cách, và dấu '/'!");
             return false;
@@ -795,7 +784,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (diaChi.isEmpty() || !diaChi.matches("^[\\w\\s/]+$") || diaChi.matches("^[\\d/]+$")) {
+        if (diaChi.isEmpty() || !diaChi.matches("^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\\\s,./-]+)$")) {
             JOptionPane.showMessageDialog(null, "Địa chỉ có thể chứa các ký tự chữ, số, dấu cách, và dấu '/'!");
             return false;
         }
@@ -837,13 +826,11 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
             return;
         }
 
-        // Kiểm tra ID giáo viên
         if (!gvBUS.checkMagv(magv)) {
             JOptionPane.showMessageDialog(this, "Không tồn tại ID này", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (!isValidTeacherInfosua()) {
-            // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
             return;
         }
         // Xác nhận sửa giáo viên
@@ -855,8 +842,14 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         if (result == JOptionPane.YES_OPTION) {
             updateRow(magv); // Gọi phương thức cập nhật thông tin giáo viên
-        } else {
-            System.out.println("Bạn đã chọn không sửa.");
+            if(!img.toString().equals(tf[7].getText()))
+            {
+                luuanhkhixacnhan(tf[7].getText(),imagePath);
+            }
+            JOptionPane.showMessageDialog(this, "Bạn đã sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            
+        } else if (result == JOptionPane.NO_OPTION) {
+            JOptionPane.showMessageDialog(this, "Bạn đã sửa thất bại", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -943,36 +936,19 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         }
     }
 
-    // public void autoCreateAccount(String magv) {
-    //     accBUS = new ChangeAcc_BUS();
-    //     String username = magv;
-    //     String password = tf[5].getText();
-    //     Account_DTO acc = new Account_DTO(username, password);
-    //     accBUS.Add(acc);
-    // }
-
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == JsearchText) {
             clearTextFields();
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -993,9 +969,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(Color.green);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -1011,9 +984,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         } else if (e.getSource() == btnExpExcel) {
             btnExpExcel.setBackground(defaultColor);
         }
-        // throw new UnsupportedOperationException("Not supported yet."); // Generated
-        // from
-        // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
