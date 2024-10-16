@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import BUS.ChangeAcc_BUS;
 import BUS.HocSinhBUS;
@@ -381,7 +382,13 @@ public class ThemHocSinh extends JFrame {
 
                     // Lấy năm từ Calendar
                     namSinh = calendar.get(Calendar.YEAR);
-                    tuoi = 2024-namSinh;
+                    
+                    //Lấy ngày hiện tại
+                    LocalDate currentDate = LocalDate.now();
+        
+                    // Lấy năm hiện tại
+                    int currentYear = currentDate.getYear();
+                    tuoi = currentYear-namSinh;
                     if(comboBox_khoi.getSelectedItem().toString().equals("10") && tuoi < 15)
                     {
                         JOptionPane.showMessageDialog(null, "Năm sinh không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -433,14 +440,22 @@ public class ThemHocSinh extends JFrame {
         return ten.matches(regex);
     }
     
-    public boolean checkDiaChi(String tenDC) {
+    /*public boolean checkDiaChi(String tenDC) {
         // Biểu thức chính quy để kiểm tra địa chỉ: nếu chỉ có số thì phải có chữ cái, nếu không thì chỉ có chữ cái là được.
         String regex = "^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+)$";
         
         // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
         return tenDC.matches(regex);
+    }*/
+
+
+    public boolean checkDiaChi(String diaChi) {
+        // Biểu thức chính quy cho phép chữ cái Unicode, số, khoảng trắng và các ký tự đặc biệt (,./-)
+        String regex = "^[\\p{L}0-9\\s,./-]+$";
+        
+        // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
+        return diaChi.matches(regex);
     }
-    
     
     
     
