@@ -627,6 +627,8 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         } else {
             JOptionPane.showMessageDialog(null, "Không có hàng nào được chọn để cập nhật.");
         }
+        luuanhkhixacnhan(IMG,imagePath);
+
     }
 
     public void clearTextFields() {
@@ -842,10 +844,6 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
 
         if (result == JOptionPane.YES_OPTION) {
             updateRow(magv); // Gọi phương thức cập nhật thông tin giáo viên
-            if(!img.toString().equals(tf[7].getText()))
-            {
-                luuanhkhixacnhan(tf[7].getText(),imagePath);
-            }
             JOptionPane.showMessageDialog(this, "Bạn đã sửa thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             
         } else if (result == JOptionPane.NO_OPTION) {
