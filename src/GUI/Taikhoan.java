@@ -556,7 +556,7 @@ public final class Taikhoan extends JPanel implements MouseListener, ActionListe
         sorter = new TableRowSorter<>(model);
         t.setRowSorter(sorter);
         if (selectedOption.equals("Username")) {
-            sorter.setRowFilter(RowFilter.regexFilter(searchText, 0));
+            sorter.setRowFilter(RowFilter.regexFilter(searchText.toUpperCase(), 0));
         } else if (selectedOption.equals("Role")) {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 2));
         }

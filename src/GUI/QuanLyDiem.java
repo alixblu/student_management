@@ -434,7 +434,7 @@ public class QuanLyDiem extends JPanel{
             List<RowFilter<Object, Object>> filters = new ArrayList<>();
 
             if(!searchid.isEmpty()){
-                filters.add(RowFilter.regexFilter(searchid, 0));
+                filters.add(RowFilter.regexFilter(searchid.toUpperCase(), 0));
             }
             if (!lopSelected.equals("Tất cả")) {
                 filters.add(RowFilter.regexFilter(lopSelected, 2));

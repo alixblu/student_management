@@ -433,7 +433,7 @@ public final class NamhocGUI extends JPanel implements MouseListener, ActionList
         System.out.println("selectedOption: " + selectedOption);
 
         if (selectedOption.equals("Mã năm học")) {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 0));
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText.toUpperCase(), 0));
         } else if (selectedOption.equals("Năm học bắt đầu")) {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 1));
         } else if (selectedOption.equals("Năm học kết thúc")) {

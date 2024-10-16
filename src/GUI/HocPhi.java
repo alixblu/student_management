@@ -447,7 +447,7 @@ public class HocPhi extends JPanel{
             List<RowFilter<Object, Object>> filters = new ArrayList<>();
     
             if (!searchid.isEmpty() && timkiem.equals("Mã HS")) {
-                filters.add(RowFilter.regexFilter(searchid, 0));
+                filters.add(RowFilter.regexFilter(searchid.toUpperCase(), 0));
             }
             if (!searchid.isEmpty() && timkiem.equals("Tên HS")) {
                 filters.add(RowFilter.regexFilter("(?i)" + searchid, 1));

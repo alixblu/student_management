@@ -412,7 +412,7 @@ public class GVQuanLyDiem extends JPanel {
             t.setRowSorter(sorter);
             if(searchid.isEmpty() && lopSelected.equals("Tất cả")) return;
             if(!searchid.isEmpty()){
-                sorter.setRowFilter(RowFilter.regexFilter(searchid, 0));
+                sorter.setRowFilter(RowFilter.regexFilter(searchid.toUpperCase(), 0));
             }
             if(!lopSelected.equals("Tất cả")){
                 sorter.setRowFilter(RowFilter.regexFilter(lopSelected, 2));

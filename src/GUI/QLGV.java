@@ -746,7 +746,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!diaChi.matches("^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\\\s,./-]+)$")) {
+        if (!diaChi.matches("^[a-zA-Z0-9\\s\\.,\\-\\'/áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđĐ]+$")) {
             JOptionPane.showMessageDialog(null, "Địa chỉ có thể chứa các ký tự chữ, số, dấu cách, và dấu '/'!");
             return false;
         }
@@ -784,7 +784,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (diaChi.isEmpty() || !diaChi.matches("^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\\\s,./-]+)$")) {
+        if (diaChi.isEmpty() || !diaChi.matches("^[a-zA-Z0-9\\s\\.,\\-\\'/áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđĐ]+$")) {
             JOptionPane.showMessageDialog(null, "Địa chỉ có thể chứa các ký tự chữ, số, dấu cách, và dấu '/'!");
             return false;
         }
@@ -867,7 +867,7 @@ public final class QLGV extends JPanel implements MouseListener, ActionListener 
         sorter = new TableRowSorter<>(model);
         t.setRowSorter(sorter);
         if (selectedOption.equals("Mã giáo viên")) {
-            sorter.setRowFilter(RowFilter.regexFilter(searchText, 0));
+            sorter.setRowFilter(RowFilter.regexFilter(searchText.toUpperCase(), 0));
         } else if (selectedOption.equals("Họ và tên")) {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 1));
         }

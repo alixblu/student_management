@@ -501,7 +501,7 @@ public final class MonHoc extends JPanel implements MouseListener, ActionListene
         System.out.println("selectedOption: " + selectedOption);
 
         if (selectedOption.equals("Mã Môn Học")) {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 0));
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText.toUpperCase(), 0));
         } else if (selectedOption.equals("Tên Môn Học")) {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 1));
         }

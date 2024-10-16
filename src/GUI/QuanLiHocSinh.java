@@ -660,7 +660,7 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         sorter = new TableRowSorter<>(model);
         t.setRowSorter(sorter);
         if (selectedOption.equals("Mã học sinh")) {
-            sorter.setRowFilter(RowFilter.regexFilter(searchText, 0));
+            sorter.setRowFilter(RowFilter.regexFilter(searchText.toUpperCase(), 0));
         } else if (selectedOption.equals("Họ và tên")) {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText, 1));
         }
