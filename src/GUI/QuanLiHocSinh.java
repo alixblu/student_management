@@ -903,12 +903,12 @@ public final class QuanLiHocSinh extends JPanel implements MouseListener, Action
         return ten.matches(regex);
     }
     
-    public boolean checkDiaChi(String tenDC) {
-        // Biểu thức chính quy để kiểm tra địa chỉ: nếu chỉ có số thì phải có chữ cái, nếu không thì chỉ có chữ cái là được.
-        String regex = "^(?=.*[a-zA-Z])([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯăẠ-ỹ\\s,./-]+)$";
+    public boolean checkDiaChi(String diaChi) {
+        // Biểu thức chính quy cho phép chữ cái Unicode, số, khoảng trắng và các ký tự đặc biệt (,./-)
+        String regex = "^[\\p{L}0-9\\s,./-]+$";
         
         // Kiểm tra xem địa chỉ có khớp với biểu thức chính quy hay không
-        return tenDC.matches(regex);
+        return diaChi.matches(regex);
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
